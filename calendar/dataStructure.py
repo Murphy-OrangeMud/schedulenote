@@ -43,11 +43,6 @@ class Schedule(db.Model):
                  userID,
                  scheduleType,
                  ID=None):
-        if ID == None:
-            self.ID = self.__generateID()
-        else:
-            self.ID = ID
-
         self.description = description
         self.location = location
         self.startTime = startTime
@@ -55,6 +50,11 @@ class Schedule(db.Model):
         self.rotation = rotation
         self.userID = userID
         self.type = scheduleType
+        
+        if ID == None:
+            self.ID = self.__generateID()
+        else:
+            self.ID = ID
 
     def __repr__(self):
         startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.startTime.year(), 
@@ -73,8 +73,16 @@ class Schedule(db.Model):
             self.description, self.location, startTime, endTime, self.rotation, self.userID, self.type)
 
     def __generateID(self):
-        # TODO: generate SHA-1 value
-        return 0  
+        import hashlib
+        import json
+        import time
+
+        currentTime = time.localtime(time.time())
+
+        # 假定一个用户在一个时间戳范围内只能创建一个schedule（应该算合理假设）
+        s = hashlib.sha1()
+        s.update(json.dumps(self.userID + " " + currentTime))
+        return s.hexdigest()  
 
     # 感觉这些成员函数都不需要。。
     def getSchedule(self):
@@ -95,7 +103,7 @@ class Schedule(db.Model):
     def getRotation(self):
         return self.rotation
 
-    # TODO: 思考还需要如何考虑corner case检验这些新值的合法性
+    # 感觉这些成员函数都不需要。。若需要的话还需要思考还需要如何考虑corner case检验这些新值的合法性
     def modifyScheduleDescription(self, newDescription):
         if isinstance(newDescription, str) and newDescription != None:
             self.description = newDescription
@@ -117,7 +125,7 @@ class Schedule(db.Model):
             self.rotation = newRotation      
 
 def syncWithPKU():
-    pass  # TODO: 写爬虫从选课网爬取数据，需要和用户管理耦合/交互
+    pass  # TODO: 写爬虫从选课网爬取数据，需要和用户管理耦合/交互，或说这个函数的实现可以放进/updateclassschedule里
 
 """
 # to be revised: 直接使用数据库处理列表，不用calendar这玩意    
