@@ -1,0 +1,242 @@
+## 相关数据结构
+
+### 用户
+```json
+User = {
+    "name": string,
+    "studentNumber": number,
+}
+```
+
+### 用户档案
+这里可以把课表信息、课程信息、笔记信息加入进来，待完善
+``` json
+UserProfile = {
+    "user": User,
+    "nickname":string,
+    "motto":string,
+    "avatar": url (string),
+    "email": string,
+}
+```
+
+
+## APIs
+### 用户相关
+#### Login 登陆
+
+POST /user/login
+
+``` json
+request.body = {
+    "email": "1600012607" (string, pku邮箱名，不包括@pku.edu.cn)
+    "password": string
+}
+
+// 登录成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success"，
+		"profile": Userprofile
+    }
+}
+
+// 在登录状态下登录其他账号
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "error"
+    }
+}
+
+// 参数错误（缺少邮箱密码、用户不存在）：
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "wrong parameter"
+    }
+}
+
+// 登陆失败：
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "email or password error"
+    }
+}
+```
+
+#### Logout 注销
+
+POST /user/logout
+
+``` json
+request.body = { }
+
+// 成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success"
+    }
+}
+```
+
+#### UserProfile 查看个人信息
+
+GET /user/profile
+
+``` json
+request.body = {
+    "userID": number, // 可选参数，id为空则查看自己的个人信息
+}
+
+// 成功返回
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success",
+        "profile": Userprofile
+    }
+}
+
+// 用户不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "user does not exist",
+        "profile": {}
+    }
+}
+```
+
+#### UserProfile_modify 修改个人信息
+
+PUT /user/profile
+
+``` json
+request.body = { // 四项至少一个不为空
+    "avatar": string,
+    "username": string,
+    "nickname":string,
+    "motto":string
+}
+
+// 成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success"
+    }
+}
+
+// 用户名重复
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "duplicate username"
+    }
+}
+
+// 四项均为空
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "parameter error"
+    }
+}
+
+// 用户名重复
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "duplicate username"
+    }
+}
+
+// 头像文件不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "unexisted avatar"
+    }
+}
+
+// 用户名重复且头像文件不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "duplicate username/unexisted avatar"
+    }
+}
+// 参数输入过长（超过100字符）
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "parameter too long"
+    }
+}
+```
+### 反馈管理
+#### 意见反馈
+POST /supervision/feedback
+```json
+request.body = {  //第一项为个人信息（可不填）
+    "user":USER,
+    "msg":string //关于反馈的内容
+}
+
+response.body{
+    "code":200,
+    "data":{
+        "msg":"success"
+    }
+}
+
+// 参数输入过长（超过1000字符）
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "parameter too long"
+    }
+}
+```
+#### 举报其他用户
+POST /supervision/report
+``` json
+request.body = { 
+    "whistleblower":USER,//举报人信息，可不填
+    "reported":USER,//被举报人信息，必填
+    //举报内容，至少填一项
+    "avatar": string,
+    "username": string,
+    "nickname":string,
+    "motto":string,
+
+    "msg":string //关于举报的描述
+}
+
+response.body{
+    "code":200,
+    "data":{
+        "msg":"success"
+    }
+}
+
+// 用户不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "user does not exist"
+    }
+}
+
+// 举报内容不全
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "parameter error"
+    }
+}
+```
