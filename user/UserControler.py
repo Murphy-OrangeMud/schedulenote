@@ -25,6 +25,12 @@ def login():
     name = request.values.get('name')
     password = request.values.get('password')
     user_data = {'code':0}
+
+    if current_user:#当前有正在登录中的账号
+        user_data['code'] = 400
+        user_data['data'] = {}
+        user_data['data']['msg'] = 'User "' + current_user.name + '" is using now'
+        return jsonify(user_data)
     if is_legal_str(name) and is_legal_str(password):
         #判断用户是否存在
         user_search = User.query.filter(User.username == name).all()
@@ -43,21 +49,13 @@ def login():
                 user_data['data'] = {}
                 user_data['data']['msg'] = 'Password to '' User "' + name + '" is error'
                 return jsonify(user_data)
-        else:#用户不存在
-            user_data['code'] = 400
-            user_data['data'] = {}
-            user_data['data']['msg'] = 'User "' + name + '" doesn\'t exist'
-            return jsonify(user_data)
-    else:#参数非法
-        user_data['code'] = 700
-        user_data['data'] = {
-            'msg':'parameter ILLEGAL', 
-            'username':name, 
-            'password': password,
-        }
-        return jsonify(user_data)
+    #参数非法或用户不存在，均视为用户不存在
+    user_data['code'] = 400
+    user_data['data'] = {}
+    user_data['data']['msg'] = 'User "' + name + '" doesn\'t exist'
+    return jsonify(user_data)
 
-@user_bp.route('/logout')
+@user_bp.route('/logout', methods = ['GET', 'POST'])
 @login_required
 def logout():
     print(current_user)

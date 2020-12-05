@@ -28,7 +28,7 @@ CODE = {
 ### 用户相关
 
 #### Signup 注册
-POST /user/signup
+GET POST /user/signup
 ```json
 request.body = {
     //长度均不超过64，也都不能为空，否则报参数错误
@@ -86,11 +86,11 @@ response.body = {
 
 #### Login 登陆
 
-POST /user/login
+GET POST /user/login
 
 ``` json
 request.body = {
-    "email": "12345678" (string,邮箱名) ,
+    "name": string,
     "password": string
 }
 
@@ -99,7 +99,7 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
-		"profile": Userprofile
+		"profile": Userprofile //这里代指除password以外的全部用户信息，目前只有id, username, email, avater, motto
     }
 }
 
@@ -107,30 +107,30 @@ response.body = {
 response.body = {
     "code": 400,
     "data": {
-        "msg": "error"
+        "msg": "User %current_user.name is using now"
     }
 }
 
-// 参数错误（缺少邮箱密码、用户不存在）：
+// 参数非法或用户不存在：
 response.body = {
-    "code": 300,
+    "code": 400,
     "data": {
-        "msg": "wrong parameter"
+        "msg": "User  "%name"  doesn't exist"
     }
 }
 
-// 登陆失败：
+// 密码错误：
 response.body = {
     "code": 300,
     "data": {
-        "msg": "email or password error"
+        "msg": "Password to  User "%name" is error"
     }
 }
 ```
 
 #### Logout 注销
 
-POST /user/logout
+GET POST /user/logout
 
 ``` json
 request.body = { }
@@ -139,10 +139,13 @@ request.body = { }
 response.body = {
     "code": 200,
     "data": {
-        "msg": "success"
+        "msg": "Logout Success"
     }
 }
 ```
+
+# 后面的仅供参考，暂时未完成
+
 
 #### UserProfile 查看个人信息
 
