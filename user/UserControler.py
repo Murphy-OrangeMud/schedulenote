@@ -37,6 +37,7 @@ def signup():
             db.session.flush()
             db.session.commit()
             user_data['code'] = 200
+            user_data['data']['id'] = user.id
             user_data['data']['msg'] = 'Signup Success'
             return jsonify(user_data)
         except:

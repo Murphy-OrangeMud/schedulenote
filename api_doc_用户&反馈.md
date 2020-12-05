@@ -41,12 +41,46 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
-		"id":Integer
+        "id": id
+		"username":name,
+        "password": password, 
+        "email": email
     }
 }
 
 //参数为空
+response.body = {
+    "code" : 700, 
+    "data" : {
+        "msg":"parameter ILLEGAL",
+        "username":name,
+        "password": password, 
+        "email": email
+    } 
+}
 
+//用户已存在
+response.body = {
+    "code" : 400, 
+    "data" : {
+        "msg":"User " + name + " already exits",
+        "username":name,
+        "password": password, 
+        "email": email
+    } 
+}
+
+//数据库出现错误
+response.body = {
+    "code" : 300, 
+    "data" : {
+        "msg":"Database error",
+        "username":name,
+        "password": password, 
+        "email": email
+    } 
+}
+                
 ```
 
 #### Login 登陆
