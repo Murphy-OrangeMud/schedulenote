@@ -14,9 +14,24 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(MAXSTRLEN),  nullable=False)
     password= db.Column(db.String(PSW_HASH_LEN), nullable = False)
     avater = db.Column(db.String(MAXSTRLEN), nullable = True)
+    motto = db.Column(db.String(MAXSTRLEN), nullable = True)
     def __init__(self, username, password, email):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
+        self.avater = None
+        self.motto = None
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+    #以dict的形式返回user的全部信息（除了password）
+    def todict(self):
+        dic = {}
+        dic['id'] = self.id
+        dic['username'] = self.username
+        dic['email'] = self.email
+        dic['avater'] = self.avater
+        dic['motto'] = self.motto
+        return dic
+    

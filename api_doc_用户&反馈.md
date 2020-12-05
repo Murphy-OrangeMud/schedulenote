@@ -8,6 +8,7 @@ User = {
     "email": string,    //以后改密码需要给邮箱发邮件，功能尚未实现
     "password": string, //使用加盐哈希加密
     "avater": string, //还没想好怎么存
+    "motto": string //个性签名
 }
 这里可以把课表信息、课程信息、笔记信息加入进来，待完善
 ```
@@ -48,7 +49,7 @@ response.body = {
     }
 }
 
-//参数为空
+//参数为空或过长（超过64个字节）
 response.body = {
     "code" : 700, 
     "data" : {
