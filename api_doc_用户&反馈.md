@@ -3,33 +3,59 @@
 ### 用户
 ```json
 User = {
-    "name": string,
-    "studentNumber": number,
+    "id" = Interger,//自增的，每个用户是唯一的
+    "username": string,  //不可重复的，每个用户是唯一的
+    "email": string,    //以后改密码需要给邮箱发邮件，功能尚未实现
+    "password": string, //使用加盐哈希加密
+    "avater": string, //还没想好怎么存
 }
+这里可以把课表信息、课程信息、笔记信息加入进来，待完善
 ```
 
-### 用户档案
-这里可以把课表信息、课程信息、笔记信息加入进来，待完善
-``` json
-UserProfile = {
-    "user": User,
-    "nickname":string,
-    "motto":string,
-    "avatar": url (string),
-    "email": string,
-}
-```
 
 
 ## APIs
+```
+CODE = {
+    "success": 200,
+    "database_error": 300,
+    "user_error": 400,
+    "method_error": 600,
+    "parameter_error": 700,
+}
+```
 ### 用户相关
+
+#### Signup 注册
+POST /user/signup
+```json
+request.body = {
+    //长度均不超过64，也都不能为空，否则报参数错误
+    "username":string,
+    "password": string,
+    "email": "12345678@pku.edu.cn" (string,邮箱名)
+}
+
+// 注册成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success",
+		"id":Integer
+    }
+}
+
+//参数为空
+
+```
+
 #### Login 登陆
 
 POST /user/login
 
 ``` json
 request.body = {
-    "email": "1600012607" (string, pku邮箱名，不包括@pku.edu.cn)
+    "email": "12345678" (string,邮箱名) ,
     "password": string
 }
 
@@ -37,7 +63,7 @@ request.body = {
 response.body = {
     "code": 200,
     "data": {
-        "msg": "success"，
+        "msg": "success",
 		"profile": Userprofile
     }
 }
