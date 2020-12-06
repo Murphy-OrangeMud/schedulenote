@@ -29,7 +29,7 @@ def fun():
 如果用户没有登录，则无法访问该路径
 
 ### current_user
-如果用户未登录，则current_user为None，若用户已登录，则current_user为已登陆User对象，可以用访问User对象的方法直接访问。例如
+如果用户未登录，则current_user为一个AnonymousUserMixin类，若用户已登录，则current_user为已登陆User对象，可以用访问User对象的方法直接访问。例如
 ```python
 print(current_user.id)
 print(current_user.username)
