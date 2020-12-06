@@ -144,16 +144,15 @@ response.body = {
 }
 ```
 
-# 后面的仅供参考，暂时未完成
+#### getuser 查看个人信息
 
-
-#### UserProfile 查看个人信息
-
-GET /user/profile
+GET /user/getuser
 
 ``` json
 request.body = {
-    "userID": number, // 可选参数，id为空则查看自己的个人信息
+    //二者都空则查看自己的信息，二者都非空则以id为准
+    "id": number,
+    "name": string
 }
 
 // 成功返回
@@ -161,19 +160,22 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
+        "is_current": 1 or 0 //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
         "profile": Userprofile
     }
 }
 
-// 用户不存在
+// 用户不存在或参数错误
 response.body = {
-    "code": 300,
+    "code": 400,
     "data": {
-        "msg": "user does not exist",
-        "profile": {}
+        "msg": "user can't be visited or parameter ILLEGAL",
     }
 }
 ```
+# 后面的仅供参考，暂时未完成
+
+
 
 #### UserProfile_modify 修改个人信息
 

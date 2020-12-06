@@ -14,6 +14,9 @@ def is_legal_str(s):
             return True
     return False
 
+#表示当前有正在登录的账号
+def has_login():
+    return not current_user.is_anonymous
 
 @login_manager.user_loader
 def load_user(userid):
@@ -26,7 +29,7 @@ def login():
     password = request.values.get('password',type = str, default = None)
     user_data = {'code':0}
 
-    if not current_user.is_anonymous:#当前有正在登录中的账号
+    if has_login():#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
         user_data['data']['msg'] = 'User "' + current_user.username + '" is using now'
@@ -101,10 +104,16 @@ def signup():
 
 @user_bp.route("/getuser", methods = ['GET'])
 def get_user():
-    #id和name只使用一个，不可同时使用，二者同时使用，id优先
+    #id和name二者都空则查看自己的信息，二者都非空则以id为准
     id = request.values.get('id', type = int, default = None)
     name = request.values.get('name', type = str, default = None)
     return_json = {'code': 400, 'data' : {}}
+    if id == None and name == None:
+        if has_login():
+            return_json['code'] = 200
+            return_json['data'] = current_user.todict()
+            return_json['data']['msg'] = 'success'
+            return_json['data']['is_current'] = 1
     if id != None:
         userlist = User.query.filter(User.id == id).all()
         if userlist:
