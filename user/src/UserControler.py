@@ -26,10 +26,10 @@ def login():
     password = request.values.get('password')
     user_data = {'code':0}
 
-    if current_user:#当前有正在登录中的账号
+    if not current_user.is_anonymous:#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
-        user_data['data']['msg'] = 'User "' + current_user.name + '" is using now'
+        user_data['data']['msg'] = 'User "' + current_user.username + '" is using now'
         return jsonify(user_data)
     if is_legal_str(name) and is_legal_str(password):
         #判断用户是否存在

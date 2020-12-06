@@ -1,3 +1,4 @@
+#仅用作本地测试，待后端内容合并时统一修改
 HOST = 'localhost'
 PORT = '3306'
 DATABASE = 'usertest'
