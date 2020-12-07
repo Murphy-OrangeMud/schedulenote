@@ -173,13 +173,12 @@ response.body = {
     }
 }
 ```
-# 后面的仅供参考，暂时未完成
 
 
 
 #### modify 修改个人信息
 
-PUT /user/modify
+POST /user/modify
 
 ``` json
 request.body = { 
@@ -188,6 +187,8 @@ request.body = {
     "newname": string,
     "newpassword":string,
     "newmotto":string,
+
+    //后面的暂未完成
     "newavatar": string
 }
 
@@ -195,34 +196,30 @@ request.body = {
 response.body = {
     "code": 200,
     "data": {
-        "msg": "success"
+        "msg": "Something modify success" 
+        //Something可以是Username, Password等修改项
     }
 }
 
 // 用户名重复
 response.body = {
-    "code": 300,
+    "code": 400,
     "data": {
-        "msg": "duplicate username"
+        "msg": "User \"%newname\" already exists"
     }
 }
 
-// 四项均为空
+// 参数不合法
 response.body = {
-    "code": 300,
+    "code": 900,
     "data": {
-        "msg": "parameter error"
+        "msg": "parameter ILLEGAL"
     }
 }
+``` 
+# 后面的仅供参考，暂时未完成
 
-// 用户名重复
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "duplicate username"
-    }
-}
-
+```json
 // 头像文件不存在
 response.body = {
     "code": 300,
