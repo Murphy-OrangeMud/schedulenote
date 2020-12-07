@@ -28,7 +28,7 @@ CODE = {
 ### 用户相关
 
 #### Signup 注册
-GET POST /user/signup
+POST /user/signup
 ```json
 request.body = {
     //长度均不超过64，也都不能为空，否则报参数错误
@@ -86,7 +86,7 @@ response.body = {
 
 #### Login 登陆
 
-GET POST /user/login
+POST /user/login
 
 ``` json
 request.body = {
@@ -130,7 +130,7 @@ response.body = {
 
 #### Logout 注销
 
-GET POST /user/logout
+POST /user/logout
 
 ``` json
 request.body = { }
@@ -178,7 +178,7 @@ response.body = {
 
 #### modify 修改个人信息
 
-POST /user/modify
+PUT /user/modify
 
 ``` json
 request.body = { 
