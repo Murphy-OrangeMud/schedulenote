@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 from User import User, db
-from configs import MAXSTRLEN
+from configs import MAXSTRLEN, MAXMOTTO, MAXAVATER
 
 user_bp = Blueprint('user', __name__)
 login_manager = LoginManager()
@@ -139,4 +139,48 @@ def get_user():
                 return_json['data']['is_current'] = 0
             return jsonify(return_json)
     return_json['data']['msg'] = "user can't be visited or parameter ILLEGAL"
+    return jsonify(return_json)
+
+# 修改个人信息, 包括username, motto, avater，有原密码的password修改
+# 暂时不包括 忘记password修改和email, 这两个需要邮件确认才可以
+@user_bp.route("/modify", methods = ['POST'])
+@login_required
+def modify_info():
+    return_json = {'data':{}}
+    newname = request.values.get('newname', type = str, default = None)
+    if is_legal_str(newname):
+        if User.query.filter(User.username == newname).all():
+            return_json['code'] = 400
+            return_json['data']['msg'] = "User \"" + newname  + "\" already exists"
+            return jsonify(return_json)
+        else:
+            current_user.username = newname
+            db.session.commit()
+            return_json['code'] = 200
+            return_json['data']['msg'] = "Username modify success"
+            return jsonify(return_json)
+
+    newpassword = request.values.get('newpassword', type = str, default = None)
+    if is_legal_str(newpassword):
+        current_user.password = generate_password_hash(newpassword)
+        db.session.commit()
+        return_json['code'] = 200
+        return_json['data']['msg'] = "Password modify success"
+        return jsonify(return_json)
+
+    newmotto = request.values.get('newmotto', type = str, default = None)
+    if newmotto:
+        if len(newmotto) > 0 and len(newmotto) <= MAXMOTTO:
+            current_user.motto = newmotto
+            db.session.commit()
+            return_json['code'] = 200
+            return_json['data']['msg'] = "Motto modify success"
+            return jsonify(return_json)
+    
+    newavater = request.values.get('newavater', type = str, default = None)
+    # TODO
+    
+    #所有的都不满足，就一定是参数错误
+    return_json['code'] = 900
+    return_json['data']['msg'] = "parameter ILLEGAL"
     return jsonify(return_json)

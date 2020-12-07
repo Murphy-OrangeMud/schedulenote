@@ -177,16 +177,18 @@ response.body = {
 
 
 
-#### UserProfile_modify 修改个人信息
+#### modify 修改个人信息
 
-PUT /user/profile
+PUT /user/modify
 
 ``` json
-request.body = { // 四项至少一个不为空
-    "avatar": string,
-    "username": string,
-    "nickname":string,
-    "motto":string
+request.body = { 
+    // 每次只能更改一项，不可全空。多个有效参数，则只处理第一个有效参数。
+    // 如newname和newpassword都符合要求，则只处理newname
+    "newname": string,
+    "newpassword":string,
+    "newmotto":string,
+    "newavatar": string
 }
 
 // 成功

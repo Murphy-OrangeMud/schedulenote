@@ -4,7 +4,9 @@ PORT = '3306'
 DATABASE = 'usertest'
 USERNAME = 'root'
 PASSWORD = ''
-MAXSTRLEN = 64
+MAXSTRLEN = 64 #username和password的最大值
+MAXMOTTO = 64
+MAXAVATER = 64
 
 DB_URI = "mysql://{username}:{password}@{host}:{port}/{db}?charset=utf8".format(username=USERNAME,password=PASSWORD, host=HOST,port=PORT, db=DATABASE)
 
