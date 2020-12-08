@@ -110,6 +110,8 @@ def addDDL():
         json = request.get_json()
         
         scheduleType = json["type"]
+        
+        # 修改：是不是直接改成addSchedule而不要检查type，直接dispatch
         if scheduleType != ScheduleTypes.DDL.value:
             return jsonify({"status": "Fail: not a ddl"})
 
@@ -238,7 +240,6 @@ def getAlert():
 
         return jsonify({"status": "OK", "alertddl": return_alert})
     
-
 @app.route("/save", methods=("GET", ))
 def save():
     pass  # TODO: 似乎目前的API会自动保存，不需要这个操作……

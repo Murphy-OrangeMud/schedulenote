@@ -2,12 +2,14 @@ import datetime
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
+import data
 
 db = SQLAlchemy(current_app)
 
 ScheduleTypes = Enum("ScheduleTypes", 
                     ("Class", 
-                     "DDL"))
+                     "DDL",
+                     "Exam"))
 
 # sqlalchemy数据库中存Schedule对象，以id或者description作为主键
 # 每个用户有一个calendar，因此calendar和user是一一映射关系。
@@ -80,11 +82,11 @@ class Schedule(db.Model):
         currentTime = time.localtime(time.time())
 
         # 假定一个用户在一个时间戳范围内只能创建一个schedule（应该算合理假设）
+        # 可以考虑修改（如何确保唯一性和排他性）
         s = hashlib.sha1()
         s.update(json.dumps(self.userID + " " + currentTime))
         return s.hexdigest()  
 
-    # 感觉这些成员函数都不需要。。
     def getSchedule(self):
         return self.ID
 
@@ -103,7 +105,6 @@ class Schedule(db.Model):
     def getRotation(self):
         return self.rotation
 
-    # 感觉这些成员函数都不需要。。若需要的话还需要思考还需要如何考虑corner case检验这些新值的合法性
     def modifyScheduleDescription(self, newDescription):
         if isinstance(newDescription, str) and newDescription != None:
             self.description = newDescription
@@ -124,40 +125,151 @@ class Schedule(db.Model):
         if isinstance(newRotation, int) and newRotation != None:
             self.rotation = newRotation      
 
-def syncWithPKU():
-    pass  # TODO: 写爬虫从选课网爬取数据，需要和用户管理耦合/交互，或说这个函数的实现可以放进/updateclassschedule里
 
-"""
-# to be revised: 直接使用数据库处理列表，不用calendar这玩意    
 class Calendar():
-    # user: to be revised
     def __init__(self, userID):
-        self.scheduleList = []
         self.userID = userID
 
     def showCalendar(self):
-        pass
+        calendar = Schedule.query.filter_by(userID=self.userID).order_by(Schedule.startTime)
+        return calendar
 
     def addSchedule(self, schedule):
-        self.scheduleList.append(schedule)
+        db.session.add(schedule)
+        db.session.commit()
 
     def deleteSchedule(self, schedule):
-        self.scheduleList.remove(schedule)
+        db.session.delete(schedule)
+        db.session.commit()
 
     # 如果没有哪一个参数，请指定为None。内部函数会检查参数。
     def modifySchedule(self, schedule, newDescription, newLocation, newStartTime, newEndTime, newRotation):
-        schedule.modifyScheduleDescription(newDescription)
-        schedule.modifyStartTime(newStartTime)
-        schedule.modifyEndTime(newEndTime)
-        schedule.modifyLocation(newLocation)
-        schedule.modifyRotation(newRotation)
+        schedule_m = Schedule.query.filter_by(ID=schedule.ID).first()
+        schedule_m.modifyScheduleDescription(newDescription)
+        schedule_m.modifyLocation(newLocation)
+        schedule_m.modifyStartTime(newStartTime)
+        schedule_m.modifyEndTime(newEndTime)
+        schedule_m.modifyRotation(newRotation)
+        db.session.delete(schedule)
+        db.session.add(schedule_m)
+        db.session.commit()
 
     def saveSchedule(self, schedule):
         pass
 
-    def syncWithPKU(self):
-        pass
+    def syncWithPKU(self, url):
+        # TODO: 处理登录失败等情况
+        # 从选课结果页面爬取课程数据的爬虫函数
+        # url是选课结果页面的url，比如
+        # https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/electiveWork/showResults.do
+
+        import requests
+        from bs4 import BeautifulSoup
+        import re
+
+        start_time_list = ["", 
+                            datetime.datetime(hour=8), 
+                            datetime.datetime(hour=9), 
+                            datetime.datetime(hour=10, minute=10), 
+                            datetime.datetime(hour=11, minute=10),
+                            datetime.datetime(hour=13), 
+                            datetime.datetime(hour=14), 
+                            datetime.datetime(hour=15, minute=10), 
+                            datetime.datetime(hour=16, minute=10), 
+                            datetime.datetime(hour=17, minute=10), 
+                            datetime.datetime(hour=18, minute=40), 
+                            datetime.datetime(hour=19, minute=40), 
+                            datetime.datetime(hour=20, minute=40)]
+
+        end_time_list = ["", 
+                        datetime.datetime(hour=8, minute=50), 
+                        datetime.datetime(hour=9, minute=50), 
+                        datetime.datetime(hour=11), 
+                        datetime.datetime(hour=12), 
+                        datetime.datetime(hour=13, minute=50), 
+                        datetime.datetime(hour=14, minute=50), 
+                        datetime.datetime(hour=16), 
+                        datetime.datetime(hour=17), 
+                        datetime.datetime(hour=18), 
+                        datetime.datetime(hour=19, minute=30), 
+                        datetime.datetime(hour=20, minute=30), 
+                        datetime.datetime(hour=21, minute=30)]
+
+
+        r = requests.get(url).content.replace("<br>", ",")
+        bs = BeautifulSoup(r)
+        class_list_even = bs.find_all(attrs = {"class": "course-even"})
+        class_list_odd = bs.find_all(attrs = {"class": "course-odd"})
+
+        def process_class_list(class_list, even=True):
+            for i in range(class_list):
+                class_col = class_list[i].find_all(attrs = {"class": "course"})
+
+                for j in range(1, 8):
+                    class_info = class_col[i].string
+                    class_name = class_info[0]
+                    class_location = class_info[1].strip('()')
+                    class_rotation = class_info[2]
+                    # 注意：要问一下rotation各个值的含义
+                    rotation = -2
+
+                    if re.match(class_rotation, "每周"):
+                        rotation = -1
+                    elif re.match(class_rotation, "双周"):
+                        rotation = 0
+                    else: #单周
+                        rotation = 1
+
+                    class_exam = class_info[3]
+
+                    # 添加schedule，待修改：如何体现星期几
+                    if (even):
+                        new_class = Schedule(class_name, 
+                                                class_location, 
+                                                start_time_list[i*2+1], 
+                                                end_time_list[i*2+1], 
+                                                rotation, 
+                                                self.userID, 
+                                                ScheduleTypes.Class.value)
+                    else:
+                        new_class = Schedule(class_name, 
+                                                class_location, 
+                                                start_time_list[i*2+2], 
+                                                end_time_list[i*2+2], 
+                                                rotation, 
+                                                self.userID, 
+                                                ScheduleTypes.Class.value)
+
+                    self.addSchedule(new_class)
+
+                    # 是否要解析考试时间并添加schedule
+                    start_time_exam_list = [datetime.datetime(hour=8, minute=30),
+                                            datetime.datetime(hour=14),
+                                            datetime.datetime(hour=18, minute=30)]
+                    end_time_exam_list = [datetime.datetime(hour=10, minute=30), 
+                                        datetime.datetime(hour=16), 
+                                        datetime.datetime(hour=20, minute=30)]
+                    
+                    time_index = -1
+                    
+                    if re.match(class_exam, "上午"):
+                        time_index = 0
+                    elif re.match(class_exam, "下午"):
+                        time_index = 1
+                    else: # 晚上
+                        time_index = 2
+                    new_exam = Schedule(class_name + "期末考试", 
+                                        None, 
+                                        start_time_exam_list[time_index], 
+                                        end_time_exam_list[time_index],
+                                        -2,
+                                        self.userID, 
+                                        ScheduleTypes.Exam.value)
+
+                    self.addSchedule(new_exam)
+
+        process_class_list(class_list_even, True)
+        process_class_list(class_list_odd, False)
 
     def sendAlert(self):
         pass
-"""
