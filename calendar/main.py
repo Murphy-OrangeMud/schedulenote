@@ -7,3 +7,4 @@ app = Flask(__name__)
 
 # to be revised
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+

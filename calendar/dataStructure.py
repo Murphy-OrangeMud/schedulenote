@@ -5,6 +5,7 @@ from enum import Enum
 import data
 
 db = SQLAlchemy(current_app)
+db.create_all()
 
 ScheduleTypes = Enum("ScheduleTypes", 
                     ("Class", 
@@ -158,7 +159,10 @@ class Calendar():
         pass
 
     def syncWithPKU(self, url):
-        # TODO: 处理登录失败等情况
+        pass
+    """
+        # Warning: 这个函数暂时用不了
+        # TODO: 需要先处理登录
         # 从选课结果页面爬取课程数据的爬虫函数
         # url是选课结果页面的url，比如
         # https://elective.pku.edu.cn/elective2008/edu/pku/stu/elective/controller/electiveWork/showResults.do
@@ -195,9 +199,13 @@ class Calendar():
                         datetime.datetime(hour=20, minute=30), 
                         datetime.datetime(hour=21, minute=30)]
 
-
-        r = requests.get(url).content.replace("<br>", ",")
-        bs = BeautifulSoup(r)
+        r = requests.get(url).text()
+        
+        if re.match(r, "出错提示"):
+            return False
+        
+        r_m = r.replace("<br>", ",")
+        bs = BeautifulSoup(r_m)
         class_list_even = bs.find_all(attrs = {"class": "course-even"})
         class_list_odd = bs.find_all(attrs = {"class": "course-odd"})
 
@@ -270,6 +278,7 @@ class Calendar():
 
         process_class_list(class_list_even, True)
         process_class_list(class_list_odd, False)
+    """
 
     def sendAlert(self):
         pass

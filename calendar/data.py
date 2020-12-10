@@ -102,18 +102,18 @@ def getDeadlinesCalendar():
 def updateClassSchedule():
     pass # TODO: 如何刷新页面？还是说似乎也不需要这个操作……
 
-@app.route("/addddl", methods=("POST", ))
-def addDDL():
+@app.route("/addschedule", methods=("POST", ))
+def addSchedule():
     if request.method == "POST":
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
         
         scheduleType = json["type"]
-        
+
         # 修改：是不是直接改成addSchedule而不要检查type，直接dispatch
-        if scheduleType != ScheduleTypes.DDL.value:
-            return jsonify({"status": "Fail: not a ddl"})
+        # if scheduleType != ScheduleTypes.DDL.value:
+        #    return jsonify({"status": "Fail: not a ddl"})
 
         description = json["description"]
         location = json["location"]
@@ -122,21 +122,21 @@ def addDDL():
         rotation = json["rotation"]
         userID = json["userID"]
         
-        newDDL = Schedule(description, 
+        newschedule = Schedule(description, 
                           location, 
                           strformat2datetime(startTime), 
                           strformat2datetime(endTime), 
                           rotation, 
                           userID, 
-                          ScheduleTypes.DDL.value)
+                          scheduleType)
 
-        db.session.add(newDDL)
+        db.session.add(newschedule)
         db.session.commit()
 
         return jsonify({"status": "OK"})
 
-@app.route("/deleteddl", methods=("POST", ))
-def deleteDDL():
+@app.route("/deleteschedule", methods=("POST", ))
+def deleteSchedule():
     if request.method == "POST":
         content_type = request.headers["Content-type"]
 
@@ -152,65 +152,65 @@ def deleteDDL():
 
         return jsonify({"status": "OK"})
         
-@app.route("/modifyddl", methods=("POST", ))
-def modifyDDL():
+@app.route("/modifyschedule", methods=("POST", ))
+def modifySchedule():
     if request.method == "POST":
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
 
         ID = json["id"]
-        DDL = Schedule.query.filter_by(id=ID).first()
-        if DDL == None:
-            return jsonify({"status": "Fail: ddl does not exist"})
+        schedule = Schedule.query.filter_by(id=ID).first()
+        if schedule == None:
+            return jsonify({"status": "Fail: schedule does not exist"})
         
         scheduleType = json["type"]
-        if scheduleType != ScheduleTypes.DDL.value:
-            return jsonify({"status": "Fail: not a ddl"})
+        # if scheduleType != ScheduleTypes.DDL.value:
+        #     return jsonify({"status": "Fail: not a ddl"})
 
         description = json["description"]
         if description == None:  # 或约定一个值代表这一项不需要修改，下同
-            description = DDL.description
+            description = schedule.description
 
         location = json["location"]
         if location == None:  
-            location = DDL.location
+            location = schedule.location
 
         startTime = json["startTime"]
         if startTime == None:
-            startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (DDL.startTime.year(), 
-                                                            DDL.startTime.month(), 
-                                                            DDL.startTime.day(), 
-                                                            DDL.startTime.hour(), 
-                                                            DDL.startTime.minute(), 
-                                                            DDL.startTime.second())
+            startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.startTime.year(), 
+                                                            schedule.startTime.month(), 
+                                                            schedule.startTime.day(), 
+                                                            schedule.startTime.hour(), 
+                                                            schedule.startTime.minute(), 
+                                                            schedule.startTime.second())
         endTime = json["endTime"]
         if endTime == None:
-            endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (DDL.endTime.year(), 
-                                                        DDL.endTime.month(), 
-                                                        DDL.endTime.day(), 
-                                                        DDL.endTime.hour(), 
-                                                        DDL.endTime.minute(), 
-                                                        DDL.endTime.second())
+            endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.endTime.year(), 
+                                                        schedule.endTime.month(), 
+                                                        schedule.endTime.day(), 
+                                                        schedule.endTime.hour(), 
+                                                        schedule.endTime.minute(), 
+                                                        schedule.endTime.second())
         rotation = json["rotation"]
         if rotation == None:
-            rotation = DDL.rotation
+            rotation = schedule.rotation
 
         userID = json["userID"]
         if userID == None:
-            userID = DDL.userID
+            userID = schedule.userID
         
-        newDDL = Schedule(description, 
+        newschedule = Schedule(description, 
                           location, 
                           strformat2datetime(startTime), 
                           strformat2datetime(endTime), 
                           rotation, 
                           userID, 
-                          ScheduleTypes.DDL.value,
+                          scheduleType,
                           ID)
 
-        db.session.delete(DDL)
-        db.session.add(newDDL)
+        db.session.delete(schedule)
+        db.session.add(newschedule)
         db.session.commit()
 
         return jsonify({"status": "OK"})
