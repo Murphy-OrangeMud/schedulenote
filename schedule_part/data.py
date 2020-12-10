@@ -9,7 +9,7 @@ from dataStructure import ScheduleTypes
 from dataStructure import Schedule
 from dataStructure import db
 
-app = Blueprint("data", __name__)
+app = Blueprint("schedule", __name__, url_prefix='/schedule')
 
 def strformat2datetime(strformat):
     year = strformat[0:4]
@@ -27,7 +27,9 @@ def getCalendar():
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
-        userID = json["userID"][0]
+        userID = json["userID"]
+
+        print(userID)
 
         # to be revised: 按照起始时间排序还是终止时间？
         calendar = Schedule.query.filter_by(userID=userID).order_by(Schedule.startTime)
@@ -35,14 +37,14 @@ def getCalendar():
         return_calendar = []
         for schedule in calendar:
             return_calendar.append({
-                "id": schedule.ID,
+                "id": schedule.id,
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
                 "startTime": schedule.startTime, 
                 "endTime": schedule.endTime, 
                 "rotation": schedule.rotation,
-                "type": schedule.type
+                "type": schedule.scheduleType
             })
 
         return jsonify({"status": "OK", "calendar": return_calendar})
@@ -53,21 +55,21 @@ def getClassCalendar():
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
-        userID = json["userID"][0]
+        userID = json["userID"]
 
         calendar = Schedule.query.filter_by(userID=userID, scheduleType=ScheduleTypes.Class.value).order_by(Schedule.startTime)
 
         return_calendar = []
         for schedule in calendar:
             return_calendar.append({
-                "id": schedule.ID,
+                "id": schedule.id,
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
                 "startTime": schedule.startTime, 
                 "endTime": schedule.endTime, 
                 "rotation": schedule.rotation,
-                "type": schedule.type
+                "type": schedule.scheduleType
             })
 
         return jsonify({"status": "OK", "calendar": return_calendar})
@@ -78,7 +80,7 @@ def getDeadlinesCalendar():
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
-        userID = json["userID"][0]
+        userID = json["userID"]
 
         # to be revised: DDL按照起始时间排序还是终止时间？
         calendar = Schedule.query.filter_by(userID=userID, scheduleType=ScheduleTypes.DDL.value).order_by(Schedule.startTime)
@@ -86,14 +88,14 @@ def getDeadlinesCalendar():
         return_calendar = []
         for schedule in calendar:
             return_calendar.append({
-                "id": schedule.ID,
+                "id": schedule.id,
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
                 "startTime": schedule.startTime, 
                 "endTime": schedule.endTime, 
                 "rotation": schedule.rotation,
-                "type": schedule.type
+                "type": schedule.scheduleType
             })
 
         return jsonify({"status": "OK", "calendar": return_calendar})
@@ -105,9 +107,11 @@ def updateClassSchedule():
 @app.route("/addschedule", methods=("POST", ))
 def addSchedule():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        # content_type = request.headers["Content-type"]
 
         json = request.get_json()
+        print(json)
+        #json = request.json
         
         scheduleType = json["type"]
 
@@ -221,8 +225,7 @@ def getAlert():
     if request.method == "GET":
         current_time = datetime.datetime.now()
         
-        alertList = Schedule.query.filter_by(Schedule.startTime <= current_time + datetime.timedelta(days=1), 
-                                            type=ScheduleTypes.DDL.value).all()
+        alertList = Schedule.query.filter(Schedule.startTime <= current_time + datetime.timedelta(days=1)).filter_by(scheduleType=ScheduleTypes.DDL.value).all()
 
         return_alert = []
 

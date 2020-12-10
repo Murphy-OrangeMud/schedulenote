@@ -2,10 +2,8 @@ import datetime
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
-import data
 
 db = SQLAlchemy(current_app)
-db.create_all()
 
 ScheduleTypes = Enum("ScheduleTypes", 
                     ("Class", 
@@ -52,12 +50,12 @@ class Schedule(db.Model):
         self.endTime = endTime
         self.rotation = rotation
         self.userID = userID
-        self.type = scheduleType
+        self.scheduleType = scheduleType
         
         if ID == None:
-            self.ID = self.__generateID()
+            self.id = self.__generateID()
         else:
-            self.ID = ID
+            self.id = ID
 
     def __repr__(self):
         startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.startTime.year(), 
@@ -80,12 +78,13 @@ class Schedule(db.Model):
         import json
         import time
 
-        currentTime = time.localtime(time.time())
+        currentTime = time.strftime("%04d-%02d-%02d-%02d-%02d-%02d", time.localtime(time.time()))
+        
 
         # 假定一个用户在一个时间戳范围内只能创建一个schedule（应该算合理假设）
         # 可以考虑修改（如何确保唯一性和排他性）
         s = hashlib.sha1()
-        s.update(json.dumps(self.userID + " " + currentTime))
+        s.update((self.userID + " " + currentTime).encode("utf-8"))
         return s.hexdigest()  
 
     def getSchedule(self):
@@ -282,3 +281,6 @@ class Calendar():
 
     def sendAlert(self):
         pass
+
+print("Ready to create all")
+db.create_all()
