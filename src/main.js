@@ -2,19 +2,23 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import VueMarkdownEditor from '@kangc/v-md-editor'
+import '@kangc/v-md-editor/lib/style/base-editor.css'
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-<<<<<<< Updated upstream
+Vue.config.productionTip = false
+VueMarkdownEditor.use(vuepressTheme)
+Vue.use(ElementUI)
+Vue.use(VueMarkdownEditor)
 Vue.config.productionTip = false
 
-=======
->>>>>>> Stashed changes
 new Vue({
   router,
   store,
   render: h => h(App)
 }).$mount('#app')
-<<<<<<< Updated upstream
-=======
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) { // 验证是否需要登陆
@@ -25,4 +29,3 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
->>>>>>> Stashed changes

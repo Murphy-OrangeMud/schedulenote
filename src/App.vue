@@ -1,19 +1,11 @@
 <template>
   <div id="app">
-<<<<<<< Updated upstream
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/test">Test</router-link>
-    </div>
-=======
-    <router-link to="/register">Register</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/home">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/calender">Calender</router-link> |
-    <router-link to="/notes">Notes</router-link>
->>>>>>> Stashed changes
+    <el-button type="primary" icon="el-icon-edit" @click="EnterWriting">笔记</el-button>
+    <el-button type="primary" icon="el-icon-user" @click="ToReg">注册</el-button>
+    <el-button type="primary" icon="el-icon-user-solid" @click="ToLogin">登陆</el-button>
+    <el-button type="primary" icon="el-icon-date" @click="ToCal">日历</el-button>
+    <el-button type="primary" icon="el-icon-folder" @click="ToNotes">笔记库</el-button>
+    <el-button type="primary" icon="el-icon-info" @click="ToAbout">关于</el-button>
     <router-view />
   </div>
 </template>
@@ -27,7 +19,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  background-color: #99ffff;
+  /*background-color: #99ffff;*/
+}
+.note{
+  text-align: left;
 }
 
 </style>
@@ -35,6 +30,26 @@
 <script>
 
 export default {
-  name: 'app'
+  name: 'app',
+  methods: {
+    EnterWriting: function () {
+      this.$router.push('/home')
+    },
+    ToReg: function () {
+      this.$router.push('/register')
+    },
+    ToLogin: function () {
+      this.$router.push('/login')
+    },
+    ToCal: function () {
+      this.$router.push('/calender')
+    },
+    ToAbout: function () {
+      this.$router.push('/about')
+    },
+    ToNotes: function () {
+      this.$router.push('/notes')
+    }
+  }
 }
 </script>
