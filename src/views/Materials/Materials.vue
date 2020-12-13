@@ -10,6 +10,8 @@
             <th>贡献者</th>
             <th>创建时间</th>
             <th>操作</th>
+            <th>赞</th>
+            <th>踩</th>
           </tr>
         </thead>
       <tbody>
@@ -19,6 +21,8 @@
         <td>{{item.contributor}}</td>
         <td>{{item.date}}</td>
         <td><button v-on:click="download()">下载</button></td>
+        <td>{{item.upvote}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
+        <td>{{item.downvote}} <el-button type="success" icon="el-icon-arrow-down" size = "small" @click="Downvote"></el-button></td>
         </tr>
       </tbody>
       </table>
@@ -44,6 +48,10 @@ export default {
     download () {
     },
     addMaterials () {
+    },
+    Upvote () {
+    },
+    Downvote () {
     }
   }
 }

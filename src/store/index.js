@@ -22,13 +22,17 @@ const store = new Vuex.Store({
         course: '软件工程',
         name: '软工笔记1',
         contributor: 'hzj',
-        date: '2020-12-13'
+        date: '2020-12-13',
+        upvote: 100,
+        downvote: 1
       },
       {
         course: '软件工程',
         name: '软工笔记2',
         contributor: 'hzj',
-        date: '2020-12-13'
+        date: '2020-12-13',
+        upvote: 100,
+        downvote: 1
       }
     ],
     materialList: [
@@ -36,13 +40,17 @@ const store = new Vuex.Store({
         course: '软件工程',
         name: '软工课件1',
         contributor: 'hzj',
-        date: '2020-12-13'
+        date: '2020-12-13',
+        upvote: 100,
+        downvote: 1
       },
       {
         course: '软件工程',
         name: '软工课件2',
         contributor: 'hzj',
-        date: '2020-12-13'
+        date: '2020-12-13',
+        upvote: 100,
+        downvote: 1
       }
     ],
     mdtext: 'markdown'
