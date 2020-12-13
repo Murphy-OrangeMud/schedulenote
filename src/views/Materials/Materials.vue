@@ -1,7 +1,7 @@
 <template>
   <div id="notes">
-    <h1>笔记列表</h1>
-    <div v-if="noteCount">
+    <h1>课程资料列表</h1>
+    <div v-if="materialCount">
       <table align="center">
         <thead>
           <tr>
@@ -13,7 +13,7 @@
           </tr>
         </thead>
       <tbody>
-        <tr v-for="item in noteList" :key="item" >
+        <tr v-for="item in materialList" :key="item" >
         <td>{{item.course}}</td>
         <td>{{item.name}}</td>
         <td>{{item.contributor}}</td>
@@ -23,9 +23,9 @@
       </tbody>
       </table>
     </div>
-    <h2 v-else>笔记为空</h2>
+    <h2 v-else>课程资料为空</h2>
     <h1></h1>
-    <button v-on:click="addNote()">添加笔记</button>
+    <button v-on:click="addMaterials()">添加资料</button>
   </div>
 </template>
 
@@ -33,17 +33,17 @@
 export default {
   name: 'notes',
   computed: {
-    noteList () {
-      return this.$store.state.noteList
+    materialList () {
+      return this.$store.state.materialList
     },
-    noteCount () {
-      return this.$store.state.noteList.length
+    materialCount () {
+      return this.$store.state.materialList.length
     }
   },
   methods: {
     download () {
     },
-    addNote () {
+    addMaterials () {
     }
   }
 }

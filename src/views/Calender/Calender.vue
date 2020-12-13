@@ -23,7 +23,7 @@
     </div>
     <h2 v-else>ddl为空</h2>
     <h1></h1>
-    <button v-on:click="addDdl()">添加ddl</button>
+    <button v-on:click="addDdl()">添加事件</button>
   </div>
 </template>
 

@@ -20,7 +20,7 @@ const store = new Vuex.Store({
     noteList: [
       {
         course: '软件工程',
-        name: '软工笔记',
+        name: '软工笔记1',
         contributor: 'hzj',
         date: '2020-12-13'
       },
@@ -31,15 +31,23 @@ const store = new Vuex.Store({
         date: '2020-12-13'
       }
     ],
+    materialList: [
+      {
+        course: '软件工程',
+        name: '软工课件1',
+        contributor: 'hzj',
+        date: '2020-12-13'
+      },
+      {
+        course: '软件工程',
+        name: '软工课件2',
+        contributor: 'hzj',
+        date: '2020-12-13'
+      }
+    ],
     mdtext: 'markdown'
   },
   gatters: {
-    ddlList (state) {
-      return state.ddlList
-    },
-    ddlCount (state, getters) {
-      return getters.ddlList.length
-    }
   },
   mutations: {
   },

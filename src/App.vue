@@ -5,6 +5,7 @@
     <el-button type="primary" icon="el-icon-user-solid" @click="ToLogin">登陆</el-button>
     <el-button type="primary" icon="el-icon-date" @click="ToCal">日历</el-button>
     <el-button type="primary" icon="el-icon-folder" @click="ToNotes">笔记库</el-button>
+    <el-button type="primary" icon="el-icon-folder" @click="ToMaterials">课程资料</el-button>
     <el-button type="primary" icon="el-icon-info" @click="ToAbout">关于</el-button>
     <router-view />
   </div>
@@ -49,6 +50,9 @@ export default {
     },
     ToNotes: function () {
       this.$router.push('/notes')
+    },
+    ToMaterials: function () {
+      this.$router.push('/materials')
     }
   }
 }

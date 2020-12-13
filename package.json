@@ -30,5 +30,20 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "description": "软件工程实践项目",
+  "main": ".eslintrc.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Murphy-OrangeMud/schedulenote.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Murphy-OrangeMud/schedulenote/issues"
+  },
+  "homepage": "https://github.com/Murphy-OrangeMud/schedulenote#readme"
 }

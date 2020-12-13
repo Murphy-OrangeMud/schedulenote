@@ -69,6 +69,15 @@ const routes = [
       requireAuth: false
     },
     component: () => import('../views/Notes/Notes.vue')
+  },
+  {
+    path: '/materials',
+    name: 'Materials',
+    meta: {
+      title: 'materials',
+      requireAuth: false
+    },
+    component: () => import('../views/Materials/Materials.vue')
   }
 ]
 
