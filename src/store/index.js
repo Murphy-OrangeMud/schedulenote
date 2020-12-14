@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    username: '',
     ddlList: [
       {
         date: '2020-12-13',

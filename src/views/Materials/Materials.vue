@@ -1,7 +1,7 @@
 <template>
   <div id="notes">
     <h1>课程资料列表</h1>
-    <div v-if="MaterialCount">
+    <div v-if="materialList.length">
       <table align="center">
         <thead>
           <tr>
@@ -14,7 +14,7 @@
           </tr>
         </thead>
       <tbody>
-        <tr v-for="item in MaterialList" :key="item" >
+        <tr v-for="item in materialList" :key="item" >
         <td>{{item.coursename}}</td>
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
@@ -34,13 +34,18 @@
 <script>
 import { getHomeMultidata, postHomeMultidata } from 'network/home'
 export default {
-  name: 'notes',
+  name: 'materials',
+  data () {
+    return {
+      materialList: []
+    }
+  },
   computed: {
     MaterialList () {
-      return this.$store.state.materialList
+      return this.materialList
     },
     MaterialCount () {
-      return this.$store.state.materialList.length
+      return this.materialList.length
     }
   },
   methods: {
@@ -56,7 +61,7 @@ export default {
     },
     getHomeMultidata () {
       getHomeMultidata().then(res => {
-        this.MaterialList = res
+        this.materialList = res
       })
     }
   },

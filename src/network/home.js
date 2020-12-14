@@ -1,4 +1,4 @@
-import { request, request1 } from './request'
+import { request, request1, request2 } from './request'
 
 export function getHomeMultidata () {
   return request({
@@ -14,14 +14,42 @@ export function postHomeMultidata (id) {
   })
 }
 
-export function postRegister (myname, mypassword) {
+export function postRegister (datas) {
   return request1({
     url: '/user/signup',
     method: 'post',
-    data: {
-      name: myname,
-      password: mypassword,
-      email: '12345678@pku.edu.cn'
-    }
+    data: datas
+  })
+}
+
+export function postLogin (datas) {
+  return request1({
+    url: '/user/login',
+    method: 'post',
+    data: datas
+  })
+}
+
+export function getddl (datas) {
+  return request2({
+    url: '/schedule/getdeadlinescalendar',
+    method: 'post',
+    data: datas
+  })
+}
+
+export function addddl (datas) {
+  return request2({
+    url: '/schedule/addschedule',
+    method: 'post',
+    data: datas
+  })
+}
+
+export function delddl (datas) {
+  return request2({
+    url: '/schedule/deleteschedule',
+    method: 'post',
+    data: datas
   })
 }

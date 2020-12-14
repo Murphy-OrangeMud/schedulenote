@@ -11,7 +11,6 @@
             <th>创建时间</th>
             <th>操作</th>
             <th>赞</th>
-            <th>踩</th>
           </tr>
         </thead>
       <tbody>
@@ -22,7 +21,6 @@
         <td>{{item.date}}</td>
         <td><el-button v-on:click="download()" type="success" size = "small">下载</el-button></td>
         <td>{{item.upvote}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
-        <td>{{item.downvote}} <el-button type="success" icon="el-icon-arrow-down" size = "small" @click="Downvote"></el-button></td>
         </tr>
       </tbody>
       </table>

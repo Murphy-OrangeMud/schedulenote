@@ -1,27 +1,29 @@
 <template>
   <div id="login">
     <h1>Schedule note 用户注册</h1>
-    <form>
-        <div id="input">
-            账号
-            <input type="text" name="userid" placeholder="请输入你的账号" v-model=account>
-            <br>
-            <h1></h1>
-            密码
-            <input type="password" name="userpassword" placeholder="请输入你的密码" v-model=password>
-            <br>
-            <h1></h1>
-            <button v-on:click="regi()">注册</button>
-        </div>
-        <div v-if="noteCount">
-            <input type="text" name="userid" placeholder="请输入你的账号" v-model=mess>
-        </div>
-    </form>
+    <el-form ref=for :model="form" label-width="80px" class="login-form">
+
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model=account></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码" prop="password">
+          <el-input v-model=password type="password"></el-input>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type=mess @click=regi>注册</el-button>
+        </el-form-item>
+      </el-form>
+      <div v-if=mess>
+        <el-tag type="success">{{mess}}</el-tag>
+      </div>
   </div>
 </template>
 
 <script>
 import { postRegister } from 'network/home'
+import qs from 'qs'
 export default {
   name: 'register',
   data () {
@@ -33,8 +35,15 @@ export default {
   },
   methods: {
     regi: function () {
-      postRegister(this.account, this.password).then(res => {
-        this.mess = res
+      const datas = qs.stringify({
+        name: this.account,
+        password: this.password,
+        email: '12345678@pku.edu.cn'
+      })
+      console.log(datas)
+      event.preventDefault()
+      postRegister(datas).then(res => {
+        this.mess = res.data.msg
       })
     }
   }
