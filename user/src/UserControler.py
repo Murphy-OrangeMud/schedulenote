@@ -77,7 +77,6 @@ def signup():
         'data' : {
             'msg':'parameter ILLEGAL', 
             'username':name, 
-            'password': password, 
             'email': email
         } 
     }

@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from configs import MAXSTRLEN, MAXMOTTO, MAXAVATER
 db = SQLAlchemy()
 #generate_password_hash得到的hash长度一定是93
-PSW_HASH_LEN = 93
+PSW_HASH_LEN = 128
 
 class User(UserMixin, db.Model):
     __tablename__ = "users_v1"
