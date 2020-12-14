@@ -16,17 +16,17 @@
         <tr v-for="item in courseList" :key="item" >
         <td>{{item.time}}</td>
         <td>{{item.course}}</td>
-        <td><button v-on:click="chooseNote()">查询</button></td>
-        <td><button v-on:click="chooseMaterials()">查询</button></td>
-        <td><button v-on:click="deleteCourse()">删除</button></td>
+        <td><el-button v-on:click="chooseNote()" round type="success">查询</el-button></td>
+        <td><el-button v-on:click="chooseMaterials()" round type="success">查询</el-button></td>
+        <td><el-button v-on:click="deleteCourse()" round type="danger" >删除</el-button></td>
         </tr>
       </tbody>
       </table>
     </div>
     <h2 v-else>课程为空</h2>
     <h1></h1>
-    <button v-on:click="addCourse()">添加课程</button>
-    <button v-on:click="refresh()">刷新</button>
+    <el-button v-on:click="addCourse()" type="primary" round>添加课程</el-button>
+    <el-button v-on:click="refresh()" icon="el-icon-refresh" round>刷新</el-button>
   </div>
 </template>
 

@@ -19,7 +19,7 @@
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
         <td>{{item.date}}</td>
-        <td><button v-on:click="download()">下载</button></td>
+        <td><el-button v-on:click="download()" size="small" type="success">下载</el-button></td>
         <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
       </tbody>
@@ -27,7 +27,7 @@
     </div>
     <h2 v-else>课程资料为空</h2>
     <h1></h1>
-    <button v-on:click="addMaterials()">上传资料</button>
+    <el-button v-on:click="addMaterials()" type="primary">上传资料</el-button>
   </div>
 </template>
 
