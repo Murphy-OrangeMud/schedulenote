@@ -3,12 +3,16 @@
     <h1>Schedule note 用户登录</h1>
     <el-form ref="form" :rules="rules" :model="form" label-width="80px" class="login-form">
 
-        <el-form-item label="学工号" prop="username">
-          <el-input v-model.number="form.username"></el-input>
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
           <el-input v-model="form.password"></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -22,14 +26,8 @@
 export default {
   data () {
     const validateNumber = (rule, value, callback) => {
-      console.log(typeof (value))
-      console.log(value > 1)
       if (!value) {
-        callback(new Error('学工号不能为空'))
-      } else if (typeof (value) !== 'number') {
-        callback(new Error('学工号应该是数字'))
-      } else if (value < 1000000000 || value > 9999999999) {
-        callback(new Error('请输入10位数学工号'))
+        callback(new Error('用户名不能为空'))
       } else {
         callback()
       }
@@ -37,7 +35,8 @@ export default {
     return {
       form: {
         username: '',
-        password: ''
+        password: '',
+        email: ''
       },
       rules: {
         username: [
@@ -46,6 +45,10 @@ export default {
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
           { min: 7, max: 15, message: '密码7-15位', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ]
       }
     }
@@ -55,11 +58,11 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           alert('注册成功!')
+          this.$router.push('/home')
         } else {
           alert('注册失败!请正确填写注册信息!')
           return false
         }
-        this.$router.push('/home')
       })
     }
   }
