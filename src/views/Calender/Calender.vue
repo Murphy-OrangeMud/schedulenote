@@ -46,6 +46,7 @@ export default {
       // skipher
     },
     refresh: function () {
+      this.$axios.defaults.baseURL = 'http://localhost:8080/api'
       this.$axios.get('/api/getDDL')
         .then((response) => {
           console.log(response)
