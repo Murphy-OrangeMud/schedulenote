@@ -18,7 +18,7 @@
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
         <td><button v-on:click="download()">下载</button></td>
-        <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
+        <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
       </tbody>
       </table>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getHomeMultidata } from 'network/home'
+import { getHomeMultidata, postHomeMultidata } from 'network/home'
 export default {
   name: 'notes',
   data () {
@@ -45,15 +45,20 @@ export default {
     },
     addMaterials () {
     },
-    Upvote () {
+    Upvote (item, id) {
+      item.score += 1
+      postHomeMultidata({ id })
     },
     Downvote () {
     },
     getHomeMultidata () {
       getHomeMultidata().then(res => {
-        this.MaterialList = res.MaterialList
+        this.MaterialList = res
       })
     }
+  },
+  created () {
+    this.getHomeMultidata()
   }
 }
 
