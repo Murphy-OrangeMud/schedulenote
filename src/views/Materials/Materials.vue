@@ -27,7 +27,7 @@
     </div>
     <h2 v-else>课程资料为空</h2>
     <h1></h1>
-    <el-button v-on:click="addMaterials()" type="primary">添加资料</el-button>
+    <button v-on:click="addMaterials()">上传资料</button>
   </div>
 </template>
 

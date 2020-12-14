@@ -71,6 +71,15 @@ const routes = [
     component: () => import('../views/Notes/Notes.vue')
   },
   {
+    path: '/course',
+    name: 'Course',
+    meta: {
+      title: 'course',
+      requireAuth: false
+    },
+    component: () => import('../views/Course/Course.vue')
+  },
+  {
     path: '/materials',
     name: 'Materials',
     meta: {

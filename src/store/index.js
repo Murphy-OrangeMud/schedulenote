@@ -35,6 +35,13 @@ const store = new Vuex.Store({
         downvote: 1
       }
     ],
+    courseList: [
+      {
+        course: '软件工程',
+        contributor: 'skipher',
+        time: '周二34，周四56'
+      }
+    ],
     materialList: [
       {
         course: '软件工程',
