@@ -54,18 +54,13 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!')
+          alert('注册成功!')
         } else {
-          console.log('error submit!!')
+          alert('注册失败!请正确填写注册信息!')
           return false
         }
+        this.$router.push('/home')
       })
-    },
-    register: function () {
-      this.$router.push('/register')
-    },
-    loginCheck: function () {
-      this.$router.push('/home')
     }
   }
 }
