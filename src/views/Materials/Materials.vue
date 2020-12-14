@@ -1,7 +1,7 @@
 <template>
   <div id="notes">
     <h1>课程资料列表</h1>
-    <div v-if="materialCount">
+    <div v-if="MaterialCount">
       <table align="center">
         <thead>
           <tr>
@@ -11,7 +11,6 @@
             <th>创建时间</th>
             <th>操作</th>
             <th>赞</th>
-            <th>踩</th>
           </tr>
         </thead>
       <tbody>
@@ -19,6 +18,7 @@
         <td>{{item.coursename}}</td>
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
+        <td>{{item.date}}</td>
         <td><button v-on:click="download()">下载</button></td>
         <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
@@ -36,10 +36,10 @@ import { getHomeMultidata, postHomeMultidata } from 'network/home'
 export default {
   name: 'notes',
   computed: {
-    materialList () {
+    MaterialList () {
       return this.$store.state.materialList
     },
-    materialCount () {
+    MaterialCount () {
       return this.$store.state.materialList.length
     }
   },
