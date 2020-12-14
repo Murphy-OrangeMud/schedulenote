@@ -15,14 +15,12 @@
           </tr>
         </thead>
       <tbody>
-        <tr v-for="item in materialList" :key="item" >
-        <td>{{item.course}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.contributor}}</td>
-        <td>{{item.date}}</td>
-        <td><el-button v-on:click="download()" type="success" >下载</el-button></td>
-        <td>{{item.upvote}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
-        <td>{{item.downvote}} <el-button type="success" icon="el-icon-arrow-down" size = "small" @click="Downvote"></el-button></td>
+        <tr v-for="item in MaterialList" :key="item" >
+        <td>{{item.coursename}}</td>
+        <td>{{item.filename}}</td>
+        <td>{{item.uploader}}</td>
+        <td><button v-on:click="download()">下载</button></td>
+        <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
       </tbody>
       </table>
@@ -34,6 +32,7 @@
 </template>
 
 <script>
+import { getHomeMultidata, postHomeMultidata } from 'network/home'
 export default {
   name: 'notes',
   computed: {
@@ -49,10 +48,20 @@ export default {
     },
     addMaterials () {
     },
-    Upvote () {
+    Upvote (item, id) {
+      item.score += 1
+      postHomeMultidata({ id })
     },
     Downvote () {
+    },
+    getHomeMultidata () {
+      getHomeMultidata().then(res => {
+        this.MaterialList = res
+      })
     }
+  },
+  created () {
+    this.getHomeMultidata()
   }
 }
 </script>

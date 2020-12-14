@@ -1,4 +1,4 @@
-import { request } from './request'
+import { request, request1 } from './request'
 
 export function getHomeMultidata () {
   return request({
@@ -6,12 +6,22 @@ export function getHomeMultidata () {
   })
 }
 
-export function getHomeGoods (type, page) {
+export function postHomeMultidata (id) {
   return request({
-    url: '/home/data',
-    params: {
-      type,
-      page
+    url: '/course/upvote',
+    method: 'post',
+    data: id
+  })
+}
+
+export function postRegister (myname, mypassword) {
+  return request1({
+    url: '/user/signup',
+    method: 'post',
+    data: {
+      name: myname,
+      password: mypassword,
+      email: '12345678@pku.edu.cn'
     }
   })
 }
