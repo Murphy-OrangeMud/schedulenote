@@ -16,14 +16,14 @@
         <td>{{item.date}}</td>
         <td>{{item.course}}</td>
         <td>{{item.task}}</td>
-        <td><button v-on:click="deleteDdl()">移除</button></td>
+        <td><el-button v-on:click="deleteDdl()" type="danger" size="small">移除</el-button></td>
         </tr>
       </tbody>
       </table>
     </div>
     <h2 v-else>ddl为空</h2>
     <h1></h1>
-    <button v-on:click="addDdl()">添加事件</button>
+    <el-button v-on:click="addDdl()" type="primary">添加事件</el-button>
   </div>
 </template>
 
