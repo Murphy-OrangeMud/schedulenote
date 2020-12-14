@@ -1,12 +1,12 @@
-import {request} from "./request";
+import { request } from './request'
 
-export function getHomeMultidata() {
+export function getHomeMultidata () {
   return request({
-    url: '/home/multidata'
+    url: '/course/filelist'
   })
 }
 
-export function getHomeGoods(type, page) {
+export function getHomeGoods (type, page) {
   return request({
     url: '/home/data',
     params: {
