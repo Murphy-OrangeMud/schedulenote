@@ -1,7 +1,7 @@
 <template>
   <div id="notes">
     <h1>课程资料列表</h1>
-    <div v-if="materialCount">
+    <div v-if="MaterialCount">
       <table align="center">
         <thead>
           <tr>
@@ -11,36 +11,35 @@
             <th>创建时间</th>
             <th>操作</th>
             <th>赞</th>
-            <th>踩</th>
           </tr>
         </thead>
       <tbody>
-        <tr v-for="item in materialList" :key="item" >
-        <td>{{item.course}}</td>
-        <td>{{item.name}}</td>
-        <td>{{item.contributor}}</td>
+        <tr v-for="item in MaterialList" :key="item" >
+        <td>{{item.coursename}}</td>
+        <td>{{item.filename}}</td>
+        <td>{{item.uploader}}</td>
         <td>{{item.date}}</td>
-        <td><button v-on:click="download()">下载</button></td>
-        <td>{{item.upvote}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
-        <td>{{item.downvote}} <el-button type="success" icon="el-icon-arrow-down" size = "small" @click="Downvote"></el-button></td>
+        <td><el-button v-on:click="download()" size="small" type="success">下载</el-button></td>
+        <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
       </tbody>
       </table>
     </div>
     <h2 v-else>课程资料为空</h2>
     <h1></h1>
-    <button v-on:click="addMaterials()">添加资料</button>
+    <el-button v-on:click="addMaterials()" type="primary">上传资料</el-button>
   </div>
 </template>
 
 <script>
+import { getHomeMultidata, postHomeMultidata } from 'network/home'
 export default {
   name: 'notes',
   computed: {
-    materialList () {
+    MaterialList () {
       return this.$store.state.materialList
     },
-    materialCount () {
+    MaterialCount () {
       return this.$store.state.materialList.length
     }
   },
@@ -49,10 +48,20 @@ export default {
     },
     addMaterials () {
     },
-    Upvote () {
+    Upvote (item, id) {
+      item.score += 1
+      postHomeMultidata({ id })
     },
     Downvote () {
+    },
+    getHomeMultidata () {
+      getHomeMultidata().then(res => {
+        this.MaterialList = res
+      })
     }
+  },
+  created () {
+    this.getHomeMultidata()
   }
 }
 </script>

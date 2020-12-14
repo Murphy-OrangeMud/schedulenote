@@ -35,21 +35,28 @@ const store = new Vuex.Store({
         downvote: 1
       }
     ],
-    materialList: [
+    courseList: [
       {
         course: '软件工程',
-        name: '软工课件1',
-        contributor: 'hzj',
+        contributor: 'skipher',
+        time: '周二34，周四56'
+      }
+    ],
+    materialList: [
+      {
+        coursename: '软件工程',
+        filename: '软工课件1',
+        uploader: 'hzj',
         date: '2020-12-13',
-        upvote: 100,
+        score: 100,
         downvote: 1
       },
       {
-        course: '软件工程',
-        name: '软工课件2',
-        contributor: 'hzj',
+        coursename: '软件工程',
+        filename: '软工课件2',
+        uploader: 'hzj',
         date: '2020-12-13',
-        upvote: 100,
+        score: 100,
         downvote: 1
       }
     ],

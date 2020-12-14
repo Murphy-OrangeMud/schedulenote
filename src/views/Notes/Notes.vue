@@ -20,7 +20,7 @@
         <td>{{item.name}}</td>
         <td>{{item.contributor}}</td>
         <td>{{item.date}}</td>
-        <td><button v-on:click="download()">下载</button></td>
+        <td><el-button v-on:click="download()" type="success" size = "small">下载</el-button></td>
         <td>{{item.upvote}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote"></el-button></td>
         <td>{{item.downvote}} <el-button type="success" icon="el-icon-arrow-down" size = "small" @click="Downvote"></el-button></td>
         </tr>
@@ -29,7 +29,7 @@
     </div>
     <h2 v-else>笔记为空</h2>
     <h1></h1>
-    <button v-on:click="addNote()">添加笔记</button>
+    <el-button v-on:click="addNote()" type="primary">添加笔记</el-button>
   </div>
 </template>
 
