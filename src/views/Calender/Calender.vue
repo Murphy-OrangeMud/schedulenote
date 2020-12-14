@@ -24,6 +24,7 @@
     <h2 v-else>ddl为空</h2>
     <h1></h1>
     <el-button v-on:click="addDdl()" type="primary">添加事件</el-button>
+    <el-button v-on:click="refresh()" type="primary">刷新</el-button>
   </div>
 </template>
 
@@ -42,6 +43,14 @@ export default {
     deleteDdl () {
     },
     addDdl () {
+      // skipher
+    },
+    refresh: function () {
+      this.$axios.defaults.baseURL = 'http://localhost:8080/api'
+      this.$axios.get('/api/getDDL')
+        .then((response) => {
+          console.log(response)
+        })
     }
   }
 }
