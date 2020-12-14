@@ -29,7 +29,7 @@ def previewNote():
     if request.method == "POST":
         json = request.get_json()
         ID = json["ID"]
-        return jsonify({"status": "OK", "html": markdown.Markdown(Note.query.get(ID).sourceCode)})
+        return jsonify(markdown.Markdown(Note.query.get(ID).sourceCode))
 
 
 @app.route("/exportPDF", methods=["POST"])
@@ -75,9 +75,21 @@ def downVote():
         return jsonify({"status": "OK"})
 
 
-@app.route("/getUps", methods=["Get"])
-def getUps():
-    if request.method == "GET":
+@app.route("/getNote", methods=["POST"])
+def getNote():
+    if request.method == "POST":
         json = request.get_json()
         ID = json["ID"]
-        return jsonify({"status": "OK", "ups": Note.query.get(ID).ups})
+        note = Note.query.get(ID)
+        return jsonify(
+            {"sourceCode": note.sourceCode, "owner": note.owner, "createTime": note.createTime,
+             "modifyTime": note.modifyTime, "courseBelonged": note.courseBelonged, "ups": note.ups})
+
+
+@app.route("/getAllNoteID", methods=["GET"])
+def getAllNoteID():
+    if request.method == "GET":
+        IDList = []
+        for note in Note.query.all():
+            IDList.append(note.id)
+        return jsonify(IDList)
