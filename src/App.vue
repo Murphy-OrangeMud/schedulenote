@@ -22,6 +22,7 @@
   text-align: center;
   color: #2c3e50;
   /*background-color: #99ffff;*/
+  /* hys contributor */
 }
 .note{
   text-align: left;
