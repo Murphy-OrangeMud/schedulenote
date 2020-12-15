@@ -1,3 +1,4 @@
+import os
 # 仅用作本地测试，待后端内容合并时统一修改
 # Database Parameter
 HOST = 'localhost'
@@ -14,7 +15,7 @@ MAXAVATAR = 64
 
 
 # Path Configs
-ROOTPATH = "/"
+ROOTPATH = "D:/junior1/软件工程/项目开发/schedulenote/"
 IMAGEPATH = ROOTPATH + "images/"
 
 # App Configs

@@ -4,11 +4,12 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from uuid import uuid1
 
 from User import User, db
-from configs import MAXSTRLEN, MAXMOTTO, MAXavatar, ROOTPATH, IMAGEPATH
+from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, ROOTPATH, IMAGEPATH
 
 user_bp = Blueprint('user', __name__)
 login_manager = LoginManager()
 
+#### 一些辅助函数 ##################################################
 def is_legal_str(s):
     if s:
         if len(s) > 0 and len(s) <= MAXSTRLEN:
@@ -18,6 +19,20 @@ def is_legal_str(s):
 #表示当前有正在登录的账号
 def has_login():
     return not current_user.is_anonymous
+
+
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'JPEG', 'JPG', 'PNG']
+ 
+def get_file_type(filename):
+    return filename.rsplit('.', 1)[1]
+
+def allowed_file(filename):
+    return '.' in filename and  get_file_type(filename) in ALLOWED_EXTENSIONS
+
+####################################################################
+
+
+# APIs
 
 @login_manager.user_loader
 def load_user(userid):
@@ -185,12 +200,25 @@ def modify_info():
     return_json['data']['msg'] = "parameter ILLEGAL"
     return jsonify(return_json)
 
-@app.route('/upload_avatar', methods=['POST'])
+# 极其简陋的上传文件，以后要修改
+@user_bp.route('/upload_avatar', methods=['POST'])
 @login_required
 def upload_avatar():
     img = request.files.get('avatar')
+    return_json = {'data':{}}
     user_id = current_user.id
-    filename = uuid1(user_id)
-    path = IMAGEPATH
-    file_path = path + filename
-    img.save(file_path)
+    if allowed_file(img.filename):
+        ext = get_file_type(img.filename)
+        filename = str(uuid1(user_id)) + '.' + ext
+        path = IMAGEPATH
+        file_path = path + filename
+        current_user.avatar = filename
+        db.session.commit()
+        # print(current_user.avatar)
+        img.save(file_path)
+        return_json['code'] = 200
+        return_json['data']['msg'] = 'success'
+        return jsonify(return_json)
+    return_json['code'] = 900
+    return_json['data']['msg'] = 'abnormal image type'
+    return jsonify(return_json)
