@@ -187,9 +187,6 @@ request.body = {
     "newname": string,
     "newpassword":string,
     "newmotto":string,
-
-    //后面的暂未完成
-    "newavatar": string
 }
 
 // 成功
@@ -217,6 +214,31 @@ response.body = {
     }
 }
 ``` 
+
+#### upload_avatar
+POST /user/upoad_avatar
+```json
+request.body = { 
+    "avatar": file
+}
+
+// 成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success" 
+    }
+}
+
+//图片非jpg,jepg,png格式，或后缀名错误
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "abnormal image type" 
+    }
+}
+```
+
 # 后面的仅供参考，暂时未完成
 
 ```json
@@ -228,20 +250,6 @@ response.body = {
     }
 }
 
-// 用户名重复且头像文件不存在
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "duplicate username/unexisted avatar"
-    }
-}
-// 参数输入过长（超过100字符）
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "parameter too long"
-    }
-}
 ```
 ### 反馈管理
 #### 意见反馈
