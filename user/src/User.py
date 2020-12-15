@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
-from configs import MAXSTRLEN, MAXMOTTO, MAXAVATER
+from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR
 db = SQLAlchemy()
 #generate_password_hash得到的hash长度一定是93
 PSW_HASH_LEN = 128
@@ -13,13 +13,13 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(MAXSTRLEN), unique = True,  nullable=False)
     email = db.Column(db.String(MAXSTRLEN),  nullable=False)
     password= db.Column(db.String(PSW_HASH_LEN), nullable = False)
-    avater = db.Column(db.String(MAXAVATER), nullable = True)
+    avatar = db.Column(db.String(MAXAVATAR), nullable = True)
     motto = db.Column(db.String(MAXMOTTO), nullable = True)
     def __init__(self, username, password, email):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
-        self.avater = None
+        self.avatar = None
         self.motto = None
     def __repr__(self):
         return '<User %r>' % self.username
@@ -31,7 +31,7 @@ class User(UserMixin, db.Model):
         dic['id'] = self.id
         dic['username'] = self.username
         dic['email'] = self.email
-        dic['avater'] = self.avater
+        dic['avatar'] = self.avatar
         dic['motto'] = self.motto
         return dic
     
