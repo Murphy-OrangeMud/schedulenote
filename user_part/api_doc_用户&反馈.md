@@ -7,7 +7,7 @@ User = {
     "username": string,  //不可重复的，每个用户是唯一的
     "email": string,    //以后改密码需要给邮箱发邮件，功能尚未实现
     "password": string, //使用加盐哈希加密
-    "avater": string, //还没想好怎么存
+    "avatar": string, //还没想好怎么存
     "motto": string //个性签名
 }
 这里可以把课表信息、课程信息、笔记信息加入进来，待完善
@@ -28,7 +28,7 @@ CODE = {
 ### 用户相关
 
 #### Signup 注册
-GET POST /user/signup
+POST /user/signup
 ```json
 request.body = {
     //长度均不超过64，也都不能为空，否则报参数错误
@@ -86,7 +86,7 @@ response.body = {
 
 #### Login 登陆
 
-GET POST /user/login
+POST /user/login
 
 ``` json
 request.body = {
@@ -99,7 +99,7 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
-		"profile": Userprofile //这里代指除password以外的全部用户信息，目前只有id, username, email, avater, motto
+		"profile": Userprofile //这里代指除password以外的全部用户信息，目前只有id, username, email, avatar, motto
     }
 }
 
@@ -128,9 +128,9 @@ response.body = {
 }
 ```
 
-#### Logout 注销
+#### Logout 登出
 
-GET POST /user/logout
+POST /user/logout
 
 ``` json
 request.body = { }
@@ -160,7 +160,7 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
-        "is_current": 1 or 0 //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
+        "is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
         "profile": Userprofile
     }
 }
@@ -178,7 +178,7 @@ response.body = {
 
 #### modify 修改个人信息
 
-POST /user/modify
+PUT /user/modify
 
 ``` json
 request.body = { 
