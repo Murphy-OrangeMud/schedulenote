@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Message
 from uuid import uuid1
 
 from User import User, db
+from Mail import mail 
 from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, ROOTPATH, IMAGEPATH
 from utils import get_file_type, is_legal_str, allowed_file, has_login
 user_bp = Blueprint('user', __name__)
@@ -197,3 +199,11 @@ def upload_avatar():
     return_json['code'] = 900
     return_json['data']['msg'] = 'abnormal image type'
     return jsonify(return_json)
+
+
+
+@user_bp.route('/test_mail', methods=['GET'])
+def test_send_mail():
+    test_message = Message(subject = "I am a Title", recipients = ['1800013021@pku.edu.cn'], body="I am the body")
+    mail.send(test_message)
+    return "success"
