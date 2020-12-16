@@ -5,7 +5,6 @@ from flask_mail import Message
 from uuid import uuid1
 
 from User import User, db
-from Mail import mail 
 from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, ROOTPATH, IMAGEPATH
 from utils import get_file_type, is_legal_str, allowed_file, has_login
 user_bp = Blueprint('user', __name__)
@@ -202,8 +201,8 @@ def upload_avatar():
 
 
 
-@user_bp.route('/test_mail', methods=['GET'])
-def test_send_mail():
-    test_message = Message(subject = "I am a Title", recipients = ['1800013021@pku.edu.cn'], body="I am the body")
-    mail.send(test_message)
-    return "success"
+# @user_bp.route('/test_mail', methods=['GET'])
+# def test_send_mail():
+#     test_message = Message(subject = "I am a Title", recipients = ['1800013021@pku.edu.cn'], body="I am the body")
+#     mail.send(test_message)
+#     return "success"
