@@ -31,7 +31,6 @@ def getCalendar():
 
         print(userID)
 
-        # to be revised: 按照起始时间排序还是终止时间？
         calendar = Schedule.query.filter_by(userID=userID).order_by(Schedule.startTime)
 
         return_calendar = []
@@ -82,8 +81,7 @@ def getDeadlinesCalendar():
         json = request.get_json()
         userID = json["userID"]
 
-        # to be revised: DDL按照起始时间排序还是终止时间？
-        calendar = Schedule.query.filter_by(userID=userID, scheduleType=ScheduleTypes.DDL.value).order_by(Schedule.startTime)
+        calendar = Schedule.query.filter_by(userID=userID, scheduleType=ScheduleTypes.DDL.value).order_by(Schedule.endTime)
 
         return_calendar = []
         for schedule in calendar:
@@ -102,7 +100,7 @@ def getDeadlinesCalendar():
 
 @app.route("/updateclassschedule", methods=("GET", ))
 def updateClassSchedule():
-    pass # TODO: 如何刷新页面？还是说似乎也不需要这个操作……
+    pass 
 
 @app.route("/addschedule", methods=("POST", ))
 def addSchedule():
@@ -173,15 +171,15 @@ def modifySchedule():
         #     return jsonify({"status": "Fail: not a ddl"})
 
         description = json["description"]
-        if description == None:  # 或约定一个值代表这一项不需要修改，下同
+        if description == "":  # 或约定一个值代表这一项不需要修改，下同
             description = schedule.description
 
         location = json["location"]
-        if location == None:  
+        if location == "":  
             location = schedule.location
 
         startTime = json["startTime"]
-        if startTime == None:
+        if startTime == "":
             startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.startTime.year(), 
                                                             schedule.startTime.month(), 
                                                             schedule.startTime.day(), 
@@ -189,7 +187,7 @@ def modifySchedule():
                                                             schedule.startTime.minute(), 
                                                             schedule.startTime.second())
         endTime = json["endTime"]
-        if endTime == None:
+        if endTime == "":
             endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.endTime.year(), 
                                                         schedule.endTime.month(), 
                                                         schedule.endTime.day(), 
@@ -197,11 +195,11 @@ def modifySchedule():
                                                         schedule.endTime.minute(), 
                                                         schedule.endTime.second())
         rotation = json["rotation"]
-        if rotation == None:
+        if rotation <= -10:
             rotation = schedule.rotation
 
         userID = json["userID"]
-        if userID == None:
+        if userID == "":
             userID = schedule.userID
         
         newschedule = Schedule(description, 
@@ -245,4 +243,4 @@ def getAlert():
     
 @app.route("/save", methods=("GET", ))
 def save():
-    pass  # TODO: 似乎目前的API会自动保存，不需要这个操作……
+    pass
