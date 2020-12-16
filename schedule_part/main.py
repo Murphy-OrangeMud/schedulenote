@@ -6,8 +6,7 @@ from flask import render_template
 
 app = Flask(__name__)
 
-# to be revised
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test2.db'
 
 @app.route('/')
 def my_chart():

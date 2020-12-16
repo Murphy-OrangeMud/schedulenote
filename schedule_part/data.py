@@ -110,32 +110,32 @@ def addSchedule():
         json = request.get_json()
         print(json)
         #json = request.json
-        
-        scheduleType = json["type"]
+        try:
+            scheduleType = json["type"]
+            description = json["description"]
+            location = json["location"]
+            startTime = json["startTime"]
+            endTime = json["endTime"]
+            rotation = json["rotation"]
+            userID = json["userID"]
+            
+            newschedule = Schedule(description, 
+                                location, 
+                                strformat2datetime(startTime), 
+                                strformat2datetime(endTime), 
+                                rotation, 
+                                userID, 
+                                scheduleType)
 
-        # 修改：是不是直接改成addSchedule而不要检查type，直接dispatch
-        # if scheduleType != ScheduleTypes.DDL.value:
-        #    return jsonify({"status": "Fail: not a ddl"})
+            db.session.add(newschedule)
+            db.session.commit()
 
-        description = json["description"]
-        location = json["location"]
-        startTime = json["startTime"]
-        endTime = json["endTime"]
-        rotation = json["rotation"]
-        userID = json["userID"]
-        
-        newschedule = Schedule(description, 
-                          location, 
-                          strformat2datetime(startTime), 
-                          strformat2datetime(endTime), 
-                          rotation, 
-                          userID, 
-                          scheduleType)
-
-        db.session.add(newschedule)
-        db.session.commit()
-
-        return jsonify({"status": "OK"})
+            return jsonify({"status": "OK"})
+        except ValueError:
+            return jsonify({"status": "information format incorrect"})
+        except KeyError:
+            return jsonify({"status": "information not complete"})
+        ##    return jsonify({"status": "schedule already added"})
 
 @app.route("/deleteschedule", methods=("POST", ))
 def deleteSchedule():
@@ -160,62 +160,85 @@ def modifySchedule():
         content_type = request.headers["Content-type"]
 
         json = request.get_json()
+        try:
+            ID = json["id"]
+        except KeyError:
+            return jsonify({"status": "Fail: schedule id needed"})
 
-        ID = json["id"]
         schedule = Schedule.query.filter_by(id=ID).first()
         if schedule == None:
             return jsonify({"status": "Fail: schedule does not exist"})
         
-        scheduleType = json["type"]
-        # if scheduleType != ScheduleTypes.DDL.value:
-        #     return jsonify({"status": "Fail: not a ddl"})
+        try:
+            scheduleType = json["type"]
+        except KeyError:
+            scheduleType = schedule.scheduleType
 
-        description = json["description"]
-        if description == "":  # 或约定一个值代表这一项不需要修改，下同
+        try:
+            description = json["description"]
+        except KeyError:
             description = schedule.description
 
-        location = json["location"]
-        if location == "":  
+        try:
+            location = json["location"]
+        except KeyError:  
             location = schedule.location
 
-        startTime = json["startTime"]
-        if startTime == "":
-            startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.startTime.year(), 
-                                                            schedule.startTime.month(), 
-                                                            schedule.startTime.day(), 
-                                                            schedule.startTime.hour(), 
-                                                            schedule.startTime.minute(), 
-                                                            schedule.startTime.second())
-        endTime = json["endTime"]
-        if endTime == "":
-            endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.endTime.year(), 
-                                                        schedule.endTime.month(), 
-                                                        schedule.endTime.day(), 
-                                                        schedule.endTime.hour(), 
-                                                        schedule.endTime.minute(), 
-                                                        schedule.endTime.second())
-        rotation = json["rotation"]
-        if rotation <= -10:
+        try:
+            startTime = json["startTime"]
+        except KeyError:
+            startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.startTime.year, 
+                                                            schedule.startTime.month, 
+                                                            schedule.startTime.day, 
+                                                            schedule.startTime.hour, 
+                                                            schedule.startTime.minute, 
+                                                            schedule.startTime.second)
+        
+        try:
+            endTime = json["endTime"]
+        except KeyError:
+            endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (schedule.endTime.year, 
+                                                        schedule.endTime.month, 
+                                                        schedule.endTime.day, 
+                                                        schedule.endTime.hour, 
+                                                        schedule.endTime.minute, 
+                                                        schedule.endTime.second)
+        try:
+            rotation = json["rotation"]
+        except KeyError:
             rotation = schedule.rotation
 
-        userID = json["userID"]
-        if userID == "":
+        try:
+            userID = json["userID"]
+        except KeyError:
             userID = schedule.userID
         
-        newschedule = Schedule(description, 
-                          location, 
-                          strformat2datetime(startTime), 
-                          strformat2datetime(endTime), 
-                          rotation, 
-                          userID, 
-                          scheduleType,
-                          ID)
+        try:
+            newschedule = Schedule(description, 
+                                    location, 
+                                    strformat2datetime(startTime), 
+                                    strformat2datetime(endTime), 
+                                    rotation, 
+                                    userID, 
+                                    scheduleType,
+                                    ID)
+        except:
+            return jsonify({"status": "information format incorrect"})
 
         db.session.delete(schedule)
         db.session.add(newschedule)
         db.session.commit()
 
-        return jsonify({"status": "OK"})
+        return jsonify({"status": "OK", "schedule": {
+                                                        "id": newschedule.id,
+                                                        "userID": newschedule.userID,
+                                                        "description": newschedule.description,
+                                                        "location": newschedule.location,
+                                                        "startTime": newschedule.startTime, 
+                                                        "endTime": newschedule.endTime, 
+                                                        "rotation": newschedule.rotation,
+                                                        "type": newschedule.scheduleType
+                                                    }})
 
 # 规定：离ddl小于或等于24h的ddl被返回，待修改
 @app.route("/getalert", methods=("GET", ))
@@ -223,20 +246,20 @@ def getAlert():
     if request.method == "GET":
         current_time = datetime.datetime.now()
         
-        alertList = Schedule.query.filter(Schedule.startTime <= current_time + datetime.timedelta(days=1)).filter_by(scheduleType=ScheduleTypes.DDL.value).all()
+        alertList = Schedule.query.filter(Schedule.endTime <= current_time + datetime.timedelta(days=1)).filter_by(scheduleType=ScheduleTypes.DDL.value).all()
 
         return_alert = []
 
         for schedule in alertList:
             return_alert.append({
-                "id": schedule.ID,
+                "id": schedule.id,
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
                 "startTime": schedule.startTime, 
                 "endTime": schedule.endTime, 
                 "rotation": schedule.rotation,
-                "type": schedule.type
+                "type": schedule.scheduleType
             })
 
         return jsonify({"status": "OK", "alertddl": return_alert})
