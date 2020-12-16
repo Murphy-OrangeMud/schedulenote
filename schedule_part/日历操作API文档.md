@@ -97,7 +97,7 @@ POST /modifyschedule
 ``` json
 request.body = {
     "id": string, //待修改的ddl的ID
-    //以下为新参数，如果这一项不需要修改，则维持原值，或设置为空字符串，rotation设置成比-10小的很小的负数，type应该是不需要修改的。这样泛化过后的接口能够继续适应修改课程的操作而不仅仅是ddl（二者函数写法类似）
+    //只需要填写需要修改的项。比如如果location不需要填写，就不需要location这个键值对
     "discription": string, 
     "location": string, 
     "startTime": string("yyyy-mm-dd hh-mm-ss"), 
@@ -107,7 +107,17 @@ request.body = {
     "type": scheduleType/int
 }
 response.body = {
-    "status": "OK"
+    "status": "OK",
+    "schedule": {
+        "id": string,
+        "discription": string, 
+        "location": string, 
+        "startTime": string("Thu, 04 Apr 2019 08:00:00 GMT"), 
+        "endTime": string("Thu, 04 Apr 2019 08:00:00 GMT"), 
+        "rotation": int,
+        "userID": string,
+        "type": scheduleType/int
+    } //返回修改之后的schedule
 }
 ```
 

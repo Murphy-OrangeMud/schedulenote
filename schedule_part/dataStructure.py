@@ -23,7 +23,7 @@ class Schedule(db.Model):
     startTime = db.Column(db.DateTime)
     endTime = db.Column(db.DateTime)
     rotation = db.Column(db.Integer)
-    userID = db.Column(db.String(100), unique=True)
+    userID = db.Column(db.String(100))
     scheduleType = db.Column(db.Integer)
 
     """
@@ -80,11 +80,12 @@ class Schedule(db.Model):
 
         currentTime = time.strftime("%04d-%02d-%02d-%02d-%02d-%02d", time.localtime(time.time()))
         
-
-        # 假定一个用户在一个时间戳范围内只能创建一个schedule（应该算合理假设）
-        # 可以考虑修改（如何确保唯一性和排他性）
         s = hashlib.sha1()
-        s.update((self.userID + " " + currentTime).encode("utf-8"))
+        s.update((self.startTime.strftime("%04d-%02d-%02d-%02d-%02d-%02d") + " " + 
+                  self.endTime.strftime("%04d-%02d-%02d-%02d-%02d-%02d") + " " + 
+                  self.userID + " " + 
+                  str(self.scheduleType) + " " +
+                  self.description).encode("utf-8"))
         return s.hexdigest()  
 
     def getSchedule(self):
