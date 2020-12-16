@@ -1,36 +1,15 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Message
 from uuid import uuid1
 
 from User import User, db
+from Mail import mail 
 from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, ROOTPATH, IMAGEPATH
-
+from utils import get_file_type, is_legal_str, allowed_file, has_login
 user_bp = Blueprint('user', __name__)
 login_manager = LoginManager()
-
-#### 一些辅助函数 ##################################################
-def is_legal_str(s):
-    if s:
-        if len(s) > 0 and len(s) <= MAXSTRLEN:
-            return True
-    return False
-
-#表示当前有正在登录的账号
-def has_login():
-    return not current_user.is_anonymous
-
-
-ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'JPEG', 'JPG', 'PNG']
- 
-def get_file_type(filename):
-    return filename.rsplit('.', 1)[1]
-
-def allowed_file(filename):
-    return '.' in filename and  get_file_type(filename) in ALLOWED_EXTENSIONS
-
-####################################################################
-
 
 # APIs
 
@@ -129,6 +108,7 @@ def get_user():
             return_json['data'] = current_user.todict()
             return_json['data']['msg'] = 'success'
             return_json['data']['is_current'] = 1
+            return jsonify(return_json)
     if id != None:
         userlist = User.query.filter(User.id == id).all()
         if userlist:
@@ -156,8 +136,9 @@ def get_user():
     return_json['data']['msg'] = "user can't be visited or parameter ILLEGAL"
     return jsonify(return_json)
 
-# 修改个人信息, 包括username, motto, avatar，有原密码的password修改
+# 修改个人信息, 包括username, motto 有原密码的password修改
 # 暂时不包括 忘记password修改和email, 这两个需要邮件确认才可以
+# 头像涉及到文件，所以单独写了upload_avatar接口
 @user_bp.route("/modify", methods = ['PUT'])
 @login_required
 def modify_info():
@@ -191,17 +172,13 @@ def modify_info():
             return_json['code'] = 200
             return_json['data']['msg'] = "Motto modify success"
             return jsonify(return_json)
-    
-    newavatar = request.values.get('newavatar', type = str, default = None)
-    # TODO
 
     #所有的都不满足，就一定是参数错误
     return_json['code'] = 900
     return_json['data']['msg'] = "parameter ILLEGAL"
     return jsonify(return_json)
 
-# 极其简陋的上传文件，以后要修改
-@user_bp.route('/upload_avatar', methods=['POST'])
+@user_bp.route('/upload_avatar', methods=['PUT'])
 @login_required
 def upload_avatar():
     img = request.files.get('avatar')
@@ -222,3 +199,11 @@ def upload_avatar():
     return_json['code'] = 900
     return_json['data']['msg'] = 'abnormal image type'
     return jsonify(return_json)
+
+
+
+@user_bp.route('/test_mail', methods=['GET'])
+def test_send_mail():
+    test_message = Message(subject = "I am a Title", recipients = ['1800013021@pku.edu.cn'], body="I am the body")
+    mail.send(test_message)
+    return "success"

@@ -18,6 +18,14 @@ MAXAVATAR = 64
 ROOTPATH = "D:/junior1/软件工程/项目开发/schedulenote/"
 IMAGEPATH = ROOTPATH + "images/"
 
+# Mail Configs
+MAIL_PORT = 465
+MAIL_USE_TLS = True
+MAIL_SERVER = os.getenv("MAIL_SERVER")
+MAIL_USEERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+MAIL_DEFAULT_SENDER = ('Schedulernote', os.getenv("MAIL_USERNAME"))
+MAIL_DEBUG = False
 # App Configs
 DB_URI = "mysql://{username}:{password}@{host}:{port}/{db}?charset=utf8".format(username=USERNAME,password=PASSWORD, host=HOST,port=PORT, db=DATABASE)
 
@@ -25,4 +33,4 @@ SQLALCHEMY_DATABASE_URI = DB_URI
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = True
 
-SECRET_KEY = 'FOOLISH_KEY'
+SECRET_KEY = os.getenv("SECRET_KEY")

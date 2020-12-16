@@ -155,16 +155,53 @@ request.body = {
     "name": string
 }
 
-// 成功返回
+// 成功返回, 头像也正常返回, avatar的code为200
 response.body = {
     "code": 200,
     "data": {
         "msg": "success",
         "is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
-        "profile": Userprofile
+        "name": string,
+        "id" : number,
+        "motto" : string,
+        "avatar":{
+            "code" : 200,
+            "img_type" : ALLOWED_EXTENSIONS,
+            "img_stream" : filestream
+            //返回base64编码下的图片流
+        }
+    }
+}
+// 成功返回, 头像从未初始化过，为None, avatar的code为400
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success",
+        "is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
+        "name": string,
+        "id" : number,
+        "motto" : string,
+        "avatar":{
+            "code" : 400
+        }
     }
 }
 
+// 成功返回,  头像无法读取（可能图片文件损坏或丢失），avatar的code为300
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success",
+        "is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
+        "name": string,
+        "id" : number,
+        "motto" : string,
+        "avatar":{
+            "code" : 300
+            //返回base64编码下的图片流
+        }
+    }
+}
 // 用户不存在或参数错误
 response.body = {
     "code": 400,
@@ -187,9 +224,6 @@ request.body = {
     "newname": string,
     "newpassword":string,
     "newmotto":string,
-
-    //后面的暂未完成
-    "newavatar": string
 }
 
 // 成功
@@ -217,6 +251,31 @@ response.body = {
     }
 }
 ``` 
+
+#### upload_avatar
+POST /user/upoad_avatar
+```json
+request.body = { 
+    "avatar": file
+}
+
+// 成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success" 
+    }
+}
+
+//图片非jpg,jepg,png格式，或后缀名错误
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "abnormal image type" 
+    }
+}
+```
+
 # 后面的仅供参考，暂时未完成
 
 ```json
@@ -228,20 +287,6 @@ response.body = {
     }
 }
 
-// 用户名重复且头像文件不存在
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "duplicate username/unexisted avatar"
-    }
-}
-// 参数输入过长（超过100字符）
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "parameter too long"
-    }
-}
 ```
 ### 反馈管理
 #### 意见反馈
