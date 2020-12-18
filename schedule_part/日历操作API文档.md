@@ -125,7 +125,10 @@ response.body = {
 
 GET /getalert
 ``` json
-{
+request.body = {
+    "userID": string
+}
+response.body = {
     "alertddl": {
         "id": string,
         "discription": string, 

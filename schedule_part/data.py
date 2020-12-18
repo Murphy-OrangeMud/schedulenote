@@ -24,7 +24,7 @@ def strformat2datetime(strformat):
 @app.route("/getcalendar", methods=("POST", ))
 def getCalendar():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         userID = json["userID"]
@@ -51,7 +51,7 @@ def getCalendar():
 @app.route("/getclasscalendar", methods=("POST",))
 def getClassCalendar():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         userID = json["userID"]
@@ -76,7 +76,7 @@ def getClassCalendar():
 @app.route("/getdeadlinescalendar", methods=("POST", ))
 def getDeadlinesCalendar():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         userID = json["userID"]
@@ -105,7 +105,7 @@ def updateClassSchedule():
 @app.route("/addschedule", methods=("POST", ))
 def addSchedule():
     if request.method == "POST":
-        # content_type = request.headers["Content-type"]
+        # #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         print(json)
@@ -135,12 +135,13 @@ def addSchedule():
             return jsonify({"status": "information format incorrect"})
         except KeyError:
             return jsonify({"status": "information not complete"})
-        ##    return jsonify({"status": "schedule already added"})
+        except:
+            return jsonify({"status": "schedule already added"})
 
 @app.route("/deleteschedule", methods=("POST", ))
 def deleteSchedule():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         ID = json["id"]
@@ -157,7 +158,7 @@ def deleteSchedule():
 @app.route("/modifyschedule", methods=("POST", ))
 def modifySchedule():
     if request.method == "POST":
-        content_type = request.headers["Content-type"]
+        #content_type = request.headers["Content-type"]
 
         json = request.get_json()
         try:
@@ -241,12 +242,20 @@ def modifySchedule():
                                                     }})
 
 # 规定：离ddl小于或等于24h的ddl被返回，待修改
-@app.route("/getalert", methods=("GET", ))
+@app.route("/getalert", methods=("POST", ))
 def getAlert():
-    if request.method == "GET":
+    if request.method == "POST":
+        #content_type = request.headers["Content-type"]
+
+        json = request.get_json()
+        try:
+            userID = json["userID"]
+        except:
+            return jsonify({"status": "Please provide userID"})
+
         current_time = datetime.datetime.now()
         
-        alertList = Schedule.query.filter(Schedule.endTime <= current_time + datetime.timedelta(days=1)).filter_by(scheduleType=ScheduleTypes.DDL.value).all()
+        alertList = Schedule.query.filter(Schedule.endTime > current_time).filter(Schedule.endTime <= current_time + datetime.timedelta(days=1)).filter_by(scheduleType=ScheduleTypes.DDL.value).filter_by(userID=userID).all()
 
         return_alert = []
 
