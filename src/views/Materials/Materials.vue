@@ -57,8 +57,6 @@ export default {
       item.score += 1
       postHomeMultidata({ id })
     },
-    Downvote () {
-    },
     getHomeMultidata () {
       getHomeMultidata().then(res => {
         this.materialList = res

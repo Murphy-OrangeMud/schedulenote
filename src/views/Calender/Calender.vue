@@ -112,8 +112,9 @@ export default {
         type: 2
       }
       console.log(datas)
+      this.mess = '未能添加ddl'
       addddl(datas).then(res => {
-        this.mess = res.data.msg
+        this.mess = '添加ddl成功'
       })
       this.getDdl()
     },
