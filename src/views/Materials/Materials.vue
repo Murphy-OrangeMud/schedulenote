@@ -19,7 +19,7 @@
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
         <td>{{item.date}}</td>
-        <td><el-button v-on:click="download()" size="small" type="success">下载</el-button></td>
+        <td><el-button v-on:click="download(item, item.fileid)" size="small" type="success">下载</el-button></td>
         <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
       </tbody>
@@ -27,17 +27,34 @@
     </div>
     <h2 v-else>课程资料为空</h2>
     <h1></h1>
-    <el-button v-on:click="addMaterials()" type="primary">上传资料</el-button>
+    附件名称：<el-input v-model="addFileName" autocomplete="off" size="small" style="width: 300px;" ></el-input>
+    <div class="add-file-right" style="height:70px;margin-top:15px;">
+        <div class="add-file-right-img">上传文件：</div>
+        <input type="file" ref="clearFile" @change="getFile($event)" multiple="multiplt" class="add-file-right-input" style="margin-left:70px;" accept=".docx,.doc,.pdf,.md">
+        <span class="add-file-right-more">支持扩展名：.doc .docx .pdf .md </span>
+    </div>
+    <div class="add-file-list">
+        <ul>
+            <li v-for="(item, index) in addArr" :key="index"><a >{{item.name}}</a></li>
+        </ul>
+    </div>
+    <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitAddFile" size="small">开始上传</el-button>
+        <el-button @click="resetAdd" size="small">全部删除</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { getHomeMultidata, postHomeMultidata } from 'network/home'
+import { getHomeMultidata, postHomeMultidata, postMaterials, getMaterials } from 'network/home'
 export default {
   name: 'materials',
   data () {
     return {
-      materialList: []
+      materialList: [],
+      addArr: [],
+      mess: '',
+      ge: []
     }
   },
   computed: {
@@ -49,18 +66,79 @@ export default {
     }
   },
   methods: {
-    download () {
+    download (item, ID) {
+      var formData = new FormData()
+      formData.append('id', ID)
+      getMaterials(formData).then(res => {
+        console.log(res)
+        console.log(item.filename)
+        const blob = new Blob([res])
+        console.log(blob)
+        const urlObject = window.URL || window.webkitURL || window
+        const link = document.createElement('a')
+        link.href = urlObject.createObjectURL(blob)
+        link.download = item.filename
+        link.click()
+        console.log(res)
+        console.log(link)
+        window.URL.revokeObjectURL(link.href)
+      })
     },
     addMaterials () {
-    },
-    Upvote (item, id) {
-      item.score += 1
-      postHomeMultidata({ id })
     },
     getHomeMultidata () {
       getHomeMultidata().then(res => {
         this.materialList = res
       })
+    },
+    Upvote (item, id) {
+      postHomeMultidata({ id })
+      this.getHomeMultidata()
+    },
+    getFile (event) {
+      var file = event.target.files
+      for (var i = 0; i < file.length; i++) {
+        this.addArr.push(file[i])
+      }
+    },
+    submitAddFile () {
+      for (var i = 0; i < this.addArr.length; i++) {
+        if (this.addArr.length === 0) {
+          this.$message(
+            {
+              type: 'info',
+              message: '请选择要上传的文件'
+            }
+          )
+          return
+        }
+        var formData = new FormData()
+        formData.append('course', 1)
+        formData.append('uploader', 2)
+        formData.append('description', 'hzj')
+        formData.append('file', this.addArr[i])
+
+        postMaterials(formData).then(res => {
+          if (res.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '附件上传成功!'
+            })
+          }
+          if (res.data.code === 400) {
+            this.$message({
+              type: 'fail',
+              message: '已有同名文件!'
+            })
+          }
+        })
+        getHomeMultidata().then(res => {
+          this.materialList = res
+        })
+      }
+    },
+    resetAdd () {
+      this.addArr = []
     }
   },
   created () {

@@ -6,9 +6,25 @@ export function getHomeMultidata () {
   })
 }
 
+export function getMaterials (datas) {
+  return request({
+    url: '/course/download/',
+    method: 'post',
+    data: datas
+  })
+}
+
+export function postMaterials (datas) {
+  return request({
+    url: '/course/upload/',
+    method: 'post',
+    data: datas
+  })
+}
+
 export function postHomeMultidata (id) {
   return request({
-    url: '/course/upvote',
+    url: '/course/upvote/',
     method: 'post',
     data: id
   })
