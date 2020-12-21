@@ -1,14 +1,12 @@
 # 用于测试User模块的功能
 from flask import Flask
 from flask_login import UserMixin
-from flask_mail import Message
 from flask_sqlalchemy import SQLAlchemy 
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 from configs import IMAGEPATH
 from User import User, db
-from Mail import mail
 from UserControler import user_bp, login_manager
 
 app = Flask(__name__)
@@ -16,7 +14,6 @@ app.register_blueprint(user_bp,url_prefix='/user')
 app.config.from_pyfile('configs.py')
 app.app_context().push()
 db.init_app(app)
-mail.init_app(app)
 login_manager.init_app(app)
 
 

@@ -5,7 +5,9 @@ import base64
 
 from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, IMAGEPATH
 from utils import get_file_type
+import redis
 db = SQLAlchemy()
+MyRedis = redis.Redis(host="localhost",port=6379,decode_responses=True)
 #generate_password_hash得到的hash长度一定是93
 PSW_HASH_LEN = 128
 
@@ -14,7 +16,7 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer,primary_key=True, nullable=False)
     username = db.Column(db.String(MAXSTRLEN), unique = True,  nullable=False)
-    email = db.Column(db.String(MAXSTRLEN),  nullable=False)
+    email = db.Column(db.String(MAXSTRLEN),  unique = True, nullable=False)
     password= db.Column(db.String(PSW_HASH_LEN), nullable = False)
     avatar = db.Column(db.String(MAXAVATAR), nullable = True)
     motto = db.Column(db.String(MAXMOTTO), nullable = True)
