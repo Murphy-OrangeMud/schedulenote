@@ -10,9 +10,7 @@ import time
 import numpy as np
 if __name__ == "__main__":
     r = redis.Redis(host="localhost",port=6379,decode_responses=True)
-    # r.set("name", 1, 100)
-    r.delete('name')
-    print(r.get('name'))
+    r.set("1800013021@pku.edu.cn_checked", "1800013021@pku.edu.cn")
 
 
 

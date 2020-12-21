@@ -103,29 +103,40 @@ def login():
                 user_data['data'] = {}
                 user_data['data']['msg'] = 'Password to '' User "' + name + '" is error'
                 return jsonify(user_data)
-    #参数非法或用户不存在，均视为用户不存在
-    user_data['code'] = 400
+        else:
+            #用户不存在
+            user_data['code'] = 400
+            user_data['data'] = {}
+            user_data['data']['msg'] = 'User "' + name + '" doesn\'t exist'
+            return jsonify(user_data)
+    #参数非法
+    user_data['code'] = 900
     user_data['data'] = {}
-    user_data['data']['msg'] = 'User "' + name + '" doesn\'t exist'
+    user_data['data']['msg'] = 'parameter ILLEGAL'
     return jsonify(user_data)
 
 @user_bp.route('/login_by_email', methods = ['POST'])
 def login_by_email():
     user_data = {'data':{}}
-    email = request.values.get('name',type = str, default = None)
+    email = request.values.get('email',type = str, default = None)
     if MyRedis.get(email+'_checked') == email:
+        MyRedis.delete(email + '_checked')
         user_search = User.query.filter(User.email == email).all()
         if user_search:
             user = user_search[0]
             login_user(user)
             user_data['code'] = 200
             user_data['data'] = user.todict()
-            user_data['data']['msg'] = 'User "' + user.name + '" login success'
+            user_data['data']['msg'] = 'User "' + user.username + '" login success'
             return jsonify(user_data)
         else:
             user_data['code'] = 400
             user_data['data']['msg'] = 'User doesn\'t exist'
             return jsonify(user_data)
+    else:
+        user_data['code'] = 400
+        user_data['data']['msg'] = 'The mailbox was not verified'
+        return jsonify(user_data)
          
 
 @user_bp.route('/logout', methods = ['POST'])
@@ -157,6 +168,15 @@ def signup():
             user_data['code'] = 400
             user_data['data']['msg'] = 'User "' + name + '" already exists'
             return jsonify(user_data)
+        if User.query.filter(User.email == email).all():
+            user_data['code'] = 400
+            user_data['data']['msg'] = 'The mailbox is already occupied'
+            return jsonify(user_data)
+        if MyRedis.get(email + '_checked') != email:
+            user_data['code'] = 400
+            user_data['data']['msg'] = 'The mailbox was not verified'
+            return jsonify(user_data)
+        MyRedis.delete(email + '_checked')
         user = User(name, password, email)
         try:
             db.session.add(user)
@@ -214,7 +234,7 @@ def get_user():
     return jsonify(return_json)
 
 # 修改个人信息, 包括username, motto 有原密码的password修改
-# 暂时不包括 忘记password修改和email, 这两个需要邮件确认才可以
+# email修改需要先完成邮件验证
 # 头像涉及到文件，所以单独写了upload_avatar接口
 @user_bp.route("/modify", methods = ['PUT'])
 @login_required
@@ -249,7 +269,18 @@ def modify_info():
             return_json['code'] = 200
             return_json['data']['msg'] = "Motto modify success"
             return jsonify(return_json)
-
+    newemail = request.values.get('newemail', type = str, default = None)
+    if is_legal_str(newemail):
+        if MyRedis.get(newemail + "_checked") == newemail:
+            current_user.motto = newmotto
+            db.session.commit()
+            return_json['code'] = 200
+            return_json['data']['msg'] = "Email modify success"
+            return jsonify(return_json)
+        else:
+            return_json['code'] = 400
+            return_json['data']['msg'] = 'The mailbox was not verified'
+            return jsonify(return_json)
     #所有的都不满足，就一定是参数错误
     return_json['code'] = 900
     return_json['data']['msg'] = "parameter ILLEGAL"

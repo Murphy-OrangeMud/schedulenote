@@ -115,6 +115,8 @@ response.body = {
 ### 用户相关
 
 #### Signup 注册
+一定要先验证email，然后才能注册
+
 POST /user/signup
 ```json
 request.body = {
@@ -131,7 +133,6 @@ response.body = {
         "msg": "success",
         "id": id
 		"username":name,
-        "password": password, 
         "email": email
     }
 }
@@ -142,7 +143,6 @@ response.body = {
     "data" : {
         "msg":"parameter ILLEGAL",
         "username":name,
-        "password": password, 
         "email": email
     } 
 }
@@ -153,9 +153,28 @@ response.body = {
     "data" : {
         "msg":"User " + name + " already exits",
         "username":name,
-        "password": password, 
         "email": email
     } 
+}
+
+//邮箱已被占用
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "The mailbox is already occupied",
+        "username": name,
+        "email": email
+    }
+}
+
+//邮箱未验证
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "The mailbox was not verified",
+        "username": name,
+        "email": email
+    }
 }
 
 //数据库出现错误
@@ -164,7 +183,6 @@ response.body = {
     "data" : {
         "msg":"Database error",
         "username":name,
-        "password": password, 
         "email": email
     } 
 }
@@ -198,7 +216,15 @@ response.body = {
     }
 }
 
-// 参数非法或用户不存在：
+// 参数非法
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "parameter ILLEGAL"
+    }
+}
+
+//用户不存在
 response.body = {
     "code": 400,
     "data": {
@@ -214,7 +240,42 @@ response.body = {
     }
 }
 ```
+#### login_by_email
+在此之前需要先查看拥有该邮箱的用户是否存在（search_email），然后完成邮箱验证（get_mail_verify, check_mail_verify），否则会登录失败
 
+POST user/login_by_email
+```json
+request.body = {
+    "email": "12345678@pku.edu.cn" (string邮箱名)
+}
+
+//登录成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "User  + username +  login success"
+    }
+}
+
+//用户不存在，如果完成了search_email则不会出这样的错误
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "User doesn\'t exist"
+    }
+}
+
+//邮箱未验证
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "The mailbox was not verified",
+        "username": name,
+        "email": email
+    }
+}
+
+```
 #### Logout 登出
 
 POST /user/logout
@@ -313,6 +374,7 @@ request.body = {
     "newname": string,
     "newpassword":string,
     "newmotto":string,
+    "newemail":string
 }
 
 // 成功
@@ -324,7 +386,15 @@ response.body = {
     }
 }
 
-// 用户名重复
+//邮箱未验证(只有修改邮箱时发生)
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "The mailbox was not verified",
+    }
+}
+
+// 用户名重复（只有修改用户名时发生）
 response.body = {
     "code": 400,
     "data": {
