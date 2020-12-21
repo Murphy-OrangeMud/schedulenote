@@ -11,6 +11,9 @@ MAXAVATAR = 64
 ROOTPATH = "D:/junior1/软件工程/项目开发/schedulenote/"
 IMAGEPATH = ROOTPATH + "images/"
 
+#Redis Configs
+REDIS_STAY_TIME = 300 #Redis中持续留存300s
+TOKEN = TOKEN
 # Mail Configs
 MAIL_PORT = 465 #use SSL
 MAIL_SERVER = "smtp.163.com"
@@ -18,7 +21,6 @@ MAIL_USEERNAME = 'schedulenote@163.com'
 MAIL_PASSWORD = MAIL_PASSWORD
 # App Configs
 DB_URI = "mysql://{username}:{password}@{host}:{port}/{db}?charset=utf8".format(username=USERNAME,password=PASSWORD, host=HOST,port=PORT, db=DATABASE)
-
 SQLALCHEMY_DATABASE_URI = DB_URI
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = True

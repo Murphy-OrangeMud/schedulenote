@@ -25,6 +25,36 @@ CODE = {
     "parameter_error": 700,
 }
 ```
+
+### 邮件验证相关
+使用smtplib实现了SSL加密的邮件功能，以下是一些会用到的api
+
+#### search_email
+用于在login_by_email前，确认该邮箱是否存在于用户数据中
+
+GET /user/search_email
+```json
+request.body = {
+    "email": "12345678@pku.edu.cn" (string邮箱名)
+}
+
+//用户存在
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "success"
+    }
+}
+
+//用户不存在
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "User not exist"
+    }
+}
+```
+
 ### 用户相关
 
 #### Signup 注册
@@ -182,7 +212,8 @@ response.body = {
         "id" : number,
         "motto" : string,
         "avatar":{
-            "code" : 400
+            "code" : 400,
+            "msg" : "unexisted avatar"
         }
     }
 }
@@ -197,7 +228,8 @@ response.body = {
         "id" : number,
         "motto" : string,
         "avatar":{
-            "code" : 300
+            "code" : 300,
+            "msg" : "avatar damaged"
             //返回base64编码下的图片流
         }
     }
@@ -253,7 +285,7 @@ response.body = {
 ``` 
 
 #### upload_avatar
-POST /user/upoad_avatar
+PUT /user/upload_avatar
 ```json
 request.body = { 
     "avatar": file
@@ -274,20 +306,9 @@ response.body = {
         "msg": "abnormal image type" 
     }
 }
-```
 
+```
 # 后面的仅供参考，暂时未完成
-
-```json
-// 头像文件不存在
-response.body = {
-    "code": 300,
-    "data": {
-        "msg": "unexisted avatar"
-    }
-}
-
-```
 ### 反馈管理
 #### 意见反馈
 POST /supervision/feedback
