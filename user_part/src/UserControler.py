@@ -66,9 +66,14 @@ def check_mail_verify():
         return_json['data']['msg'] = "Check verify code successfully"
         return jsonify(return_json)
     else:
-        return_json['code'] = 900
-        return_json['data']['msg'] = "Verify code error"
-        return jsonify(return_json)
+        if MyRedis.get(email) != None:
+            return_json['code'] = 900
+            return_json['data']['msg'] = "Verify code error"
+            return jsonify(return_json)
+        else:
+            return_json['code'] = 900
+            return_json['data']['msg'] = "The verification code does not exist or has expired"
+            return jsonify(return_json)
         
 
 @user_bp.route('/login', methods = ['POST'])

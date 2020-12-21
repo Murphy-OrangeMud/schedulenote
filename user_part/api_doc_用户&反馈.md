@@ -54,6 +54,63 @@ response.body = {
     }
 }
 ```
+#### get_mail_verify
+获取邮件验证码，验证码会以<email, verify_code>的形式存在Redis中，持续5min。在signup, login_by_email和modify email三个场景可能用到
+
+GET user/get_mail_verify
+```json
+request.body = {
+    "email": "12345678@pku.edu.cn" (string邮箱名)
+}
+
+//发送成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "Get verify code successfully"
+    }
+}
+
+//发送失败
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "Email can't use or Network congestion"
+    }
+}
+```
+
+#### check_mail_verify
+用于确认验证码，如果验证码正确，则将<email, verify_code>删除，再将<email_checked, email>存入Redis。signup, login_by_email和modify email三个场景可以通过检查<email_checked, email>来确认验证码，持续5min
+
+POST user/check_mail_verify
+```json
+request.body = {
+    "email": "12345678@pku.edu.cn" (string邮箱名),
+    "verify_code": string
+}
+//验证码正确
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "Check verify code successfully"
+    }
+}
+//验证码错误
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "Verify code error"
+    }
+}
+//验证码不存在或已经过期
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "The verification code does not exist or has expired"
+    }
+}
+```
 
 ### 用户相关
 
