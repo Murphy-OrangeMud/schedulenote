@@ -1,4 +1,4 @@
 secret.py
 test.py
 *.pyc
-../images/
+/images/
