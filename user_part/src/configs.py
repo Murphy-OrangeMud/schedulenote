@@ -13,7 +13,6 @@ IMAGEPATH = ROOTPATH + "images/"
 
 #Redis Configs
 REDIS_STAY_TIME = 300 #Redis中持续留存300s
-TOKEN = TOKEN
 # Mail Configs
 MAIL_PORT = 465 #use SSL
 MAIL_SERVER = "smtp.163.com"
