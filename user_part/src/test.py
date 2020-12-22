@@ -8,9 +8,9 @@ import base64
 import redis
 import time
 import numpy as np
+from Mail import send_email
 if __name__ == "__main__":
-    r = redis.Redis(host="localhost",port=6379,decode_responses=True)
-    r.set("1800013021@pku.edu.cn_checked", "1800013021@pku.edu.cn")
+    send_email("1800013021@pku.edu.cn", 123456)
 
 
 
