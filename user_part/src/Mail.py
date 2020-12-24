@@ -5,16 +5,9 @@ from configs import MAIL_PORT, MAIL_SERVER, MAIL_USEERNAME, MAIL_PASSWORD
 
 # 发送给用户的信件内容
 verify_text = '''
-<p>[Schedulenote] Your verification code(valid for 5 minutes) is:</p>
-<b><p>{code}</p></b>
-<p>If you DO NOT do it yourself, please ignore this email.</p>
+<p>【Schedulenote】尊敬的Schedulenote用户，您的验证码为：<b>{code}</b></p>
+<p>该验证码5分钟内有效，请勿泄露于他人。</p>
 '''
-
-# verify_text = '''
-# <p>你好</p>
-# <b><p>{code}</p></b>
-# <p>If you DO NOT do it yourself, please ignore this email.</p>
-# '''
 
 # 向receiver发送验证邮件，其中包含6位验证码
 # 用于邮件验证、邮件登录、通过邮件修改密码（忘记原密码）
