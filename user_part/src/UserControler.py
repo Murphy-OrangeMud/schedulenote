@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from flask_mail import Message
 from uuid import uuid1
 
 from User import User, db, MyRedis

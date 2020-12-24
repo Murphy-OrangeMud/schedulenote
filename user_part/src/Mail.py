@@ -5,9 +5,8 @@ from configs import MAIL_PORT, MAIL_SERVER, MAIL_USEERNAME, MAIL_PASSWORD
 
 # 发送给用户的信件内容
 verify_text = '''
-<p>[Schedulenote] Your verification code(valid for 5 minutes) is:</p>
-<b><p>{code}</p></b>
-<p>If you DO NOT do it yourself, please ignore this email.</p>
+<p>【Schedulenote】尊敬的Schedulenote用户，您的验证码为：<b>{code}</b></p>
+<p>该验证码5分钟内有效，请勿泄露于他人。</p>
 '''
 
 # 向receiver发送验证邮件，其中包含6位验证码
@@ -20,7 +19,6 @@ def send_email(receiver, verify_code):
         message['To'] =  receiver
         message['Subject'] = Header("Schedulenote 邮件验证码","utf-8")
         context = ssl.create_default_context()
-        print(message.as_string()) 
         with smtplib.SMTP_SSL(MAIL_SERVER, MAIL_PORT, context = context) as server:
             server.login(MAIL_USEERNAME,MAIL_PASSWORD)  
             server.sendmail(MAIL_USEERNAME, receiver, message.as_string())
