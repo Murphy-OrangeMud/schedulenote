@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from uuid import uuid1
 
-from Model import User, db, MyRedis, Report
+from Model import User, db, MyRedis, Report, Feedback
 from configs import *
 from utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
 from Mail import send_email
@@ -35,13 +35,17 @@ def search_email():
 # 在signup, login_by_mail, modify mail的时候，需要检查<email_checked, email>是否在Redis中
 @user_bp.route('/get_mail_verify', methods = ['GET'])
 def get_mail_verify():
+    return_json = {'data':{}}
     email = request.values.get('email',type = str, default = None)
+    if not is_legal_str(email):
+        return_json['code'] = 900
+        return_json['data']['msg'] = "Email can't use or Network congestion"
+        return jsonify(return_json)
     if MyRedis.get(email) != None:
         verify_code = MyRedis.get(email)
     else:
         verify_code = get_verify_code()
         MyRedis.set(email, verify_code, REDIS_STAY_TIME)
-    return_json = {'data':{}}
     if send_email(email, verify_code) == -1:
         #发送失败，可能是网络问题或者email有误
         return_json['code'] = 900
@@ -309,3 +313,35 @@ def upload_avatar():
     return_json['code'] = 900
     return_json['data']['msg'] = 'abnormal image type'
     return jsonify(return_json)
+
+#################反馈相关###########################
+@user_bp.route('/feedback', methods = ['POST'])
+@login_required
+def feedback():
+    msg = request.values.get('msg', type = str, default = None)
+    anonymous = request.values.get('anonymous', type = int, default = None)
+    return_json = {'code' : 900,'data':{}}
+    if msg == None:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    elif len(msg) == 0 or len(msg) > MAXMSG:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    else: #msg合法
+        feedback = Feedback(msg)
+        print(anonymous)
+        if anonymous == 0:
+            feedback = Feedback(msg, current_user.id)
+        try:
+            db.session.add(feedback)
+            db.session.flush()
+            db.session.commit()
+        except:
+            return_json['code'] = 300
+            return_json['data']['msg'] = 'Database error'
+            return jsonify(return_json)
+        return_json['code'] = 200
+        return_json['data']['msg'] = "feedback success"
+        return jsonify(return_json)
+
+

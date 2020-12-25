@@ -8,7 +8,8 @@ User = {
     "email": string,    //以后改密码需要给邮箱发邮件，功能尚未实现
     "password": string, //使用加盐哈希加密
     "avatar": string, //还没想好怎么存
-    "motto": string //个性签名
+    "motto": string, //个性签名
+    "is_admin":boolean
 }
 这里可以把课表信息、课程信息、笔记信息加入进来，待完善
 ```
@@ -121,7 +122,7 @@ POST /user/signup
 ```json
 request.body = {
     //长度均不超过64，也都不能为空，否则报参数错误
-    "username":string,
+    "name":string,
     "password": string,
     "email": "12345678@pku.edu.cn" (string,邮箱名)
 }
@@ -453,31 +454,39 @@ response.body = {
 }
 
 ```
-# 后面的仅供参考，暂时未完成
 ### 反馈管理
 #### 意见反馈
-POST /supervision/feedback
+POST /user/feedback
 ```json
 request.body = {  //第一项为个人信息（可不填）
-    "user":USER,
-    "msg":string //关于反馈的内容
+    "msg":string, //关于反馈的内容
+    "anonymous":0 or 1 //是否选择匿名
 }
 
 response.body{
     "code":200,
     "data":{
-        "msg":"success"
+        "msg":"feedback success"
     }
 }
 
-// 参数输入过长（超过1000字符）
+// 参数非法
 response.body = {
-    "code": 300,
+    "code": 900,
     "data": {
-        "msg": "parameter too long"
+        "msg": "message can not be None or Too long(over 200 bytes)"
+    }
+}
+
+//数据库发生错误
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "Database error"
     }
 }
 ```
+# 后面的仅供参考，暂时未完成
 #### 举报其他用户
 POST /supervision/report
 ``` json
