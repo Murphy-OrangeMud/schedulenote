@@ -38,6 +38,7 @@ class User(UserMixin, db.Model):
         dic['id'] = self.id
         dic['username'] = self.username
         dic['email'] = self.email
+        dic['is_admin'] = self.is_admin
         #将文件编程base64图片流传给前端
         dic['avatar'] = {}
         if self.avatar == None:

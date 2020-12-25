@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 from configs import IMAGEPATH
-from Model import User, db
+from Model import db
 from UserControler import user_bp, login_manager
 
 app = Flask(__name__)

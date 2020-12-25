@@ -204,7 +204,17 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "success",
-		"profile": Userprofile //这里代指除password以外的全部用户信息，目前只有id, username, email, avatar, motto
+		"is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
+        "name": string,
+        "id" : number,
+        "motto" : string,
+        "avatar":{
+            "code" : 200,
+            "img_type" : ALLOWED_EXTENSIONS,
+            "img_stream" : filestream
+            //返回base64编码下的图片流
+        },
+        "is_admin":Boolean
     }
 }
 
@@ -254,6 +264,17 @@ response.body = {
     "code": 200,
     "data": {
         "msg": "User  + username +  login success"
+        "is_current": 1 or 0, //如果是1，表示访问的是当前登录者的信息，如果是0，则不是当前登录者的信息
+        "name": string,
+        "id" : number,
+        "motto" : string,
+        "avatar":{
+            "code" : 200,
+            "img_type" : ALLOWED_EXTENSIONS,
+            "img_stream" : filestream
+            //返回base64编码下的图片流
+        },
+        "is_admin":Boolean
     }
 }
 
@@ -270,8 +291,6 @@ response.body = {
     "code": 400,
     "data": {
         "msg": "The mailbox was not verified",
-        "username": name,
-        "email": email
     }
 }
 
@@ -317,7 +336,8 @@ response.body = {
             "img_type" : ALLOWED_EXTENSIONS,
             "img_stream" : filestream
             //返回base64编码下的图片流
-        }
+        },
+        "is_admin":Boolean
     }
 }
 // 成功返回, 头像从未初始化过，为None, avatar的code为400
