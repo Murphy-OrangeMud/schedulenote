@@ -84,3 +84,18 @@ class Report(db.Model):
         dic['msg'] = self.msg
         dic['file_id'] = self.file_id
         dic['whistleBlower_id'] = self.whistleBlower_id
+
+class Feedback(db.Model):
+    __tablename__ = "feedback"
+    id = db.Column(db.Integer,primary_key=True, nullable=False)
+    msg = db.Column(db.String(MAXMSG), nullable = False)
+    whistleBlower_id = db.Column(db.Integer, nullable=True) #提意见的用户
+    def __init__(self, msg, whistleBlower = -1):
+        self.msg = msg
+        self.whistleBlower_id = whistleBlower
+
+    def todict(self):
+        dic = {}
+        dic['id'] = self.id
+        dic['msg'] = self.msg
+        dic['whistleBlower_id'] = self.whistleBlower_id
