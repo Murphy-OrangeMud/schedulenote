@@ -5,7 +5,7 @@ from secret import *
 MAXSTRLEN = 64 #username和password的最大值
 MAXMOTTO = 64
 MAXAVATAR = 64
-
+MAXMSG = 200
 
 # Path Configs
 ROOTPATH = "D:/junior1/软件工程/项目开发/schedulenote/"

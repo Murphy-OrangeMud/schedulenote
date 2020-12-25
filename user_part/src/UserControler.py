@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from uuid import uuid1
 
-from User import User, db, MyRedis
+from Model import User, db, MyRedis
 from configs import *
 from utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
 from Mail import send_email
