@@ -470,7 +470,7 @@ response.body{
     }
 }
 
-// 参数非法
+// msg参数非法
 response.body = {
     "code": 900,
     "data": {
@@ -486,42 +486,54 @@ response.body = {
     }
 }
 ```
-# 后面的仅供参考，暂时未完成
-#### 举报其他用户
-POST /supervision/report
+#### 举报
+POST /user/report
 ``` json
 request.body = { 
-    "whistleblower":USER,//举报人信息，可不填
-    "reported":USER,//被举报人信息，必填
-    //举报内容，至少填一项
-    "avatar": string,
-    "username": string,
-    "nickname":string,
-    "motto":string,
-
-    "msg":string //关于举报的描述
+    "msg":string, //关于举报的描述
+    "reported_id":int,//被举报人id，必填
+    "to_report":int,//举报内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
+    "file_id":string,//文件号，如果to_report=3则必填
+    "anonymous":0 or 1 //是否匿名
 }
 
 response.body{
     "code":200,
     "data":{
-        "msg":"success"
+        "msg":"report success"
     }
 }
 
-// 用户不存在
+// 被举报者不存在
 response.body = {
     "code": 300,
     "data": {
-        "msg": "user does not exist"
+        "msg": "User does not exist"
     }
 }
 
-// 举报内容不全
+//举报内容为文件，文件号为空
 response.body = {
-    "code": 300,
+    "code": 900,
     "data": {
-        "msg": "parameter error"
+        "msg": "Error: file_id empty"
     }
 }
+
+// msg参数非法
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "message can not be None or Too long(over 200 bytes)"
+    }
+}
+
+//数据库发生错误
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "Database error"
+    }
+}
+
 ```

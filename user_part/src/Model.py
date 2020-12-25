@@ -66,10 +66,10 @@ class Report(db.Model):
     reported_id = db.Column(db.Integer, nullable=False) #被举报者
     #被举报类型，包括昵称、头像、座右铭、笔记文件四种，分别用0、1、2、3代表
     to_report = db.Column(db.Integer, nullable=False) 
-    msg = db.Column(db.String(MAXMSG), nullable = True)
+    msg = db.Column(db.String(MAXMSG), nullable = False)
     file_id = db.Column(db.String(MAXSTRLEN), nullable=True) #这里与Note部分对接，他使用的str(uuid1)作为id
     whistleBlower_id = db.Column(db.Integer, nullable=True) #举报者，可以为空
-    def __init__(self, reported, to_report, msg = "", file_id = "", whistleBlower = -1):
+    def __init__(self, reported, to_report, msg, file_id = None, whistleBlower = -1):
         self.reported_id = reported
         self.to_report = to_report
         self.msg = msg

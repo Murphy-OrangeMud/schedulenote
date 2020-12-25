@@ -15,7 +15,7 @@ login_manager = LoginManager()
 
 @login_manager.user_loader
 def load_user(userid):
-    return User.query.filter(User.id == userid).all()[0]
+    return User.query.get(userid)
 
 @user_bp.route('/search_email', methods = ['GET'])
 def search_email():
@@ -210,9 +210,8 @@ def get_user():
             return_json['data']['is_current'] = 1
             return jsonify(return_json)
     if id != None:
-        userlist = User.query.filter(User.id == id).all()
-        if userlist:
-            user = userlist[0]
+        user = User.query.get(id)
+        if user:
             return_json['code'] = 200
             return_json['data'] = user.todict()
             return_json['data']['msg'] = 'success'
@@ -315,6 +314,9 @@ def upload_avatar():
     return jsonify(return_json)
 
 #################反馈相关###########################
+# 反馈意见
+# msg为反馈内容
+# anonymous取0或1，表示用户是否选择匿名
 @user_bp.route('/feedback', methods = ['POST'])
 @login_required
 def feedback():
@@ -328,12 +330,11 @@ def feedback():
         return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
         return jsonify(return_json)
     else: #msg合法
-        feedback = Feedback(msg)
-        print(anonymous)
+        my_feedback = Feedback(msg)
         if anonymous == 0:
-            feedback = Feedback(msg, current_user.id)
+            my_feedback = Feedback(msg, current_user.id)
         try:
-            db.session.add(feedback)
+            db.session.add(my_feedback)
             db.session.flush()
             db.session.commit()
         except:
@@ -344,4 +345,50 @@ def feedback():
         return_json['data']['msg'] = "feedback success"
         return jsonify(return_json)
 
+@user_bp.route('/report', methods = ['POST'])
+@login_required
+def report():
+    msg = request.values.get('msg', type = str, default = None)
+    #被举报者id
+    reported_id = request.values.get('reported_id', type = int, default = None)
+    #举报内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
+    to_report = request.values.get('to_report', type = int, default = None)
+    #文件号，如果to_report=3则必填
+    file_id = request.values.get('file_id', type = str, default = None)
+    #是否匿名，取0 or 1
+    anonymous = request.values.get('anonymous', type = int, default = None)
+    return_json = {'code' : 900,'data':{}}
+    #被举报者不存在
+    if not User.query.get(reported_id):
+        return_json['code'] = 400
+        return_json['data']['msg'] = "User does not exists"
+        return jsonify(return_json)
+    #举报内容为文件，文件号为空
+    if to_report == 3 and file_id == None:
+        return_json['code'] = 900
+        return_json['data']['msg'] = "Error: file_id empty"
+        return jsonify(return_json)
+    # msg非法
+    if msg == None:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    elif len(msg) == 0 or len(msg) > MAXMSG:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
 
+    else: #msg合法
+        my_id = current_user.id
+        if anonymous == 0:
+            my_id = -1
+        my_report = Report(reported_id, to_report, msg, file_id, my_id)
+        try:
+            db.session.add(my_report)
+            db.session.flush()
+            db.session.commit()
+        except:
+            return_json['code'] = 300
+            return_json['data']['msg'] = 'Database error'
+            return jsonify(return_json)
+        return_json['code'] = 200
+        return_json['data']['msg'] = "report success"
+        return jsonify(return_json)
