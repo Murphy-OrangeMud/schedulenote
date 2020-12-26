@@ -8,14 +8,14 @@ const store = new Vuex.Store({
     username: '',
     ddlList: [
       {
-        date: '2020-12-13',
-        course: '软件工程',
-        task: '开会'
+        title: '软工开会',
+        start: '2020-12-12',
+        end: '2020-12-13'
       },
       {
-        date: '2020-12-19',
-        course: '软件工程',
-        task: '开会'
+        title: '软工开会',
+        start: '2020-12-19',
+        end: '2020-12-20'
       }
     ],
     noteList: [

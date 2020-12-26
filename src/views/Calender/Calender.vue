@@ -1,4 +1,48 @@
 <template>
+  <div id = "calendar">
+    <full-calendar :events="fcEvents"
+    @changeMonth="changeMonth"
+    @eventClick="eventClick"
+    @dayClick="dayClick"
+    @moreClick="moreClick"></full-calendar>
+    <button v-on:click="refresh()">刷新</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      fcEvents: this.$store.state.ddlList
+    }
+  },
+  components: {
+    'full-calendar': require('vue-fullcalendar')
+  },
+  methods: {
+    changeMonth () {
+    },
+    eventClick (event) {
+      if (confirm('是否要删除' + event.title + '？')) {
+        console.log('delete')
+      }
+    },
+    dayClick (day, jsEvent) {
+      if (confirm('是否要在' + day + '添加一个DDL？')) {
+        console.log('add')
+      }
+    },
+    moreClick () {
+    },
+    refresh () {
+      console.log('刷新')
+    }
+  }
+}
+</script>
+
+<!--
+<template>
   <div id="calender">
     <h1>日历界面</h1>
     <div v-if="ddlList.length">
@@ -147,3 +191,4 @@ th {
   font-weight: 600;
 }
 </style>
+-->
