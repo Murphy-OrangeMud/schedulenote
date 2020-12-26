@@ -364,6 +364,36 @@ def save():
 
 
 
+
+@user_bp.route('/test_init', methods = ['GET', 'POST'])
+def test_init():
+    user1 = User('alice', '123', 'alice@email')
+    user2 = User('admin', '123', 'admin@email')
+    db.session.add(user1)
+    db.session.flush()
+    db.session.commit()
+    user2.isAdmin = 1
+    db.session.add(user2)
+    db.session.flush()
+    db.session.commit()
+    feed1 = Feedback("msg1")
+    db.session.add(feed1)
+    db.session.flush()
+    db.session.commit()
+    feed2 = Feedback("msg2")
+    db.session.add(user2)
+    db.session.flush()
+    db.session.commit()
+    rep1 = Report(1, 1, "msg1")
+    db.session.add(feed1)
+    db.session.flush()
+    db.session.commit()
+    rep2 = Report(1, 1, "msg2")
+    db.session.add(rep2)
+    db.session.flush()
+    db.session.commit()
+    return "success"
+
 @login_manager.user_loader
 def load_user(userid):
     return User.query.get(userid)
@@ -434,7 +464,7 @@ def check_mail_verify():
 def login():
     name = request.values.get('name',type = str, default = None)
     password = request.values.get('password',type = str, default = None)
-    user_data = {'code':0}
+    user_data = {'code':0, 'data':{}}
 
     if has_login():#当前有正在登录中的账号
         user_data['code'] = 400
@@ -448,6 +478,7 @@ def login():
             user = user_search[0]
             if check_password_hash(user.password, password):
                 login_user(user)
+                # print(user.todict())
                 user_data['code'] = 200
                 user_data['data'] = user.todict()
                 user_data['data']['msg'] = 'User "' + name + '" login success'
@@ -744,8 +775,10 @@ def report():
         return_json['data']['msg'] = "report success"
         return jsonify(return_json)
 
+    
+    
+############################# admin part
 
-# 获得未完成的feedback的id
 @admin_bp.route('/feedback_list', methods = ['GET'])
 @login_required
 def get_unfinished_feedback():
@@ -754,7 +787,7 @@ def get_unfinished_feedback():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
-    unfin_list = Feedback.query.filter(not Feedback.finished)
+    unfin_list = Feedback.query.filter(Feedback.finished == 0)
     id_list = [fd.id for fd in unfin_list]
     return_json['code'] = 200
     return_json['data']['msg'] = "get unfinished feedback successfully"
@@ -769,7 +802,7 @@ def get_unfinished_report():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
-    unfin_list = Report.query.filter(not Report.finished)
+    unfin_list = Report.query.filter(Report.finished == 0)
     id_list = [rp.id for rp in unfin_list]
     return_json['code'] = 200
     return_json['data']['msg'] = "get unfinished report successfully"
@@ -823,7 +856,7 @@ def finish_feedback(id):
         return jsonify(return_json)
     try:
         this_feedback = Feedback.query.get(id)
-        this_feedback.finished = True
+        this_feedback.finished = 1
         db.session.commit()
         return_json['data']["msg"] = "feedback {id} finished".format(id = id)
         return_json['code'] = 200
@@ -843,7 +876,7 @@ def finish_report(id):
         return jsonify(return_json)
     try:
         this_report = Report.query.get(id)
-        this_report.finished = True
+        this_report.finished = 1
         db.session.commit()
         return_json['data']["msg"] = "report {id} finished".format(id = id)
         return_json['code'] = 200
@@ -853,8 +886,8 @@ def finish_report(id):
         return_json['code'] = 300
         return jsonify(return_json)
 
-
-# 管理员根据report进行修改
+# UNFINISHED
+# 删除文件部分还要和Note结合一下
 @admin_bp.route('/admin_modify/<id>', methods = ['PUT'])
 @login_required
 def admin_modify(id):
@@ -872,19 +905,19 @@ def admin_modify(id):
         if report_type == 0:
             reported_user.username = str(uuid1())
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "name", new_one = reported_user.username)
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "name", new_one = reported_user.username)
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 1:
             reported_user.avatar = None
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "avatar", new_one = "None")
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "avatar", new_one = "None")
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 2:
             reported_user.motto = None
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "motto", new_one = "None")
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "motto", new_one = "None")
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 3:
@@ -905,3 +938,4 @@ def admin_modify(id):
         return_json['code'] = 300
         return jsonify(return_json)
 
+    
