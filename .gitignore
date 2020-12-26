@@ -1,9 +1,9 @@
 
-schedule_part/__pycache__/
+*/__pycache__/
 .DS_Store
 node_modules
 /dist
-
+.vscode
 
 # local env files
 .env.local
