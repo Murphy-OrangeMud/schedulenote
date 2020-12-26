@@ -853,15 +853,15 @@ def finish_report(id):
         return_json['code'] = 300
         return jsonify(return_json)
 
-# UNFINISHED
-# 删除文件部分还要和Note结合一下
+
+# 管理员根据report进行修改
 @admin_bp.route('/admin_modify/<id>', methods = ['PUT'])
 @login_required
 def admin_modify(id):
     return_json = {'data':{}}
     #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
-    #目前只完成0，1，2 TODO
     report_type = request.values.get('report_type', type = int, default = None)
+    file_id = request.values.get('file_id', type = str, default = None)
     if not current_user.is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
@@ -888,8 +888,14 @@ def admin_modify(id):
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 3:
-            pass 
-            #TODO
+            try:
+                temp_note = Note.query.get(file_id)
+                temp_note.sourceCode = None
+                db.session.commit()
+            except:
+                return_json['data']["msg"] = "file id {id} error or database error".format(id = file_id)
+                return_json['code'] = 300
+                return jsonify(return_json)
         else:
             return_json['data']["msg"] = "Modify type undefined "
             return_json['code'] = 900
@@ -898,3 +904,4 @@ def admin_modify(id):
         return_json['data']["msg"] = "User {id} not exist or database error".format(id = id)
         return_json['code'] = 300
         return jsonify(return_json)
+
