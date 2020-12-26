@@ -1,73 +1,8 @@
 <template>
-  <div id = "calendar">
-    <full-calendar :events="fcEvents"
-    @changeMonth="changeMonth"
-    @eventClick="eventClick"
-    @dayClick="dayClick"
-    @moreClick="moreClick"></full-calendar>
-    <button v-on:click="refresh()">刷新</button>
-  </div>
-</template>
-
-<script>
-export default {
-  data () {
-    return {
-      fcEvents: this.$store.state.ddlList
-    }
-  },
-  components: {
-    'full-calendar': require('vue-fullcalendar')
-  },
-  methods: {
-    changeMonth () {
-    },
-    eventClick (event) {
-      if (confirm('是否要删除' + event.title + '？')) {
-        console.log('delete')
-      }
-    },
-    dayClick (day, jsEvent) {
-      if (confirm('是否要在' + day + '添加一个DDL？')) {
-        console.log('add')
-      }
-    },
-    moreClick () {
-    },
-    refresh () {
-      console.log('刷新')
-    }
-  }
-}
-</script>
-
-<!--
-<template>
   <div id="calender">
-    <h1>日历界面</h1>
-    <div v-if="ddlList.length">
-      <table align="center">
-        <thead>
-          <tr>
-            <th>描述</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>地点</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-      <tbody>
-        <tr v-for="item in ddlList" :key="item" >
-        <td>{{item.description}}</td>
-        <td>{{item.startTime}}</td>
-        <td>{{item.endTime}}</td>
-        <td>{{item.location}}</td>
-        <td><el-button v-on:click="delDdl(item.id)" type="danger" size="small">移除</el-button></td>
-        </tr>
-      </tbody>
-      </table>
-    </div>
-    <h2 v-else>ddl为空</h2>
+    <full-calendar :events="ddlList">
+    @eventClick="eventClick"
+    </full-calendar>
     <h1></h1>
     <el-form ref=for :model="form" label-width="80px" class="login-form">
 
@@ -112,7 +47,7 @@ export default {
 import { getddl, addddl, delddl } from 'network/home'
 export default {
   name: 'calender',
-  data () { // asdf
+  data () {
     return {
       ddlList: [],
       myddl: {
@@ -126,6 +61,9 @@ export default {
       mess: '未能获取ddl'
     }
   },
+  components: {
+    'full-calendar': require('vue-fullcalendar')
+  },
   methods: {
     getDdl () {
       const datas = { userID: '100' }
@@ -135,15 +73,17 @@ export default {
         this.mess = '成功获取ddl'
       })
     },
-    delDdl (id) {
-      const datas = {
-        id: id
+    eventClick (ddl) {
+      if (confirm('是否要删除' + ddl.description + '？')) {
+        const datas = {
+          id: ddl
+        }
+        this.mess = '未能删除ddl'
+        delddl(datas).then(res => {
+          this.mess = '删除ddl成功'
+        })
+        this.getDdl()
       }
-      this.mess = '未能删除ddl'
-      delddl(datas).then(res => {
-        this.mess = '删除ddl成功'
-      })
-      this.getDdl()
     },
     addDdl () {
       const datas = {
@@ -191,4 +131,3 @@ th {
   font-weight: 600;
 }
 </style>
--->
