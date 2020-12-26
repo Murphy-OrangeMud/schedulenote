@@ -5,7 +5,8 @@ from secret import *
 MAXSTRLEN = 64 #username和password的最大值
 MAXMOTTO = 64
 MAXAVATAR = 64
-
+PSW_HASH_LEN = 128
+MAXMSG = 200
 
 # Path Configs
 ROOTPATH = "D:/junior1/软件工程/项目开发/schedulenote/"
@@ -13,6 +14,9 @@ IMAGEPATH = ROOTPATH + "images/"
 
 #Redis Configs
 REDIS_STAY_TIME = 300 #Redis中持续留存300s
+REDISHOST = "localhost"
+REDISPORT = 6379
+
 # Mail Configs
 MAIL_PORT = 465 #use SSL
 MAIL_SERVER = "smtp.163.com"
