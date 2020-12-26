@@ -8,6 +8,7 @@
     <!--<el-button type="primary" icon="el-icon-folder" @click="ToNotes">笔记库</el-button>
     <el-button type="primary" icon="el-icon-folder" @click="ToMaterials">课程资料</el-button>-->
     <el-button type="primary" icon="el-icon-info" @click="ToAbout">关于</el-button>
+    <el-button type="primary" icon="el-icon-userpage" @click="ToUserpage">个人主页</el-button>
     <router-view />
   </div>
 </template>
@@ -58,6 +59,9 @@ export default {
     },
     ToMaterials: function () {
       this.$router.push('/materials')
+    },
+    ToUserpage: function () {
+      this.$router.push('/Userpage')
     }
   }
 }
