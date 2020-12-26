@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import base64
 import uuid
 
-from .configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, IMAGEPATH
+from .configs import *
 from .utils import get_file_type
 import redis
 
@@ -13,6 +13,7 @@ import datetime
 from enum import Enum
 
 db = SQLAlchemy(current_app)
+MyRedis = redis.Redis(host=REDISHOST,port=REDISPORT,decode_responses=True)
 
 class Note(db.Model):
     id = db.Column(db.String, primary_key=True, unique=True)
@@ -253,13 +254,11 @@ class Course(db.Model):
         db.session.commit()
         return res
 
-        
-MyRedis = redis.Redis(host="localhost",port=6379,decode_responses=True)
-#generate_password_hash得到的hash长度一定是93
-PSW_HASH_LEN = 128
+      
 
+# User part
 class User(UserMixin, db.Model):
-    __tablename__ = "users_v1"
+    __tablename__ = "users_v2"
 
     id = db.Column(db.Integer,primary_key=True, nullable=False)
     username = db.Column(db.String(MAXSTRLEN), unique = True,  nullable=False)
@@ -267,15 +266,19 @@ class User(UserMixin, db.Model):
     password= db.Column(db.String(PSW_HASH_LEN), nullable = False)
     avatar = db.Column(db.String(MAXAVATAR), nullable = True)
     motto = db.Column(db.String(MAXMOTTO), nullable = True)
+    is_admin = db.Column(db.Boolean, nullable = False)
     def __init__(self, username, password, email):
         self.username = username
         self.email = email
         self.password = generate_password_hash(password)
         self.avatar = None
         self.motto = None
+        self.is_admin = False
     def __repr__(self):
         return '<User %r>' % self.username
 
+    def is_admin(self):
+        return self.is_admin
 
     #以dict的形式返回user的全部信息（除了password）
     def todict(self):
@@ -283,6 +286,7 @@ class User(UserMixin, db.Model):
         dic['id'] = self.id
         dic['username'] = self.username
         dic['email'] = self.email
+        dic['is_admin'] = int(self.is_admin)
         #将文件编程base64图片流传给前端
         dic['avatar'] = {}
         if self.avatar == None:
@@ -301,4 +305,52 @@ class User(UserMixin, db.Model):
                 dic['avatar']['code'] = 300
         dic['motto'] = self.motto
         return dic
+
+
+to_report_type = ["username", "avatar", "motto", "note"]
+class Report(db.Model):
+    __tablename__ = "report"
+    id = db.Column(db.Integer,primary_key=True, nullable=False)
+    finished = db.Column(db.Boolean, nullable = False)
+    reported_id = db.Column(db.Integer, nullable=False) #被举报者
+    #被举报类型，包括昵称、头像、座右铭、笔记文件四种，分别用0、1、2、3代表
+    to_report = db.Column(db.Integer, nullable=False) 
+    msg = db.Column(db.String(MAXMSG), nullable = False)
+    file_id = db.Column(db.String(MAXSTRLEN), nullable=True) #这里与Note部分对接，他使用的str(uuid1)作为id
+    whistleBlower_id = db.Column(db.Integer, nullable=True) #举报者，可以为空
+    def __init__(self, reported, to_report, msg, file_id = None, whistleBlower = -1):
+        self.reported_id = reported
+        self.to_report = to_report
+        self.msg = msg
+        self.file_id = file_id
+        self.whistleBlower_id = whistleBlower
+        self.finished = False
+
+    def todict(self):
+        dic = {}
+        dic['id'] = self.id
+        dic['finished'] = int(self.finished)
+        dic['reported_id'] = self.reported_id
+        dic['to_report'] = to_report_type[self.to_report]
+        dic['msg'] = self.msg
+        dic['file_id'] = self.file_id
+        dic['whistleBlower_id'] = self.whistleBlower_id
+
+class Feedback(db.Model):
+    __tablename__ = "feedback"
+    id = db.Column(db.Integer,primary_key=True, nullable=False)
+    finished = db.Column(db.Boolean, nullable = False)
+    msg = db.Column(db.String(MAXMSG), nullable = False)
+    whistleBlower_id = db.Column(db.Integer, nullable=True) #提意见的用户
     
+    def __init__(self, msg, whistleBlower = -1):
+        self.msg = msg
+        self.whistleBlower_id = whistleBlower
+        self.finished = False
+
+    def todict(self):
+        dic = {}
+        dic['id'] = self.id
+        dic['finished'] = int(self.finished)
+        dic['msg'] = self.msg
+        dic['whistleBlower_id'] = self.whistleBlower_id
