@@ -68,7 +68,7 @@
 import { getddl, addddl, delddl } from 'network/home'
 export default {
   name: 'calender',
-  data () {
+  data () { // asdf
     return {
       ddlList: [],
       myddl: {
