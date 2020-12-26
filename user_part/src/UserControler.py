@@ -13,6 +13,39 @@ login_manager = LoginManager()
 
 # APIs
 
+@user_bp.route('/test_init', methods = ['GET', 'POST'])
+def test_init():
+    user1 = User('alice', '123', 'alice@email')
+    user2 = User('admin', '123', 'admin@email')
+    db.session.add(user1)
+    db.session.flush()
+    db.session.commit()
+    user2.isAdmin = 1
+    db.session.add(user2)
+    db.session.flush()
+    db.session.commit()
+    feed1 = Feedback("msg1")
+    db.session.add(feed1)
+    db.session.flush()
+    db.session.commit()
+    feed2 = Feedback("msg2")
+    db.session.add(user2)
+    db.session.flush()
+    db.session.commit()
+    rep1 = Report(1, 1, "msg1")
+    db.session.add(feed1)
+    db.session.flush()
+    db.session.commit()
+    rep2 = Report(1, 1, "msg2")
+    db.session.add(rep2)
+    db.session.flush()
+    db.session.commit()
+    return "success"
+
+
+
+
+
 @login_manager.user_loader
 def load_user(userid):
     return User.query.get(userid)
@@ -83,7 +116,7 @@ def check_mail_verify():
 def login():
     name = request.values.get('name',type = str, default = None)
     password = request.values.get('password',type = str, default = None)
-    user_data = {'code':0}
+    user_data = {'code':0, 'data':{}}
 
     if has_login():#当前有正在登录中的账号
         user_data['code'] = 400
@@ -97,6 +130,7 @@ def login():
             user = user_search[0]
             if check_password_hash(user.password, password):
                 login_user(user)
+                # print(user.todict())
                 user_data['code'] = 200
                 user_data['data'] = user.todict()
                 user_data['data']['msg'] = 'User "' + name + '" login success'
