@@ -8,9 +8,10 @@ import os
 from configs import IMAGEPATH
 from Model import db
 from UserControler import user_bp, login_manager
-
+from AdminControler import admin_bp
 app = Flask(__name__)
 app.register_blueprint(user_bp,url_prefix='/user')
+app.register_blueprint(admin_bp,url_prefix='/admin')
 app.config.from_pyfile('configs.py')
 app.app_context().push()
 db.init_app(app)

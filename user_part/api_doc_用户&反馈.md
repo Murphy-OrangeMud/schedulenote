@@ -506,7 +506,7 @@ response.body{
 
 // 被举报者不存在
 response.body = {
-    "code": 300,
+    "code": 400,
     "data": {
         "msg": "User does not exist"
     }
@@ -530,7 +530,7 @@ response.body = {
 
 //数据库发生错误
 response.body = {
-    "code": 900,
+    "code": 300,
     "data": {
         "msg": "Database error"
     }
