@@ -1,9 +1,9 @@
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.header import Header
-from configs import MAIL_PORT, MAIL_SERVER, MAIL_USEERNAME, MAIL_PASSWORD
+from .configs import MAIL_PORT, MAIL_SERVER, MAIL_USEERNAME, MAIL_PASSWORD
 
-from configs import MAXSTRLEN
+from .configs import MAXSTRLEN
 from flask_login import current_user
 from uuid import uuid1
 import datetime

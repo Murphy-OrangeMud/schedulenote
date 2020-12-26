@@ -3,17 +3,17 @@ import json
 from flask import render_template, redirect,url_for, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 
-from Models import *
+from .Models import *
 
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from uuid import uuid1
 
-from configs import *
+from .configs import *
 
-from utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
-from utils import send_email
+from .utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
+from .utils import send_email
 
 import markdown, pdfkit
 
@@ -22,6 +22,11 @@ note_bp = Blueprint("note", __name__, url_prefix='/note')
 schedule_bp = Blueprint("schedule", __name__, url_prefix='/schedule')
 user_bp = Blueprint('user', __name__, url_prefix='/user')
 login_manager = LoginManager()
+
+# for test
+@current_app.route("/")
+def hello():
+    return render_template("helloworld.html")
 
 @course_bp.route("/filelist",methods = ['GET'])
 def queryList():

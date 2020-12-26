@@ -5,8 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import base64
 import uuid
 
-from configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, IMAGEPATH
-from utils import get_file_type
+from .configs import MAXSTRLEN, MAXMOTTO, MAXAVATAR, IMAGEPATH
+from .utils import get_file_type
 import redis
 
 import datetime
