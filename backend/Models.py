@@ -18,7 +18,7 @@ MyRedis = redis.Redis(host=REDISHOST,port=REDISPORT,decode_responses=True)
 class Note(db.Model):
     id = db.Column(db.String, primary_key=True, unique=True)
     sourceCode = db.Column(db.String)
-    owner = db.Column(db.String)
+    owner = db.Column(db.Integer)
     createTime = db.Column(db.DateTime, default=datetime.datetime.now)
     modifyTime = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
     courseBelonged = db.Column(db.String)
