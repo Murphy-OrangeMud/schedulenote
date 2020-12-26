@@ -9,7 +9,7 @@ User = {
     "password": string, //使用加盐哈希加密
     "avatar": string, //还没想好怎么存
     "motto": string, //个性签名
-    "is_admin":boolean
+    "is_admin":Integer // 0 or 1
 }
 这里可以把课表信息、课程信息、笔记信息加入进来，待完善
 ```
@@ -455,6 +455,26 @@ response.body = {
 
 ```
 ### 反馈管理
+```json
+Feedback = {
+    id : Int,
+    finished : Int, //0 or 1
+    msg : string, 
+    whistleBlower_id : Int
+}
+
+Report = {
+    id : Int,
+    finished : Int, //0 or 1
+    //被举报者id
+    reported_id: Int,
+    //被举报类型，包括昵称、头像、座右铭、笔记文件四种，分别用0、1、2、3代表
+    to_report:Int,
+    msg : string, 
+    file_id : string,
+    whistleBlower_id : Int
+}
+```
 #### 意见反馈
 POST /user/feedback
 ```json
