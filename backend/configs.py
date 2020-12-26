@@ -1,4 +1,11 @@
-from secret import *
+HOST = 'localhost'
+PORT = '3306'
+DATABASE = 'usertest'
+USERNAME = 'root'
+PASSWORD = ''
+
+MAIL_PASSWORD = 'EUJTGGGIQFXWGFUJ'
+SECRET_KEY = 'FOOLISH_KEY'
 
 # Size Limits
 MAXSTRLEN = 64 #username和password的最大值
