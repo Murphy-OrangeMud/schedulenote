@@ -21,6 +21,7 @@ course_bp = Blueprint("course", __name__, url_prefix='/course')
 note_bp = Blueprint("note", __name__, url_prefix='/note')
 schedule_bp = Blueprint("schedule", __name__, url_prefix='/schedule')
 user_bp = Blueprint('user', __name__, url_prefix='/user')
+admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 login_manager = LoginManager()
 
 # for test
@@ -363,10 +364,9 @@ def save():
 
 
 
-# APIs
 @login_manager.user_loader
 def load_user(userid):
-    return User.query.filter(User.id == userid).all()[0]
+    return User.query.get(userid)
 
 @user_bp.route('/search_email', methods = ['GET'])
 def search_email():
@@ -386,13 +386,17 @@ def search_email():
 # 在signup, login_by_mail, modify mail的时候，需要检查<email_checked, email>是否在Redis中
 @user_bp.route('/get_mail_verify', methods = ['GET'])
 def get_mail_verify():
+    return_json = {'data':{}}
     email = request.values.get('email',type = str, default = None)
+    if not is_legal_str(email):
+        return_json['code'] = 900
+        return_json['data']['msg'] = "Email can't use or Network congestion"
+        return jsonify(return_json)
     if MyRedis.get(email) != None:
         verify_code = MyRedis.get(email)
     else:
         verify_code = get_verify_code()
         MyRedis.set(email, verify_code, REDIS_STAY_TIME)
-    return_json = {'data':{}}
     if send_email(email, verify_code) == -1:
         #发送失败，可能是网络问题或者email有误
         return_json['code'] = 900
@@ -557,9 +561,8 @@ def get_user():
             return_json['data']['is_current'] = 1
             return jsonify(return_json)
     if id != None:
-        userlist = User.query.filter(User.id == id).all()
-        if userlist:
-            user = userlist[0]
+        user = User.query.get(id)
+        if user:
             return_json['code'] = 200
             return_json['data'] = user.todict()
             return_json['data']['msg'] = 'success'
@@ -661,4 +664,237 @@ def upload_avatar():
     return_json['data']['msg'] = 'abnormal image type'
     return jsonify(return_json)
 
-login_manager.init_app(current_app)
+#################反馈相关###########################
+# 反馈意见
+# msg为反馈内容
+# anonymous取0或1，表示用户是否选择匿名
+@user_bp.route('/feedback', methods = ['POST'])
+@login_required
+def feedback():
+    msg = request.values.get('msg', type = str, default = None)
+    anonymous = request.values.get('anonymous', type = int, default = None)
+    return_json = {'code' : 900,'data':{}}
+    if msg == None:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    elif len(msg) == 0 or len(msg) > MAXMSG:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    else: #msg合法
+        my_feedback = Feedback(msg)
+        if anonymous == 0:
+            my_feedback = Feedback(msg, current_user.id)
+        try:
+            db.session.add(my_feedback)
+            db.session.flush()
+            db.session.commit()
+        except:
+            return_json['code'] = 300
+            return_json['data']['msg'] = 'Database error'
+            return jsonify(return_json)
+        return_json['code'] = 200
+        return_json['data']['msg'] = "feedback success"
+        return jsonify(return_json)
+
+@user_bp.route('/report', methods = ['POST'])
+@login_required
+def report():
+    msg = request.values.get('msg', type = str, default = None)
+    #被举报者id
+    reported_id = request.values.get('reported_id', type = int, default = None)
+    #举报内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
+    to_report = request.values.get('to_report', type = int, default = None)
+    #文件号，如果to_report=3则必填
+    file_id = request.values.get('file_id', type = str, default = None)
+    #是否匿名，取0 or 1
+    anonymous = request.values.get('anonymous', type = int, default = None)
+    return_json = {'code' : 900,'data':{}}
+    #被举报者不存在
+    if not User.query.get(reported_id):
+        return_json['code'] = 400
+        return_json['data']['msg'] = "User does not exists"
+        return jsonify(return_json)
+    #举报内容为文件，文件号为空
+    if to_report == 3 and file_id == None:
+        return_json['code'] = 900
+        return_json['data']['msg'] = "Error: file_id empty"
+        return jsonify(return_json)
+    # msg非法
+    if msg == None:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+    elif len(msg) == 0 or len(msg) > MAXMSG:
+        return_json['data']['msg'] = "message can not be None or Too long(over 200 bytes)"
+        return jsonify(return_json)
+
+    else: #msg合法
+        my_id = current_user.id
+        if anonymous == 0:
+            my_id = -1
+        my_report = Report(reported_id, to_report, msg, file_id, my_id)
+        try:
+            db.session.add(my_report)
+            db.session.flush()
+            db.session.commit()
+        except:
+            return_json['code'] = 300
+            return_json['data']['msg'] = 'Database error'
+            return jsonify(return_json)
+        return_json['code'] = 200
+        return_json['data']['msg'] = "report success"
+        return jsonify(return_json)
+
+
+# 获得未完成的feedback的id
+@admin_bp.route('/feedback_list', methods = ['GET'])
+@login_required
+def get_unfinished_feedback():
+    return_json = {'data':{}} 
+    if not current_user.is_admin():
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    unfin_list = Feedback.query.filter(not Feedback.finished)
+    id_list = [fd.id for fd in unfin_list]
+    return_json['code'] = 200
+    return_json['data']['msg'] = "get unfinished feedback successfully"
+    return_json['data']['id_list'] = id_list
+    return jsonify(return_json)
+
+@admin_bp.route('/report_list', methods = ['GET'])
+@login_required
+def get_unfinished_report():
+    return_json = {'data':{}} 
+    if not current_user.is_admin():
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    unfin_list = Report.query.filter(not Report.finished)
+    id_list = [rp.id for rp in unfin_list]
+    return_json['code'] = 200
+    return_json['data']['msg'] = "get unfinished report successfully"
+    return_json['data']['id_list'] = id_list
+    return jsonify(return_json)
+
+
+@admin_bp.route('/get_feedback/<id>', methods = ['GET'])
+@login_required
+def get_feedback(id):
+    return_json = {'data':{}}
+    if not current_user.is_admin(): 
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    try:
+        return_json['data']["feedback"] = Feedback.query.get(id).todict()
+        return_json['data']["msg"] = "feedback {id} get".format(id = id)
+        return_json['code'] = 200
+        return jsonify(return_json)
+    except:
+        return_json['data']["msg"] = "feedback {id} not exist".format(id = id)
+        return_json['code'] = 300
+        return jsonify(return_json)
+
+@admin_bp.route('/get_report/<id>', methods = ['GET'])
+@login_required
+def get_report(id):
+    return_json = {'data':{}}
+    if not current_user.is_admin(): 
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    try:
+        return_json['data']["report"] = Report.query.get(id).todict()
+        return_json['data']["msg"] = "report {id} get".format(id = id)
+        return_json['code'] = 200
+        return jsonify(return_json)
+    except:
+        return_json['data']["msg"] = "report {id} not exist".format(id = id)
+        return_json['code'] = 300
+        return jsonify(return_json)
+
+@admin_bp.route('/finish_feedback/<id>', methods = ['POST'])
+@login_required
+def finish_feedback(id):
+    return_json = {'data':{}}
+    if not current_user.is_admin(): 
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    try:
+        this_feedback = Feedback.query.get(id)
+        this_feedback.finished = True
+        db.session.commit()
+        return_json['data']["msg"] = "feedback {id} finished".format(id = id)
+        return_json['code'] = 200
+        return jsonify(return_json)
+    except:
+        return_json['data']["msg"] = "feedback {id} not exist or database error".format(id = id)
+        return_json['code'] = 300
+        return jsonify(return_json)
+
+@admin_bp.route('/finish_report/<id>', methods = ['POST'])
+@login_required
+def finish_report(id):
+    return_json = {'data':{}}
+    if not current_user.is_admin(): 
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    try:
+        this_report = Report.query.get(id)
+        this_report.finished = True
+        db.session.commit()
+        return_json['data']["msg"] = "report {id} finished".format(id = id)
+        return_json['code'] = 200
+        return jsonify(return_json)
+    except:
+        return_json['data']["msg"] = "report {id} not exist or database error".format(id = id)
+        return_json['code'] = 300
+        return jsonify(return_json)
+
+# UNFINISHED
+# 删除文件部分还要和Note结合一下
+@admin_bp.route('/admin_modify/<id>', methods = ['PUT'])
+@login_required
+def admin_modify(id):
+    return_json = {'data':{}}
+    #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
+    #目前只完成0，1，2 TODO
+    report_type = request.values.get('report_type', type = int, default = None)
+    if not current_user.is_admin(): 
+        return_json['code'] = 400
+        return_json['data']['msg'] = "You are not an administrator"
+        return jsonify(return_json)
+    try:
+        reported_user = User.query.get(id)
+        # 改昵称
+        if report_type == 0:
+            reported_user.username = str(uuid1())
+            db.session.commit()
+            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "name", new_one = reported_user.username)
+            return_json['code'] = 200
+            return jsonify(return_json)
+        elif report_type == 1:
+            reported_user.avatar = None
+            db.session.commit()
+            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "avatar", new_one = "None")
+            return_json['code'] = 200
+            return jsonify(return_json)
+        elif report_type == 2:
+            reported_user.motto = None
+            db.session.commit()
+            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "motto", new_one = "None")
+            return_json['code'] = 200
+            return jsonify(return_json)
+        elif report_type == 3:
+            pass 
+            #TODO
+        else:
+            return_json['data']["msg"] = "Modify type undefined "
+            return_json['code'] = 900
+            return jsonify(return_json)
+    except:
+        return_json['data']["msg"] = "User {id} not exist or database error".format(id = id)
+        return_json['code'] = 300
+        return jsonify(return_json)
