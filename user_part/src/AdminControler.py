@@ -10,7 +10,6 @@ from Mail import send_email
 admin_bp = Blueprint('admin', __name__)
 
 # 获得未完成的feedback的id
-# TODO
 @admin_bp.route('/feedback_list', methods = ['GET'])
 @login_required
 def get_unfinished_feedback():
@@ -19,7 +18,7 @@ def get_unfinished_feedback():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
-    unfin_list = Feedback.query.filter(not Feedback.finished)
+    unfin_list = Feedback.query.filter(Feedback.finished == 0)
     id_list = [fd.id for fd in unfin_list]
     return_json['code'] = 200
     return_json['data']['msg'] = "get unfinished feedback successfully"
@@ -34,7 +33,7 @@ def get_unfinished_report():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
-    unfin_list = Report.query.filter(not Report.finished)
+    unfin_list = Report.query.filter(Report.finished == 0)
     id_list = [rp.id for rp in unfin_list]
     return_json['code'] = 200
     return_json['data']['msg'] = "get unfinished report successfully"
@@ -88,7 +87,7 @@ def finish_feedback(id):
         return jsonify(return_json)
     try:
         this_feedback = Feedback.query.get(id)
-        this_feedback.finished = True
+        this_feedback.finished = 1
         db.session.commit()
         return_json['data']["msg"] = "feedback {id} finished".format(id = id)
         return_json['code'] = 200
@@ -108,7 +107,7 @@ def finish_report(id):
         return jsonify(return_json)
     try:
         this_report = Report.query.get(id)
-        this_report.finished = True
+        this_report.finished = 1
         db.session.commit()
         return_json['data']["msg"] = "report {id} finished".format(id = id)
         return_json['code'] = 200
@@ -125,8 +124,8 @@ def finish_report(id):
 def admin_modify(id):
     return_json = {'data':{}}
     #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
-    #目前只完成0，1，2 TODO
     report_type = request.values.get('report_type', type = int, default = None)
+    file_id = request.values.get('file_id', type = str, default = None)
     if not current_user.is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
@@ -137,26 +136,32 @@ def admin_modify(id):
         if report_type == 0:
             reported_user.username = str(uuid1())
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "name", new_one = reported_user.username)
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "name", new_one = reported_user.username)
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 1:
             reported_user.avatar = None
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "avatar", new_one = "None")
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "avatar", new_one = "None")
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 2:
             reported_user.motto = None
             db.session.commit()
-            return_json['data']["msg"] = "Modify reported_user {id}'s {re_type} to \"{new_one}\" ".format(id = id, re_type = "motto", new_one = "None")
+            return_json['data']["msg"] = "Modify reported_user {name}'s {re_type} to \"{new_one}\" ".format(name = reported_user.name, re_type = "motto", new_one = "None")
             return_json['code'] = 200
             return jsonify(return_json)
         elif report_type == 3:
-            pass 
-            #TODO
+            try:
+                temp_note = Note.query.get(file_id)
+                temp_note.sourceCode = None
+                db.session.commit()
+            except:
+                return_json['data']["msg"] = "file id {id} error or database error".format(id = file_id)
+                return_json['code'] = 300
+                return jsonify(return_json)
         else:
-            return_json['data']["msg"] = "Modify type undefined "
+            return_json['data']["msg"] = "Modify type undefined"
             return_json['code'] = 900
             return jsonify(return_json)
     except:
