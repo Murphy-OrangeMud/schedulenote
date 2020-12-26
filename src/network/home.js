@@ -2,7 +2,8 @@ import { request, request1, request2 } from './request'
 
 export function getHomeMultidata () {
   return request({
-    url: '/course/filelist'
+    url: '/course/filelist',
+    method: 'get'
   })
 }
 
