@@ -497,7 +497,7 @@ request.body = {
     "anonymous":0 or 1 //是否匿名
 }
 
-response.body{
+response.body = {
     "code":200,
     "data":{
         "msg":"report success"
@@ -536,4 +536,212 @@ response.body = {
     }
 }
 
+```
+### 管理员部分
+#### 获得未处理的反馈信息（feedback）
+GET admin/feedback_list
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "get unfinished feedback successfully",
+        "id_list": [未处理的feedback id]
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+```
+
+#### 获得未处理的举报信息（report）
+GET admin/feedback_list
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "get unfinished report successfully",
+        "id_list": [未处理的report id]
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+```
+
+#### 获得某一条反馈信息
+GET admin/get_feedback/<id>
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "feedback {id} get",
+        "feedback" = Feedback详细信息
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+
+//该条feedback不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "feedback {id} not exist",
+    }
+}
+```
+
+#### 获得某一条举报信息
+GET admin/get_report/<id>
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "report {id} get",
+        "report" = report详细信息
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+
+//该条report不存在
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "report {id} not exist",
+    }
+}
+```
+
+#### 处理完成feedback
+POST admin/finish_feedback/<id>
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "feedback {id} finished",
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+
+//该条feedback不存在或数据库错误
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "feedback {id} not exist or database error",
+    }
+}
+```
+
+#### 处理完成report
+POST admin/finish_report/<id>
+```json
+request.body = {}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "report {id} finished",
+    }
+}
+
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+
+//该条report不存在或数据库错误
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "report {id} not exist or database error",
+    }
+}
+```
+
+#### 管理员修改用户信息
+PUT admin/admin_modify
+```json
+request.body = {
+    "report_type":int,
+    "file_id":string
+}
+
+//成功
+response.body = {
+    "code": 200,
+    "data": {
+        "msg": "Modify reported_user {name}'s {re_type} to \"{new_one}\""
+    }
+}
+//非管理员操作
+response.body = {
+    "code": 400,
+    "data": {
+        "msg": "You are not an administrator",
+    }
+}
+
+//文件不存在或数据库错误
+response.body = {
+    "code": 300,
+    "data": {
+        "msg": "file id {id} error or database error",
+    }
+}
+
+//参数无法识别
+response.body = {
+    "code": 900,
+    "data": {
+        "msg": "Modify type undefined",
+    }
+}
 ```

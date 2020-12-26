@@ -161,7 +161,7 @@ def admin_modify(id):
                 return_json['code'] = 300
                 return jsonify(return_json)
         else:
-            return_json['data']["msg"] = "Modify type undefined "
+            return_json['data']["msg"] = "Modify type undefined"
             return_json['code'] = 900
             return jsonify(return_json)
     except:
