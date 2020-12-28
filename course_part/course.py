@@ -12,6 +12,23 @@ app = Flask(__name__)
 def index():
     return "hello"
 
+@app.route("/course/addCourse",methods = ['POST','GET'])
+def addCourse():
+    name = request.values.get("name",type=str,default = None)
+    info = request.values.get("info",type=str,default = "")
+    course = Course(name,info)
+    course.save()
+@app.route("/course/deleteCourse",methods = ['POST','GET'])
+def deleteCourse():
+    id = request.values.get("id",type=int,default = None)
+    course = Course.query.get(id)
+    session = Session()
+    session.delete(course)
+    session.commit()
+    session.close()
+    
+
+
 @app.route("/course/filelist/",methods = ['GET'])
 def queryList():
     if request.method == 'GET':
