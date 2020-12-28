@@ -33,7 +33,7 @@ export function postFilelist (id) {
 
 export function postRegister (datas) {
   return request({
-    url: '/user/signup',
+    url: '/user/test_init',
     method: 'post',
     data: datas
   })
