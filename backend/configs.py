@@ -1,8 +1,8 @@
 HOST = 'localhost'
-PORT = '3306'
-DATABASE = 'usertest'
+PORT = '8848'
+DATABASE = 'ScheduleNote'
 USERNAME = 'root'
-PASSWORD = ''
+PASSWORD = 'root'
 
 MAIL_PASSWORD = 'EUJTGGGIQFXWGFUJ'
 SECRET_KEY = 'FOOLISH_KEY'
@@ -15,7 +15,7 @@ PSW_HASH_LEN = 128
 MAXMSG = 200
 
 # Path Configs
-ROOTPATH = "/mnt/c/Users/cheng/schedulenote/"
+ROOTPATH = "~/schedulenote/"
 IMAGEPATH = ROOTPATH + "images/"
 
 #Redis Configs
