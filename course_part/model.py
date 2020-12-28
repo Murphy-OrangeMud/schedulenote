@@ -3,7 +3,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 
-engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ScheduleNotes?charset=utf8')
+engine = create_engine('mysql+pymysql://root:123456@localhost:3306/ScheduleNotes?charset=utf8',
+                        max_overflow=0,
+                        pool_size=10,
+                        pool_timeout=30,
+                        pool_recycle=-1    
+                    )
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -52,6 +57,7 @@ class Course(Base):
         print("res")
         file = File(newfile["filename"],newfile["uploader"],newfile["description"],self.id)
         file.save()
+        print(newfile)
         pass
     def deleteFile(self,id):
         res = session.query(File).filter(File.id == id).delete()
