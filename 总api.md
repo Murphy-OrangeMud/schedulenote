@@ -1050,3 +1050,9 @@ response.body = {
     }
 }
 ```
+### 用于测试的接口
+GET/POST user/test_init  
+无参数，调用一次即可生成两个用户。  
+用户1：alice, 密码：123，邮箱alice@email，身份：普通用户    
+用户2：admin，密码：123，邮箱admin@email，身份：管理员  
+还会生成两个feedback和两个report用于测试
