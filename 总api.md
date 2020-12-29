@@ -11,8 +11,13 @@ request.body = {
     "ID" : String,
     "sourceCode" : String
 }
+若笔记存在：
 response.body = {
     "state" : "OK"
+}
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
 }
 ```
 
@@ -24,7 +29,12 @@ POST /previewNotes
 request.body = {
     "ID" : String
 }
+若笔记存在：
 response.body = HTML
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
+}
 ```
 
 #### 导出PDF
@@ -35,7 +45,12 @@ POST /exportPDF
 request.body = {
     "ID" : String
 }
+若笔记存在：
 response.body = File
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
+}
 ```
 
 #### 新建笔记
@@ -45,7 +60,7 @@ POST /newNote
 ```json
 request.body = {
     "sourceCode" : String,
-    "owner" : String,
+    "owner" : Integer,
     "course_belonged" : String
 }
 response.body = {
@@ -61,8 +76,13 @@ POST /upVote
 request.body = {
     "ID" : String
 }
+若笔记存在：
 response.body = {
     "state" : "OK"
+}
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
 }
 ```
 
@@ -74,8 +94,13 @@ POST /downVote
 request.body = {
     "ID" : String
 }
-response.body={
-    "state": "OK",
+若笔记存在：
+response.body = {
+    "state" : "OK"
+}
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
 }
 ```
 
@@ -87,13 +112,18 @@ POST /getNote
 request.body = {
     "ID" : String
 }
+若笔记存在：
 response.body = {
     "sourceCode" : String,
-    "owner" : String,
+    "owner" : Integer,
     "course_belonged" : String,
     "ups" : Integer,
     "createTime" : DateTime,
     "modifyTime" : DateTime
+}
+若笔记不存在：
+response.body = {
+    "state" : "ERR"
 }
 ```
 
@@ -683,7 +713,7 @@ response.body = {
         "msg": "parameter ILLEGAL"
     }
 }
-``` 
+```
 
 #### upload_avatar
 PUT /user/upload_avatar
@@ -1020,3 +1050,9 @@ response.body = {
     }
 }
 ```
+### 用于测试的接口
+GET/POST user/test_init  
+无参数，调用一次即可生成两个用户。  
+用户1：alice, 密码：123，邮箱alice@email，身份：普通用户    
+用户2：admin，密码：123，邮箱admin@email，身份：管理员  
+还会生成两个feedback和两个report用于测试

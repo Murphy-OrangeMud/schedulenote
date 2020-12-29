@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { getHomeMultidata, postHomeMultidata, postMaterials, getMaterials } from 'network/home'
+import { getFilelist, postFilelist, postMaterials, getMaterials } from 'network/home'
 export default {
   name: 'materials',
   data () {
@@ -86,14 +86,14 @@ export default {
     },
     addMaterials () {
     },
-    getHomeMultidata () {
-      getHomeMultidata().then(res => {
+    getFilelist () {
+      getFilelist().then(res => {
         this.materialList = res
       })
     },
     Upvote (item, id) {
-      postHomeMultidata({ id })
-      this.getHomeMultidata()
+      postFilelist({ id })
+      this.getFilelist()
     },
     getFile (event) {
       var file = event.target.files
@@ -132,7 +132,7 @@ export default {
             })
           }
         })
-        getHomeMultidata().then(res => {
+        getFilelist().then(res => {
           this.materialList = res
         })
       }
@@ -142,7 +142,7 @@ export default {
     }
   },
   created () {
-    this.getHomeMultidata()
+    this.getFilelist()
   }
 }
 </script>

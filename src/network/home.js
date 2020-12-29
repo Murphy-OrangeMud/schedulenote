@@ -1,6 +1,6 @@
-import { request, request1, request2 } from './request'
+import { request } from './request'
 
-export function getHomeMultidata () {
+export function getFilelist () {
   return request({
     url: '/course/filelist',
     method: 'get'
@@ -23,7 +23,7 @@ export function postMaterials (datas) {
   })
 }
 
-export function postHomeMultidata (id) {
+export function postFilelist (id) {
   return request({
     url: '/course/upvote/',
     method: 'post',
@@ -32,15 +32,15 @@ export function postHomeMultidata (id) {
 }
 
 export function postRegister (datas) {
-  return request1({
-    url: '/user/signup',
+  return request({
+    url: '/user/test_init',
     method: 'post',
     data: datas
   })
 }
 
 export function postLogin (datas) {
-  return request1({
+  return request({
     url: '/user/login',
     method: 'post',
     data: datas
@@ -48,7 +48,7 @@ export function postLogin (datas) {
 }
 
 export function getddl (datas) {
-  return request2({
+  return request({
     url: '/schedule/getdeadlinescalendar',
     method: 'post',
     data: datas
@@ -56,7 +56,7 @@ export function getddl (datas) {
 }
 
 export function addddl (datas) {
-  return request2({
+  return request({
     url: '/schedule/addschedule',
     method: 'post',
     data: datas
@@ -64,7 +64,7 @@ export function addddl (datas) {
 }
 
 export function delddl (datas) {
-  return request2({
+  return request({
     url: '/schedule/deleteschedule',
     method: 'post',
     data: datas

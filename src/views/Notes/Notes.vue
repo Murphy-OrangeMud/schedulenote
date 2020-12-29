@@ -46,6 +46,7 @@ export default {
     download () {
     },
     addNote () {
+      this.$router.push('/home')
     },
     Upvote () {
     },

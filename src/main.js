@@ -7,7 +7,9 @@ import '@kangc/v-md-editor/lib/style/base-editor.css'
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import fullCalendar from 'vue-fullcalendar'
 
+Vue.component('full-calendar', fullCalendar)
 Vue.config.productionTip = false
 VueMarkdownEditor.use(vuepressTheme)
 Vue.use(ElementUI)

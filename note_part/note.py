@@ -6,8 +6,8 @@ import os
 import markdown
 import pdfkit
 
-from dataStructure import Note
-from dataStructure import db
+from model import Note
+from model import db
 
 app = Blueprint("note", __name__, url_prefix='/note')
 
@@ -19,6 +19,8 @@ def modityNotes():
         ID = json["ID"]
         newSourceCode = json["sourceCode"]
         note = Note.query.get(ID)
+        if note==None:
+            return jsonify({"status": "ERR"})
         note.sourceCode = newSourceCode
         db.session.commit()
         return jsonify({"status": "OK"})
@@ -29,7 +31,10 @@ def previewNote():
     if request.method == "POST":
         json = request.get_json()
         ID = json["ID"]
-        return jsonify(markdown.Markdown(Note.query.get(ID).sourceCode))
+        note = Note.query.get(ID)
+        if note==None:
+            return jsonify({"status": "ERR"})
+        return jsonify(markdown.markdown(note.sourceCode))
 
 
 @app.route("/exportPDF", methods=["POST"])
@@ -39,7 +44,10 @@ def exportPDF():
         ID = json["ID"]
         path = 'pdfGenerated/'
         fileName = ID + '.pdf'
-        pdfkit.from_string(markdown.Markdown(Note.query.get(ID).sourceCode), path + fileName)
+        note = Note.query.get(ID)
+        if note==None:
+            return jsonify({"status": "ERR"})
+        pdfkit.from_string(markdown.markdown(note.sourceCode), "test")
         return make_response(send_from_directory(os.path.join(app.root_path, path), fileName, as_attachment=True))
 
 
@@ -59,7 +67,9 @@ def upVote():
         json = request.get_json()
         ID = json["ID"]
         note = Note.query.get(ID)
-        note.sourceCode += 1
+        if note==None:
+            return jsonify({"status": "ERR"})
+        note.ups += 1
         db.session.commit()
         return jsonify({"status": "OK"})
 
@@ -70,7 +80,9 @@ def downVote():
         json = request.get_json()
         ID = json["ID"]
         note = Note.query.get(ID)
-        note.sourceCode -= 1
+        if note==None:
+            return jsonify({"status": "ERR"})
+        note.ups -= 1
         db.session.commit()
         return jsonify({"status": "OK"})
 
@@ -81,6 +93,8 @@ def getNote():
         json = request.get_json()
         ID = json["ID"]
         note = Note.query.get(ID)
+        if note==None:
+            return jsonify({"status": "ERR"})
         return jsonify(
             {"sourceCode": note.sourceCode, "owner": note.owner, "createTime": note.createTime,
              "modifyTime": note.modifyTime, "courseBelonged": note.courseBelonged, "ups": note.ups})
