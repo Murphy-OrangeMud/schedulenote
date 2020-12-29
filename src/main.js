@@ -8,7 +8,11 @@ import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import fullCalendar from 'vue-fullcalendar'
+import htmlToPdf from '@/components/utils/htmlToPdf'
+import Print from 'vue-print-nb'
 
+Vue.use(Print)
+Vue.use(htmlToPdf)
 Vue.component('full-calendar', fullCalendar)
 Vue.config.productionTip = false
 VueMarkdownEditor.use(vuepressTheme)

@@ -2,41 +2,41 @@
     <div>
       <el-row :gutter="20" style="margin-top:10px;">
       <el-col :span="8" :offset="3">
-      <div class="grid-content bg-purple">
+      <div v-if=username class="grid-content bg-purple">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span>个人中心</span>
           </div>
           <div class="id">
-            <span class="sender">id：{{data.id}}</span>
+            <span class="sender">id：{{id}}</span>
           </div>
           <div class="is_admin">
-            <span class="sender">权限：{{showAuthority(data.is_admin)}}</span>
+            <span class="sender">权限：{{showAuthority(is_admin)}}</span>
           </div>
           <div class="email">
-            <span class="sender">邮箱：{{data.email}}</span>
+            <span class="sender">邮箱：{{email}}</span>
           </div>
           <el-divider></el-divider>
           <div class="avatar">
             <span class="sender">头像：</span>
             <el-image
               style="width: 100px; height: 100px"
-              :src="data.avatar"
+              :src="avatar"
               :fit="fit"></el-image>
           </div>
           <div class="username">
-            <span class="sender">用户名：{{data.username}}</span>
+            <span class="sender">用户名：{{username}}</span>
           </div>
           <div class="password">
-            <span class="sender">密码：{{data.password}}</span>
+            <span class="sender">密码：{{password}}</span>
           </div>
           <div class="motto">
-            <span class="sender">个性签名：{{data.motto}}</span>
+            <span class="sender">个性签名：{{motto}}</span>
           </div>
         </el-card>
     </div>
     </el-col>
-    <el-col :span="10">
+    <el-col v-if=username :span="10">
       <div class="grid-content bg-purple">
       <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -84,16 +84,20 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button size="mini" type="modify" @click=modify>提交</el-button>
+          <el-button size="mini" type="modify" @click=logout>登出</el-button>
         </div>
       </div>
       </el-card>
       </div>
     </el-col>
+    <div v-if=not_login>请先登录!</div>
     </el-row>
     </div>
+
 </template>
 
 <script>
+import { postLogout } from 'network/home'
 export default {
   data () {
     return {
@@ -114,11 +118,37 @@ export default {
         is_admin: false
       },
       formdata: {
-        username: 'test',
-        password: '1234567',
+        username: 'alice',
+        password: '123',
         avatar: '?',
-        motto: '生活就像海洋，只有意志坚强的人才能到达彼岸'
+        motto: ''
       }
+    }
+  },
+  computed: {
+    id () {
+      return this.$store.state.id
+    },
+    username () {
+      return this.$store.state.username
+    },
+    email () {
+      return this.$store.state.email
+    },
+    avatar () {
+      return this.$store.state.avatar
+    },
+    motto () {
+      return this.$store.state.motto
+    },
+    is_admin () {
+      return this.$store.state.is_admin
+    },
+    password () {
+      return this.$store.state.password
+    },
+    not_login () {
+      return this.$store.state.username === ''
     }
   },
   methods: {
@@ -127,10 +157,26 @@ export default {
       else return 'User'
     },
     modify: function () {
-      this.data.username = this.formdata.username
-      this.data.password = this.formdata.password
-      this.data.avatar = this.formdata.avatar
-      this.data.motto = this.formdata.motto
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.$store.state.username = this.formdata.username
+        this.$store.state.password = this.formdata.password
+        this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+        this.$store.state.motto = this.formdata.motto
+        console.log('ok')
+      }
+      , 3000)
+    },
+    logout: function () {
+      postLogout().then(res => {
+        alert('登出成功！')
+        this.$store.state.id = 0
+        this.$store.state.username = ''
+        this.$store.state.motto = ''
+        this.$store.state.password = ''
+        this.$store.state.is_admin = false
+        this.$store.state.avatar = ''
+      })
     },
     handleBeforeUpload (file) {
       if (!(file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {

@@ -24,6 +24,7 @@
 <script>
 import { postLogin } from 'network/home'
 import qs from 'qs'
+
 export default {
   name: 'register',
   data () {
@@ -37,13 +38,20 @@ export default {
     regi: function () {
       const datas = qs.stringify({
         name: this.account,
-        password: this.password,
-        email: '12345678@pku.edu.cn'
+        password: this.password
       })
       console.log(datas)
       event.preventDefault()
       postLogin(datas).then(res => {
         this.mess = res.data.msg
+        console.log(res.data)
+        if (this.mess === 'User "' + this.account + '" login success') {
+          this.$store.state.id = res.data.id
+          this.$store.state.username = res.data.username
+          this.$store.state.motto = res.data.motto
+          this.$store.state.password = this.password
+          this.$store.state.is_admin = res.data.is_admin
+        }
       })
     }
   }
