@@ -16,12 +16,12 @@ db = SQLAlchemy(current_app)
 MyRedis = redis.Redis(host=REDISHOST,port=REDISPORT,decode_responses=True)
 
 class Note(db.Model):
-    id = db.Column(db.String, primary_key=True, unique=True)
-    sourceCode = db.Column(db.String)
-    owner = db.Column(db.Integer)
+    id = db.Column(db.String(100), primary_key=True, unique=True)
+    sourceCode = db.Column(db.String(100))
+    owner = db.Column(db.String(100))
     createTime = db.Column(db.DateTime, default=datetime.datetime.now)
     modifyTime = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
-    courseBelonged = db.Column(db.String)
+    courseBelonged = db.Column(db.String(100))
     ups = db.Column(db.Integer, default=0)
 
     def __init__(self, source_code, owner, course_belonged):
@@ -43,7 +43,7 @@ ScheduleTypes = Enum("ScheduleTypes",
 # syncWithPKU那个API放在User类当中（实现在下面）
 class Schedule(db.Model):
 
-    id = db.Column(db.String, primary_key=True, unique=True)
+    id = db.Column(db.String(100), primary_key=True, unique=True)
     description = db.Column(db.String(100), unique=False)  # 是否允许重复？
     location = db.Column(db.String(100))
     startTime = db.Column(db.DateTime)
@@ -356,3 +356,5 @@ class Feedback(db.Model):
         dic['msg'] = self.msg
         dic['whistleBlower_id'] = self.whistleBlower_id
         return dic
+
+db.create_all()
