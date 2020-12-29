@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy 
+from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
@@ -9,7 +10,9 @@ from configs import IMAGEPATH
 from Model import db
 from UserControler import user_bp, login_manager
 from AdminControler import admin_bp
+
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(user_bp,url_prefix='/user')
 app.register_blueprint(admin_bp,url_prefix='/admin')
 app.config.from_pyfile('configs.py')
