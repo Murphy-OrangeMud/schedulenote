@@ -134,6 +134,7 @@ def deleteCourse():
     return jsonify({"code":200})
 @course_bp.route('/addCourse',methods=['GET','POST'])
 def addCourse():
+    print('?')
     name = request.values.get("name",type=str,default = None)
     info = request.values.get("info",type=str,default = "")
     print(name,info)
