@@ -4,12 +4,14 @@ from flask import render_template
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 import os
+from flask_cors import CORS
 
 from .configs import IMAGEPATH
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('configs.py')
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     if not os.path.exists(IMAGEPATH):
         os.makedirs(IMAGEPATH)
