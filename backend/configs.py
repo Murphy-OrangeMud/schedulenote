@@ -1,4 +1,11 @@
-from secret import *
+HOST = 'localhost'
+PORT = '8848'
+DATABASE = 'ScheduleNote'
+USERNAME = 'root'
+PASSWORD = 'root'
+
+MAIL_PASSWORD = 'EUJTGGGIQFXWGFUJ'
+SECRET_KEY = 'FOOLISH_KEY'
 
 # Size Limits
 MAXSTRLEN = 64 #username和password的最大值
@@ -8,7 +15,7 @@ PSW_HASH_LEN = 128
 MAXMSG = 200
 
 # Path Configs
-ROOTPATH = "/mnt/c/Users/cheng/schedulenote/"
+ROOTPATH = "~/schedulenote/"
 IMAGEPATH = ROOTPATH + "images/"
 
 #Redis Configs

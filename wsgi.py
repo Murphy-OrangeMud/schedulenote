@@ -1,6 +1,7 @@
 import backend
 
+app = backend.create_app()
+
 if __name__ == "__main__":
-    app = backend.create_app()
     with app.app_context():
-        app.run(debug=True)
+        app.run(host="0.0.0.0")

@@ -41,12 +41,11 @@ class Course(Base):
     # 表的名字:
     __tablename__ = 'course'
     # 表的结构:
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,autoincrement=True)
     name = Column(String(20))
     score = Column(Integer)
     info = Column(Text)
-    def __init__(self,id,name,info=""):
-        self.id = id
+    def __init__(self,name,info=""):
         self.name = name
         self.info = info
     def save(self):
@@ -66,12 +65,13 @@ class Course(Base):
 
 
 if __name__ == "__main__":
-    # Base.metadata.create_all(engine)
-    # C1 = Course(1,"ICS","hard")
-    file = {"filename":"txtbook.txt","uploader":1,"description":"txtbook"}
-    print(file)
-    Cs = session.query(Course).filter(Course.id == 1).all()
-    for c in Cs:
-        c.addFile(file)
-        c.addFile(file)
-    pass
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    # # C1 = Course(1,"ICS","hard")
+    # file = {"filename":"txtbook.txt","uploader":1,"description":"txtbook"}
+    # print(file)
+    # Cs = session.query(Course).filter(Course.id == 1).all()
+    # for c in Cs:
+    #     c.addFile(file)
+    #     c.addFile(file)
+    # pass

@@ -15,6 +15,7 @@
 
 <style>
 @import "assets/css/normalize.css";
+@CrossOrigin;
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

@@ -5,7 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    id: 0,
     username: '',
+    email: '',
+    password: '',
+    avatar: '',
+    motto: '',
+    is_admin: false,
     ddlList: [
       {
         title: '软工开会',
@@ -62,14 +68,6 @@ const store = new Vuex.Store({
       }
     ],
     mdtext: 'markdown'
-  },
-  gatters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
   }
 })
 

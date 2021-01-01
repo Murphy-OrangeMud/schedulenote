@@ -14,6 +14,7 @@ from .configs import *
 
 from .utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
 from .utils import send_email
+from .utils import strformat2datetime
 
 import markdown, pdfkit
 
@@ -81,13 +82,66 @@ def downvote():
 @course_bp.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
+        session = db.session
+        course = request.values.get("course",type=int,default = None)
+        uploader = request.values.get("uploader",type=int,default = None)
+        description = request.values.get("description",type=str,default = None)
         f = request.files['file']
-        basepath = os.path.dirname(__file__)  # 当前文件所在路径
-        upload_path = os.path.join(basepath, secure_filename(f.filename))
+        basepath = os.path.dirname(__file__)  # 当前文件所在路径\
+        filename = secure_filename(''.join(lazy_pinyin(f.filename)))
+        upload_path = os.path.join(basepath,Path(str(course)))
+        isExists=os.path.exists(upload_path)
+        if not isExists:
+            os.makedirs(upload_path)
+        upload_path = os.path.join(upload_path,filename)
+        if os.path.isfile(upload_path):
+            return jsonify({"code":400})
         f.save(upload_path)
-        return redirect(url_for('upload'))
-    return render_template('upload.html')
+        c = session.query(Course).filter(Course.id == course).first()
+        c.addFile({"uploader":uploader,"description":description,"filename":f.filename})
+        session.commit()
+        session.close()
+        return jsonify({"code":200})
+    return jsonify({"code":0})
 
+@course_bp.route('/download',methods=['GET','POST'])
+def download():
+    if request.method == "POST" or request.method == "GET":
+        session = db.session
+        id = request.values.get("id",type=int,default = None)
+        print(id)
+        file = session.query(File).filter(File.id == id).first()
+        basepath = os.path.dirname(__file__)
+        coursepath = Path(str(file.course))
+        dfilename = secure_filename(''.join(lazy_pinyin(file.filename)))
+        download_path = os.path.join(basepath,coursepath)
+        session.close()        
+        response = make_response(send_from_directory(download_path,filename=dfilename,as_attachment=True))
+        response.headers["Content-Disposition"] = "attachment; filename={}".format(file.filename.encode().decode('latin-1'))
+        return response
+@course_bp.route('/deleteCourse',methods=['GET','POST'])
+def deleteCourse():
+    id = request.values.get("id",type=int,default = None)
+    if id == None:
+        return jsonify({"code":0})
+    course = Course.query.get(id)
+    if course == None:
+        return jsonify({"code":0})
+    session = db.session
+    session.delete(course)
+    session.commit()
+    session.close()
+    return jsonify({"code":200})
+@course_bp.route('/addCourse',methods=['GET','POST'])
+def addCourse():
+    name = request.values.get("name",type=str,default = None)
+    info = request.values.get("info",type=str,default = "")
+    print(name,info)
+    if name == None:
+        return jsonify({"code":0})
+    course = Course(name,info)
+    course.save()
+    return jsonify({"code":200})
 
 @note_bp.route("/modifyNotes", methods=["POST"])
 def modityNotes():

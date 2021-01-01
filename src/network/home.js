@@ -47,6 +47,13 @@ export function postLogin (datas) {
   })
 }
 
+export function postLogout () {
+  return request({
+    url: '/user/logout',
+    method: 'post'
+  })
+}
+
 export function getddl (datas) {
   return request({
     url: '/schedule/getdeadlinescalendar',
