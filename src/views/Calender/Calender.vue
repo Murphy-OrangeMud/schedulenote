@@ -71,6 +71,7 @@ export default {
       getddl(datas).then(res => {
         this.ddlList = res.calendar
         this.mess = '成功获取ddl'
+        console.log(res)
       })
     },
     eventClick (ddl) {
