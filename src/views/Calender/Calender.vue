@@ -100,6 +100,7 @@ export default {
       this.mess = '未能添加ddl'
       addddl(datas).then(res => {
         this.mess = '添加ddl成功'
+        console.log(res)
       })
       this.getDdl()
     },
