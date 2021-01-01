@@ -25,12 +25,6 @@ user_bp = Blueprint('user', __name__, url_prefix='/user')
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 login_manager = LoginManager()
 
-
-# for test
-@current_note_bp.route("/")
-def hello():
-    return render_template("helloworld.html")
-
 @course_bp.route("/courselist", methods=['GET'])
 def courseList():
     if request.method == 'GET':
