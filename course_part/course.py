@@ -14,7 +14,6 @@ def index():
 
 @app.route("/course/addCourse",methods = ['POST','GET'])
 def addCourse():
-    print("?")
     name = request.values.get("name",type=str,default = None)
     info = request.values.get("info",type=str,default = "")
     print(name,info)
