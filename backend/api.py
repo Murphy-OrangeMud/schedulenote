@@ -82,7 +82,7 @@ def downvote():
 @course_bp.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
-        session = Session()
+        session = db.session
         course = request.values.get("course",type=int,default = None)
         uploader = request.values.get("uploader",type=int,default = None)
         description = request.values.get("description",type=str,default = None)
@@ -107,7 +107,7 @@ def upload():
 @course_bp.route('/download',methods=['GET','POST'])
 def download():
     if request.method == "POST" or request.method == "GET":
-        session = Session()
+        session = db.session
         id = request.values.get("id",type=int,default = None)
         print(id)
         file = session.query(File).filter(File.id == id).first()
@@ -127,7 +127,7 @@ def deleteCourse():
     course = Course.query.get(id)
     if course == None:
         return jsonify({"code":0})
-    session = Session()
+    session = db.session
     session.delete(course)
     session.commit()
     session.close()
