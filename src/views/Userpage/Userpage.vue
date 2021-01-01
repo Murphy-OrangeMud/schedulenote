@@ -1,105 +1,132 @@
 <template>
-    <div>
-      <el-row :gutter="20" style="margin-top:10px;">
-      <el-col :span="8" :offset="3">
-      <div v-if=username class="grid-content bg-purple">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>个人中心</span>
-          </div>
-          <div class="id">
-            <span class="sender">id：{{id}}</span>
-          </div>
-          <div class="is_admin">
-            <span class="sender">权限：{{showAuthority(is_admin)}}</span>
-          </div>
-          <div class="email">
-            <span class="sender">邮箱：{{email}}</span>
-          </div>
-          <el-divider></el-divider>
-          <div class="avatar">
-            <span class="sender">头像：</span>
-            <el-image
-              style="width: 100px; height: 100px"
-              :src="avatar"
-              :fit="fit"></el-image>
-          </div>
-          <div class="username">
-            <span class="sender">用户名：{{username}}</span>
-          </div>
-          <div class="password">
-            <span class="sender">密码：{{password}}</span>
-          </div>
-          <div class="motto">
-            <span class="sender">个性签名：{{motto}}</span>
-          </div>
-        </el-card>
-    </div>
-    </el-col>
-    <el-col v-if=username :span="10">
-      <div class="grid-content bg-purple">
-      <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span>基本资料</span>
-      </div>
-      <div>
-        <el-form label-width="80px" v-model="dataFrom" size="small" label-position="right">
-          <el-form-item :label="头像" prop="avatar" ref="uploadElement">
-          <el-upload ref="upload"
-                     action="#"
-                     accept="image/png,image/jpg,image/jpeg"
-                     list-type="picture-card"
-                     :limit=1
-                     :auto-upload="false"
-                     :on-exceed="handleExceed"
-                     :before-upload="handleBeforeUpload"
-                     :on-preview="handlePictureCardPreview"
-                     :on-remove="handleRemove"
-                     :on-change="imgChange"
-                     :class="{hide:hideUpload}">
-            <i class="el-icon-plus"></i>
-          </el-upload>
-          <el-dialog :visible.sync="dialogVisible">
-            <img width="100%"
-                 :src="dialogImageUrl"
-                 alt="">
-          </el-dialog>
-          </el-form-item>
-          <el-form-item>
-          <el-button size="small"
-                     type="primary"
-                     @click="uploadFile">立即上传</el-button>
-          <el-button size="small"
-          @click="tocancel">取消</el-button>
-          </el-form-item>
-          <el-form-item label="用户名" prop="username">
-            <el-input  auto-complete="off" v-model="formdata.username"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input auto-complete="off" v-model="formdata.password"></el-input>
-          </el-form-item>
-          <el-form-item label="个性签名" prop="motto">
-            <el-input  maxlength="30" v-model="formdata.motto"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button size="mini" type="modify" @click=modify>提交</el-button>
-          <el-button size="mini" type="modify" @click=logout>登出</el-button>
+  <div>
+    <el-row :gutter='20' style='margin-top: 10px'>
+      <el-col :span='8' :offset='3'>
+        <div v-if='username' class='grid-content bg-purple'>
+          <el-card class='box-card'>
+            <div slot='header' class='clearfix'>
+              <span>个人中心</span>
+            </div>
+            <div class='id'>
+              <span class='sender'>id：{{ id }}</span>
+            </div>
+            <div class='is_admin'>
+              <span class='sender'>权限：{{ showAuthority(is_admin) }}</span>
+            </div>
+            <div class='email'>
+              <span class='sender'>邮箱：{{ email }}</span>
+            </div>
+            <el-divider></el-divider>
+            <div class='avatar'>
+              <span class='sender'>头像：</span>
+              <el-image
+                style='width: 100px; height: 100px'
+                :src='avatar'
+                :fit='fit'
+              ></el-image>
+            </div>
+            <div class='username'>
+              <span class='sender'>用户名：{{ username }}</span>
+            </div>
+            <div class='password'>
+              <span class='sender'>密码：{{ password }}</span>
+            </div>
+            <div class='motto'>
+              <span class='sender'>个性签名：{{ motto }}</span>
+            </div>
+          </el-card>
         </div>
-      </div>
-      </el-card>
-      </div>
-    </el-col>
-    <div v-if=not_login>请先登录!</div>
+      </el-col>
+      <el-col v-if='username' :span='10'>
+        <div class='grid-content bg-purple'>
+          <el-card class='box-card'>
+            <div slot='header' class='clearfix'>
+              <span>基本资料</span>
+            </div>
+            <div>
+              <el-form
+                label-width='80px'
+                v-model='dataFrom'
+                size='small'
+                label-position='right'
+              >
+                <el-form-item :label='头像' prop='avatar' ref='uploadElement'>
+                  <div id='fileInput'>
+                    <h2 class='text-center'>Choose an Image</h2>
+                    <v-file-input
+                      accept='image/*'
+                      placeholder='images'
+                      prepend-icon='mdi-camera-plus'
+                      multiple
+                      v-model='files'
+                    >
+                    </v-file-input>
+                    <v-btn class='button' @click='onUpload'> UPLOAD </v-btn>
+                  </div>
+                  <el-upload
+                    ref='upload'
+                    action='#'
+                    accept='image/png,image/jpg,image/jpeg'
+                    list-type='picture-card'
+                    :limit='1'
+                    :auto-upload='false'
+                    :on-exceed='handleExceed'
+                    :before-upload='handleBeforeUpload'
+                    :on-preview='handlePictureCardPreview'
+                    :on-remove='handleRemove'
+                    :on-change='imgChange'
+                    :class='{ hide: hideUpload }'
+                  >
+                    <i class='el-icon-plus'></i>
+                  </el-upload>
+                  <el-dialog :visible.sync='dialogVisible'>
+                    <img width='100%' :src='dialogImageUrl' alt='' />
+                  </el-dialog>
+                </el-form-item>
+                <el-form-item>
+                  <el-button size='small' type='primary' @click='uploadFile'
+                    >立即上传</el-button
+                  >
+                  <el-button size='small' @click='tocancel'>取消</el-button>
+                </el-form-item>
+                <el-form-item label='用户名' prop='username'>
+                  <el-input
+                    auto-complete='off'
+                    v-model='formdata.username'
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label='密码' prop='password'>
+                  <el-input
+                    auto-complete='off'
+                    v-model='formdata.password'
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label='个性签名' prop='motto'>
+                  <el-input maxlength='30' v-model='formdata.motto'></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot='footer' class='dialog-footer'>
+                <el-button size='mini' type='modify' @click='modify'
+                  >提交</el-button
+                >
+                <el-button size='mini' type='modify' @click='logout'
+                  >登出</el-button
+                >
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+      <div v-if='not_login'>请先登录!</div>
     </el-row>
-    </div>
-
+  </div>
 </template>
 
 <script>
-import { postLogout } from 'network/home'
+import { postLogout, addavatar } from 'network/home'
 export default {
-  data () {
+  // eslint-disable-next-line space-before-function-paren
+  data() {
     return {
       hideUpload: false,
       dialogImageUrl: '',
@@ -107,130 +134,151 @@ export default {
       formLabelWidth: '80px',
       limitNum: 1,
       form: {},
+      files: null,
+      imageUrl: null,
       dialogVisible2: false,
-      data: {
-        id: 0,
-        username: 'test',
-        email: '1800012345@pku.edu.cn',
-        password: '1234567',
-        avatar: '',
-        motto: '生活就像海洋，只有意志坚强的人才能到达彼岸',
-        is_admin: false
-      },
+      data: {},
       formdata: {
         username: 'alice',
         password: '123',
-        avatar: '?',
+        avatar: '',
         motto: ''
       }
     }
   },
   computed: {
     id () {
-      return this.$store.state.id
+      return this.$store.state.id;
     },
     username () {
-      return this.$store.state.username
+      return this.$store.state.username;
     },
     email () {
-      return this.$store.state.email
+      return this.$store.state.email;
     },
     avatar () {
-      return this.$store.state.avatar
+      return this.$store.state.avatar;
     },
     motto () {
-      return this.$store.state.motto
+      return this.$store.state.motto;
     },
     is_admin () {
-      return this.$store.state.is_admin
+      return this.$store.state.is_admin;
     },
     password () {
-      return this.$store.state.password
+      return this.$store.state.password;
     },
     not_login () {
-      return this.$store.state.username === ''
-    }
+      return this.$store.state.username === '';
+    },
   },
   methods: {
     showAuthority: function (isAdmin) {
-      if (this.data.is_admin) return 'Admin'
-      else return 'User'
+      if (this.data.is_admin) return 'Admin';
+      else return 'User';
+    },
+    addAvatar: function () {
+      const datas = {
+        avatar: this.formdata.avatar,
+      };
+      if (
+        !(
+          datas.avatar.type === 'image/png' ||
+          datas.avatar.type.type === 'image/jpg' ||
+          datas.avatar.type.type === 'image/jpeg'
+        )
+      ) {
+        console.log('不是图片');
+      }
+      addavatar(datas);
     },
     modify: function () {
-      clearTimeout(this.timer)
+      clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        this.$store.state.username = this.formdata.username
-        this.$store.state.password = this.formdata.password
-        this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-        this.$store.state.motto = this.formdata.motto
-        console.log('ok')
-      }
-      , 3000)
+        this.$store.state.username = this.formdata.username;
+        this.$store.state.password = this.formdata.password;
+        this.$options.methods.addAvatar();
+        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+        this.$store.state.motto = this.formdata.motto;
+        console.log('ok');
+      }, 3000);
     },
     logout: function () {
-      postLogout().then(res => {
-        alert('登出成功！')
-        this.$store.state.id = 0
-        this.$store.state.username = ''
-        this.$store.state.motto = ''
-        this.$store.state.password = ''
-        this.$store.state.is_admin = false
-        this.$store.state.avatar = ''
-      })
+      postLogout().then((res) => {
+        alert('登出成功！');
+        this.$store.state.id = 0;
+        this.$store.state.username = '';
+        this.$store.state.motto = '';
+        this.$store.state.password = '';
+        this.$store.state.is_admin = false;
+        this.$store.state.avatar = '';
+      });
     },
-    handleBeforeUpload (file) {
-      if (!(file.type === 'image/png' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+    handleBeforeUpload(file) {
+      if (
+        !(
+          file.type === 'image/png' ||
+          file.type === 'image/jpg' ||
+          file.type === 'image/jpeg'
+        )
+      ) {
         this.$notify.warning({
           title: '警告',
-          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
-        })
+          message:
+            '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片',
+        });
       }
-      var size = file.size / 1024 / 1024 / 2
+      var size = file.size / 1024 / 1024 / 2;
       if (size > 4) {
         this.$notify.warning({
           title: '警告',
-          message: '图片大小必须小于4M'
-        })
+          message: '图片大小必须小于4M',
+        });
       }
-      var fd = new FormData()
-      fd.append('picFile', file)
-      console.log(fd.get('picFile'))
-      this.api({
-        url: '../../user_part/test_images',
-        method: 'post',
-        data: fd,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then((data) => {
-
-      })
+      var fd = new FormData();
+      fd.append('picFile', file);
+      console.log(fd.get('picFile'));
     },
     // 文件超出个数限制时的钩子
-    handleExceed (files, fileList) {
-
-    },
+    handleExceed(files, fileList) {},
     // 文件列表移除文件时的钩子
-    handleRemove (file, fileList) {
-      this.hideUpload = fileList.length >= this.limitNum
+    handleRemove(file, fileList) {
+      this.hideUpload = fileList.length >= this.limitNum;
     },
     // 点击文件列表中已上传的文件时的钩子
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
-    uploadFile () {
-      this.$refs.upload.submit()
+    uploadFile() {
+      this.$refs.upload.submit();
     },
-    imgChange (files, fileList) {
-      this.hideUpload = fileList.length >= this.limitNum
+    imgChange(files, fileList) {
+      this.hideUpload = fileList.length >= this.limitNum;
       if (fileList) {
-        this.$refs.uploadElement.clearValidate()
+        this.$refs.uploadElement.clearValidate();
       }
     },
-    tocancel () {
-      this.dialogVisible2 = false
+    tocancel() {
+      this.dialogVisible2 = false;
+    },
+    onUpload() {
+      var file = this.files[0];
+      /* eslint-disable no-undef */
+      let param = new FormData(); // 创建form对象
+      param.append('avatar', file); // 通过append向form对象添加数据
+      param.append('chunk', '0'); // 添加form表单中其他数据
+      console.log(param.get('file')); // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      };
+      // 添加请求头
+      this.axios
+        .post('http://8.136.141.151:8848/user/upload_avatar', param, config)
+        .then((res) => {
+          console.log(res);
+        })
     }
   }
-}
+};
 </script>
