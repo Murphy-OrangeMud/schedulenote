@@ -227,17 +227,15 @@ class File(db.Model):
 
 class Course(db.Model):
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     name = db.Column(db.String(20))
     score = db.Column(db.Integer)
     info = db.Column(db.Text)
 
     def __init__(self,
-                 id, 
                  name, 
                  info=""):
-
-        self.id = id
+                 
         self.name = name
         self.info = info
     
