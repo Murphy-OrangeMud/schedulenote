@@ -9,7 +9,7 @@ export function getFilelist () {
 
 export function getMaterials (datas) {
   return request({
-    url: '/course/download/',
+    url: '/course/download',
     method: 'post',
     data: datas
   })
@@ -17,7 +17,7 @@ export function getMaterials (datas) {
 
 export function postMaterials (datas) {
   return request({
-    url: '/course/upload/',
+    url: '/course/upload',
     method: 'post',
     data: datas
   })
@@ -25,7 +25,7 @@ export function postMaterials (datas) {
 
 export function postFilelist (id) {
   return request({
-    url: '/course/upvote/',
+    url: '/course/upvote',
     method: 'post',
     data: id
   })
