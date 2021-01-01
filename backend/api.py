@@ -119,7 +119,7 @@ def download():
         response = make_response(send_from_directory(download_path,filename=dfilename,as_attachment=True))
         response.headers["Content-Disposition"] = "attachment; filename={}".format(file.filename.encode().decode('latin-1'))
         return response
-@course_bp.route('/addCourse',methods=['GET','POST'])
+@course_bp.route('/deleteCourse',methods=['GET','POST'])
 def deleteCourse():
     id = request.values.get("id",type=int,default = None)
     if id == None:
@@ -134,7 +134,6 @@ def deleteCourse():
     return jsonify({"code":200})
 @course_bp.route('/addCourse',methods=['GET','POST'])
 def addCourse():
-    print('?')
     name = request.values.get("name",type=str,default = None)
     info = request.values.get("info",type=str,default = "")
     print(name,info)
