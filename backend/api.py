@@ -31,6 +31,47 @@ login_manager = LoginManager()
 def hello():
     return render_template("helloworld.html")
 
+@course_bp.route("/courselist", methods=['GET'])
+def courseList():
+    if request.method == 'GET':
+        courses = db.session.query(Course).all()
+        courselist = []
+        for course in courses:
+            id = course.id
+            name = course.name
+            info = course.info
+            coursedict = {"id": id,
+                        "name": name,
+                        "info": info,
+                        }
+            courselist.append(coursedict)
+        return jsonify(courselist)
+
+@course_bp.route("/queryFile", methods=['GET'])
+def queryFile():
+    if request.method == 'GET':
+        id = request.values.get("id",type=int,default = None)
+        if id == None:
+            return jsonify({"code":0})
+        files = db.session.query(File).filter(Course.id == id).all()
+        filelist = []
+        for file in files:
+            uploader = file.uploader
+            course = db.session.query(Course).filter(Course.id == file.course).first()
+            coursename = course.name
+            score = file.score
+            filename = file.filename
+            fileid = file.id
+            filedict = {"uploader": uploader,
+                        "coursename": coursename,
+                        "score": score,
+                        "filename": filename,
+                        "fileid": fileid,
+                        "courseid": course.id
+                        }
+            filelist.append(filedict)
+        return jsonify(filelist)
+
 
 @course_bp.route("/filelist", methods=['GET'])
 def queryList():

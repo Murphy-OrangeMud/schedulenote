@@ -71,6 +71,7 @@ export default {
       getddl(datas).then(res => {
         this.ddlList = res.calendar
         this.mess = '成功获取ddl'
+        console.log(res)
       })
     },
     eventClick (ddl) {
@@ -88,8 +89,8 @@ export default {
     addDdl () {
       const datas = {
         description: this.myddl.description,
-        startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2,
-        endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2,
+        startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
+        endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
         rotation: 100,
         userID: '100',
@@ -99,6 +100,7 @@ export default {
       this.mess = '未能添加ddl'
       addddl(datas).then(res => {
         this.mess = '添加ddl成功'
+        console.log(res)
       })
       this.getDdl()
     },

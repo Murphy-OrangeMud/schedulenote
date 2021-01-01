@@ -3,3 +3,4 @@ flask_login
 redis
 markdown
 pdfkit
+flask_cors
