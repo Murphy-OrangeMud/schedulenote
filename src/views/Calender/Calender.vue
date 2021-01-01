@@ -89,8 +89,8 @@ export default {
     addDdl () {
       const datas = {
         description: this.myddl.description,
-        startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2,
-        endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2,
+        startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
+        endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
         rotation: 100,
         userID: '100',
