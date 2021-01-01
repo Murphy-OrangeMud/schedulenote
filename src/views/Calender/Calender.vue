@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     getDdl () {
-      const datas = { ID: '100' }
+      const datas = { userID: '100' }
       console.log(datas)
       getddl(datas).then(res => {
         this.ddlList = res.calendar
