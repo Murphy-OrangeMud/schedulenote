@@ -136,6 +136,7 @@ def deleteCourse():
 def addCourse():
     name = request.values.get("name",type=str,default = None)
     info = request.values.get("info",type=str,default = "")
+    print(name,info)
     if name == None:
         return jsonify({"code":0})
     course = Course(name,info)
