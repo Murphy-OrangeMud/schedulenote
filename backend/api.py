@@ -45,9 +45,9 @@ def courseList():
             courselist.append(coursedict)
         return jsonify(courselist)
 
-@course_bp.route("/queryFile", methods=['GET'])
+@course_bp.route("/queryFile", methods=['GET','POST'])
 def queryFile():
-    if request.method == 'GET':
+    if request.method == 'GET' or request.method == 'POST':
         id = request.values.get("id",type=int,default = None)
         if id == None:
             return jsonify({"code":10})
