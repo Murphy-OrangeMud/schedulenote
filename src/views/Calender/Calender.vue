@@ -91,7 +91,7 @@ export default {
     },
     eventClick (event, jsEvent, pos) {
       console.log('eventClick')
-      if (confirm('是否要删除' + event.description + '？')) {
+      if (confirm('是否要删除' + event.title + '？')) {
         const datas = {
           id: event.YOUR_DATA.id
         }
