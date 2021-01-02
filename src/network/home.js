@@ -31,13 +31,6 @@ export function loginByEmail (datas) {
     data: datas
   })
 }
-export function getuser (datas) {
-  return request({
-    url: '/user/getuser',
-    method: 'get',
-    data: datas
-  })
-}
 
 export function searchEmail (datas) {
   return request({
@@ -117,13 +110,6 @@ export function delddl (datas) {
     data: datas
   })
 }
-export function addavatar (datas) {
-  return request({
-    url: '/user/upload_avatar',
-    method: 'put',
-    data: datas
-  })
-}
 
 export function getcourse (datas) {
   return request({
@@ -144,6 +130,22 @@ export function addcourse (datas) {
   return request({
     url: '/course/addCourse',
     method: 'post',
+    data: datas
+  })
+}
+
+export function getuser (datas) {
+  return request({
+    url: '/user/getuser',
+    method: 'get',
+    data: datas
+  })
+}
+
+export function addavatar (datas) {
+  return request({
+    url: '/user/upload_avatar',
+    method: 'put',
     data: datas
   })
 }
