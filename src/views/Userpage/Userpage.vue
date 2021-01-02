@@ -52,18 +52,6 @@
                 label-position='right'
               >
                 <el-form-item :label='头像' prop='avatar' ref='uploadElement'>
-                  <div id='fileInput'>
-                    <h2 class='text-center'>Choose an Image</h2>
-                    <v-file-input
-                      accept='image/*'
-                      placeholder='images'
-                      prepend-icon='mdi-camera-plus'
-                      multiple
-                      v-model='files'
-                    >
-                    </v-file-input>
-                    <v-btn class='button' @click='onUpload'> UPLOAD </v-btn>
-                  </div>
                   <el-upload
                     ref='upload'
                     action='#'
@@ -273,23 +261,6 @@ export default {
     },
     tocancel () {
       this.dialogVisible2 = false
-    },
-    onUpload () {
-      var file = this.files[0]
-      /* eslint-disable no-undef */
-      const param = new FormData() // 创建form对象
-      param.append('avatar', file) // 通过append向form对象添加数据
-      param.append('chunk', '0') // 添加form表单中其他数据
-      console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-      const config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }
-      // 添加请求头
-      this.axios
-        .post('http://8.136.141.151:8848/user/upload_avatar', param, config)
-        .then((res) => {
-          console.log(res)
-        })
     }
   }
 }
