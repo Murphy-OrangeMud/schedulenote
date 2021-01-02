@@ -79,6 +79,8 @@ def queryList():
         for file in files:
             uploader = file.uploader
             course = db.session.query(Course).filter(Course.id == file.course).first()
+            if course == None:
+                continue
             coursename = course.name
             score = file.score
             filename = file.filename
