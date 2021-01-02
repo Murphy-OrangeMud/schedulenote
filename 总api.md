@@ -231,7 +231,7 @@ response.body = {
 
 ###### 删除DDL
 
-POST /deleteddl
+POST /deleteschedule
 
 ``` json
 request.body = {
