@@ -60,7 +60,8 @@ export default {
         endTime2: '',
         location: ''
       },
-      mess: '未能获取ddl'
+      mess: '未能获取ddl',
+      timer: null
     }
   },
   components: {
@@ -100,7 +101,10 @@ export default {
         delddl(datas).then(res => {
           this.mess = '删除ddl成功'
         })
-        this.getDdl()
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.getDdl()
+        }, 1000)
       }
     },
     addDdl () {
@@ -115,12 +119,18 @@ export default {
       }
       console.log(ddldatas)
       console.log(ddldatas)
-      this.mess = '未能添加ddl'
       addddl(ddldatas).then(res => {
-        this.mess = '添加ddl成功'
+        if (res.status === 'OK') {
+          this.mess = '添加ddl成功'
+        } else {
+          this.mess = '添加ddl失败'
+        }
         console.log(res)
       })
-      this.getDdl()
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.getDdl()
+      }, 1000)
     },
     refresh: function () {
       this.getDdl()
