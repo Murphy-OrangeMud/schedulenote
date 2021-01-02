@@ -546,36 +546,6 @@ def save():
     pass
 
 
-@user_bp.route('/test_init', methods=['GET', 'POST'])
-def test_init():
-    user1 = User('alice', '123', 'alice@email')
-    user2 = User('admin', '123', 'admin@email')
-    db.session.add(user1)
-    db.session.flush()
-    db.session.commit()
-    user2.isAdmin = 1
-    db.session.add(user2)
-    db.session.flush()
-    db.session.commit()
-    feed1 = Feedback("msg1")
-    db.session.add(feed1)
-    db.session.flush()
-    db.session.commit()
-    feed2 = Feedback("msg2")
-    db.session.add(user2)
-    db.session.flush()
-    db.session.commit()
-    rep1 = Report(1, 1, "msg1")
-    db.session.add(feed1)
-    db.session.flush()
-    db.session.commit()
-    rep2 = Report(1, 1, "msg2")
-    db.session.add(rep2)
-    db.session.flush()
-    db.session.commit()
-    return "success"
-
-
 def login_required(view_func):
 
     @functools.wraps(view_func)  #
@@ -624,14 +594,6 @@ def test_init():
     db.session.flush()
     db.session.commit()
     return "success"
-
-
-
-
-
-# @login_manager.user_loader
-# def load_user(userid):
-#     return User.query.get(userid)
 
 @user_bp.route('/search_email', methods = ['GET'])
 def search_email():
