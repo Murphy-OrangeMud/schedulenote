@@ -50,6 +50,7 @@ export default {
   data () {
     return {
       ddlList: [],
+      resddl: [],
       myddl: {
         description: '',
         startTime1: '',
@@ -57,6 +58,12 @@ export default {
         endTime1: '',
         endTime2: '',
         location: ''
+      },
+      templateddl: {
+        title: '',
+        start: '',
+        end: '',
+        cssClass: 'red'
       },
       mess: '未能获取ddl'
     }
@@ -69,9 +76,19 @@ export default {
       const datas = { userID: '100' }
       console.log(datas)
       getddl(datas).then(res => {
-        this.ddlList = res.calendar
-        this.mess = '成功获取ddl'
         console.log(res)
+        this.ddlList = []
+        let i = 0
+        for (i = 0; i < res.calendar.length; i += 1) {
+          this.templateddl.title = res.calendar[i].discription
+          this.templateddl.start = res.calendar[i].startTime
+          this.templateddl.end = res.calendar[i].endTime
+          this.ddlList.push(this.templateddl)
+        }
+        this.resddl = res.calendar
+        this.mess = '成功获取ddl'
+        console.log(this.resddl)
+        console.log(this.ddlList)
       })
     },
     eventClick (ddl) {

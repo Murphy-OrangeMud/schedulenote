@@ -17,7 +17,7 @@ from .configs import *
 
 from .utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
 from .utils import send_email
-from .utils import strformat2datetime
+from .utils import strformat2datetime, datetime2strformat
 
 import markdown, pdfkit
 
@@ -298,8 +298,8 @@ def getCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -325,8 +325,8 @@ def getClassCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -352,8 +352,8 @@ def getDeadlinesCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -501,8 +501,8 @@ def modifySchedule():
             "userID": newschedule.userID,
             "description": newschedule.description,
             "location": newschedule.location,
-            "startTime": newschedule.startTime,
-            "endTime": newschedule.endTime,
+            "startTime": datetime2strformat(newschedule.startTime),
+            "endTime": datetime2strformat(newschedule.endTime),
             "rotation": newschedule.rotation,
             "type": newschedule.scheduleType
         }})
@@ -534,8 +534,8 @@ def getAlert():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -756,11 +756,11 @@ def signup():
             user_data['code'] = 400
             user_data['data']['msg'] = 'The mailbox is already occupied'
             return jsonify(user_data)
-        if MyRedis.get(email + '_checked') != email:
-            user_data['code'] = 400
-            user_data['data']['msg'] = 'The mailbox was not verified'
-            return jsonify(user_data)
-        MyRedis.delete(email + '_checked')
+#         if MyRedis.get(email + '_checked') != email:
+#             user_data['code'] = 400
+#             user_data['data']['msg'] = 'The mailbox was not verified'
+#             return jsonify(user_data)
+#         MyRedis.delete(email + '_checked')
         user = User(name, password, email)
         try:
             db.session.add(user)
@@ -854,16 +854,16 @@ def modify_info():
             return jsonify(return_json)
     newemail = request.values.get('newemail', type = str, default = None)
     if is_legal_str(newemail):
-        if MyRedis.get(newemail + "_checked") == newemail:
-            current_user().motto = newmotto
-            db.session.commit()
-            return_json['code'] = 200
-            return_json['data']['msg'] = "Email modify success"
-            return jsonify(return_json)
-        else:
-            return_json['code'] = 400
-            return_json['data']['msg'] = 'The mailbox was not verified'
-            return jsonify(return_json)
+#         if MyRedis.get(newemail + "_checked") == newemail:
+        current_user().email = newemail
+        db.session.commit()
+        return_json['code'] = 200
+        return_json['data']['msg'] = "Email modify success"
+        return jsonify(return_json)
+#         else:
+#             return_json['code'] = 400
+#             return_json['data']['msg'] = 'The mailbox was not verified'
+#             return jsonify(return_json)
     #所有的都不满足，就一定是参数错误
     return_json['code'] = 900
     return_json['data']['msg'] = "parameter ILLEGAL"
