@@ -825,7 +825,7 @@ def login():
     if user_name:#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
-        user_data['data']['msg'] = 'User "' + current_user.username + '" is using now'
+        user_data['data']['msg'] = 'User is using now'
         return jsonify(user_data)
     if is_legal_str(name) and is_legal_str(password):
         #判断用户是否存在
@@ -982,7 +982,8 @@ def get_user():
 # 头像涉及到文件，所以单独写了upload_avatar接口
 @user_bp.route("/modify", methods = ['PUT'])
 def modify_info():
-    user_name = request.cookies.get("user_name")
+    # user_name = request.cookies.get("user_name")
+    user_name = request.values.get('name', type = str, default = None)
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     newname = request.values.get('newname', type = str, default = None)
@@ -1036,7 +1037,8 @@ def modify_info():
 # 上传用户头像
 @user_bp.route('/upload_avatar', methods=['PUT'])
 def upload_avatar():
-    user_name = request.cookies.get("user_name")
+    # user_name = request.cookies.get("user_name")
+    user_name = request.values.get('name', type = str, default = None)
     current_user = User.query.filter(User.username == user_name).all()[0]
     img = request.files.get('avatar')
     return_json = {'data':{}}
@@ -1138,3 +1140,4 @@ def report():
         return_json['code'] = 200
         return_json['data']['msg'] = "report success"
         return jsonify(return_json)
+

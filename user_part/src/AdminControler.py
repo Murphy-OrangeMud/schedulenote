@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required, current_user
+# from flask_login import login_required, current_user
 from uuid import uuid1
 
 from Model import User, db, MyRedis, Report, Feedback
@@ -11,8 +11,9 @@ admin_bp = Blueprint('admin', __name__)
 
 # 获得未完成的feedback的id
 @admin_bp.route('/feedback_list', methods = ['GET'])
-@login_required
 def get_unfinished_feedback():
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}} 
     if not current_user.is_admin():
         return_json['code'] = 400
@@ -26,8 +27,9 @@ def get_unfinished_feedback():
     return jsonify(return_json)
 
 @admin_bp.route('/report_list', methods = ['GET'])
-@login_required
 def get_unfinished_report():
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}} 
     if not current_user.is_admin():
         return_json['code'] = 400
@@ -42,8 +44,9 @@ def get_unfinished_report():
 
 
 @admin_bp.route('/get_feedback/<id>', methods = ['GET'])
-@login_required
 def get_feedback(id):
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
         return_json['code'] = 400
@@ -60,8 +63,9 @@ def get_feedback(id):
         return jsonify(return_json)
 
 @admin_bp.route('/get_report/<id>', methods = ['GET'])
-@login_required
 def get_report(id):
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
         return_json['code'] = 400
@@ -78,8 +82,9 @@ def get_report(id):
         return jsonify(return_json)
 
 @admin_bp.route('/finish_feedback/<id>', methods = ['POST'])
-@login_required
 def finish_feedback(id):
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
         return_json['code'] = 400
@@ -98,8 +103,9 @@ def finish_feedback(id):
         return jsonify(return_json)
 
 @admin_bp.route('/finish_report/<id>', methods = ['POST'])
-@login_required
 def finish_report(id):
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
         return_json['code'] = 400
@@ -120,8 +126,9 @@ def finish_report(id):
 # UNFINISHED
 # 删除文件部分还要和Note结合一下
 @admin_bp.route('/admin_modify/<id>', methods = ['PUT'])
-@login_required
 def admin_modify(id):
+    user_name = request.cookies.get("user_name")
+    current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
     report_type = request.values.get('report_type', type = int, default = None)
