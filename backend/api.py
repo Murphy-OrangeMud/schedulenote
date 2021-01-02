@@ -550,11 +550,10 @@ def save():
     pass
 
 
-
 # 获得未完成的feedback的id
 @admin_bp.route('/feedback_list', methods = ['GET'])
 def get_unfinished_feedback():
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}} 
     if not current_user.is_admin():
@@ -570,7 +569,7 @@ def get_unfinished_feedback():
 
 @admin_bp.route('/report_list', methods = ['GET'])
 def get_unfinished_report():
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}} 
     if not current_user.is_admin():
@@ -587,7 +586,7 @@ def get_unfinished_report():
 
 @admin_bp.route('/get_feedback/<id>', methods = ['GET'])
 def get_feedback(id):
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
@@ -606,7 +605,7 @@ def get_feedback(id):
 
 @admin_bp.route('/get_report/<id>', methods = ['GET'])
 def get_report(id):
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
@@ -625,7 +624,7 @@ def get_report(id):
 
 @admin_bp.route('/finish_feedback/<id>', methods = ['POST'])
 def finish_feedback(id):
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
@@ -646,7 +645,7 @@ def finish_feedback(id):
 
 @admin_bp.route('/finish_report/<id>', methods = ['POST'])
 def finish_report(id):
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     if not current_user.is_admin(): 
@@ -669,7 +668,7 @@ def finish_report(id):
 # 删除文件部分还要和Note结合一下
 @admin_bp.route('/admin_modify/<id>', methods = ['PUT'])
 def admin_modify(id):
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     current_user = User.query.filter(User.username == user_name).all()[0]
     return_json = {'data':{}}
     #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
