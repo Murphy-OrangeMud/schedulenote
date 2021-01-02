@@ -123,18 +123,13 @@ export default {
         formData.append('file', this.addArr[i])
 
         postMaterials(formData).then(res => {
-          if (res.data.code === 200) {
+          if (res.code === 200) {
             this.$message({
               type: 'success',
               message: '附件上传成功!'
             })
           }
           if (res.code === 400) {
-            console.log('shit2')
-          }
-          if (res.data.code === 400) {
-            console.log('SHit!')
-            alert('已有同名文件，上传失败。')
             this.$message({
               type: 'fail',
               message: '已有同名文件!'
