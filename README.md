@@ -5,6 +5,8 @@
 
 `git clone https://github.com/Murphy-OrangeMud/schedulenote.git`
 
+或者  `git pull origin $(BRANCH) --rebase`
+
 `pip3 install -r requirements.txt`
 
 `uwsgi --ini uwsgi.ini`
