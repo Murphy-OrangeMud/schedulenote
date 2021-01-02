@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     getDdl () {
-      const datas = { userID: '100' }
+      const datas = { userID: this.$store.state.id }
       console.log(datas)
       getddl(datas).then(res => {
         console.log(res)
@@ -109,7 +109,7 @@ export default {
         endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
         rotation: 100,
-        userID: '100',
+        userID: this.$store.state.id,
         type: 2
       }
       console.log(datas)
