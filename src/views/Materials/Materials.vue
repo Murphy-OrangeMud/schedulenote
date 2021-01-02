@@ -91,7 +91,7 @@ export default {
       // formData.append('id', this.$store.state.courseid)
       // console.log(formData)
       const datas = qs.stringify({
-        id: this.$store.state.courseid
+        id: 4
       })
       getFilelist(datas).then(res => {
         this.materialList = res
