@@ -113,7 +113,7 @@ export default {
           return
         }
         var formData = new FormData()
-        formData.append('course', 1)
+        formData.append('course', 2)
         formData.append('uploader', 2)
         formData.append('description', 'hzj')
         formData.append('file', this.addArr[i])
