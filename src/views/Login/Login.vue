@@ -64,6 +64,7 @@ export default {
           this.$store.state.motto = res.data.motto
           this.$store.state.password = this.password
           this.$store.state.is_admin = res.data.is_admin
+          this.$router.push('/Userpage')
         }
       })
     }
