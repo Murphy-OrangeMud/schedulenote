@@ -47,6 +47,7 @@ export default {
       this.$router.push('/notes')
     },
     chooseMaterials () {
+      this.$store.state.courseid = 2
       this.$router.push('/materials')
     },
     addCourse () {
