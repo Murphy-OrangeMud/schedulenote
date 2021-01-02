@@ -1,9 +1,10 @@
 import { request } from './request'
 
-export function getFilelist () {
+export function getFilelist (datas) {
   return request({
     url: '/course/queryFile',
-    method: 'get'
+    method: 'get',
+    data: datas
   })
 }
 
@@ -27,6 +28,13 @@ export function loginByEmail (datas) {
   return request({
     url: '/user/login_by_email',
     method: 'post',
+    data: datas
+  })
+}
+export function getuser (datas) {
+  return request({
+    url: '/user/getuser',
+    method: 'get',
     data: datas
   })
 }
