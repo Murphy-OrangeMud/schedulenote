@@ -86,6 +86,7 @@ export default {
     },
     myGetFilelist () {
       var formData = new FormData()
+      console.log(this.$store.state.courseid)
       formData.append('id', this.$store.state.courseid)
       getFilelist(formData).then(res => {
         this.materialList = res
@@ -113,7 +114,7 @@ export default {
           return
         }
         var formData = new FormData()
-        formData.append('course', 2)
+        formData.append('course', this.$store.state.courseid)
         formData.append('uploader', 2)
         formData.append('description', 'hzj')
         formData.append('file', this.addArr[i])
