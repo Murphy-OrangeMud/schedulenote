@@ -57,7 +57,7 @@ export default {
       event.preventDefault()
       postLogin(datas).then(res => {
         this.mess = res.data.msg
-        console.log(res.data)
+        console.log(res)
         if (this.mess === 'User "' + this.account + '" login success') {
           this.$store.state.id = res.data.id
           this.$store.state.username = res.data.username

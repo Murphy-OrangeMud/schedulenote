@@ -252,12 +252,12 @@ export default {
     },
     uploadFile () {
       const datas = {
-        avatar: this.files.url
+        avatar: this.files
       }
       console.log(datas)
       addavatar(datas).then(res => {
         console.log('addavatra')
-        console.log(res.data)
+        console.log(res)
         if (res.data.code === '200') {
           this.avatar = this.imageUrl
         }
