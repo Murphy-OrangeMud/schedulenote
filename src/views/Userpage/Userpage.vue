@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { postLogout, addavatar } from 'network/home'
+import { postLogout, addavatar, getuser } from 'network/home'
 export default {
   // eslint-disable-next-line space-before-function-paren
   data() {
@@ -244,6 +244,17 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
+    getUser () {
+      const datas = {
+        id: '',
+        name: ''
+      }
+      console.log(datas)
+      getuser(datas).then(res => {
+        console.log('getuser')
+        console.log(res.data)
+      })
+    },
     uploadFile () {
       const datas = {
         avatar: this.files
@@ -295,6 +306,7 @@ export default {
   created () {
     console.log('initformdata')
     this.initformdata()
+    this.getUser()
   }
 }
 </script>

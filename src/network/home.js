@@ -30,6 +30,13 @@ export function loginByEmail (datas) {
     data: datas
   })
 }
+export function getuser (datas) {
+  return request({
+    url: '/user/getuser',
+    method: 'get',
+    data: datas
+  })
+}
 
 export function searchEmail (datas) {
   return request({
