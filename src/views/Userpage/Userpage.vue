@@ -244,15 +244,12 @@ export default {
     },
     uploadFile () {
       const datas = {
-        avatar: this.files
+        avatar: this.files,
+        name: this.$store.state.username
       }
       console.log(datas)
       addavatar(datas).then(res => {
-        console.log('addavatra')
-        console.log(res)
-        if (res.data.code === '200') {
-          this.avatar = this.imageUrl
-        }
+        console.log(res.data)
       })
     },
     modify: function () {
@@ -269,11 +266,7 @@ export default {
       }, 3000)
     },
     imgChange (files, fileList) {
-      // this.hideUpload = fileList.length >= this.limitNum
-      // if (fileList) {
-      //   this.$refs.uploadElement.clearValidate()
-      // }
-      this.files = files
+      this.files = files.raw
       this.imageUrl = files.url
     },
     tocancel () {
