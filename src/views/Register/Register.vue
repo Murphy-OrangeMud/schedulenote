@@ -85,6 +85,7 @@ export default {
             this.mess = 'Email already exist'
           } else {
             getMailVertify(emaildata).then((res) => {
+              console.log(res)
               this.mess = res.data.msg
               this.checkmess = res.data.msg
             })

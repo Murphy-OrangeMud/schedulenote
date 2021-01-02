@@ -62,7 +62,7 @@ export default {
   methods: {
     login: function () {
       const datas = qs.stringify({
-        name: this.account,
+        name: this.username,
         password: this.password
       })
       console.log(datas)
