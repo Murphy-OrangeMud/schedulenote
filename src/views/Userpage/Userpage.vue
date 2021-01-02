@@ -1,8 +1,11 @@
 <template>
   <div>
+    <el-button size='mini' type='print' @click='print'
+                  >print</el-button
+                >
     <el-row :gutter='20' style='margin-top: 10px'>
       <el-col :span='8' :offset='3'>
-        <div v-if='username' class='grid-content bg-purple'>
+        <div class='grid-content bg-purple'>
           <el-card class='box-card'>
             <div slot='header' class='clearfix'>
               <span>个人中心</span>
@@ -37,7 +40,7 @@
           </el-card>
         </div>
       </el-col>
-      <el-col v-if='username' :span='10'>
+      <el-col :span='10'>
         <div class='grid-content bg-purple'>
           <el-card class='box-card'>
             <div slot='header' class='clearfix'>
@@ -173,6 +176,11 @@ export default {
     }
   },
   methods: {
+    print: function () {
+      console.log(this.$store.state.username)
+      console.log(this.$store.state.id)
+      console.log(this.$store.state.password)
+    },
     showAuthority: function (isAdmin) {
       if (this.data.is_admin) return 'Admin'
       else return 'User'
@@ -195,6 +203,8 @@ export default {
     modify: function () {
       clearTimeout(this.timer)
       this.timer = setTimeout(() => {
+        console.log('modify modify modify modify modify modify modify ')
+        console.log(this.$store.state)
         this.$store.state.username = this.formdata.username
         this.$store.state.password = this.formdata.password
         this.$options.methods.addAvatar()
@@ -205,13 +215,17 @@ export default {
     },
     logout: function () {
       postLogout().then((res) => {
-        alert('登出成功！')
-        this.$store.state.id = 0
-        this.$store.state.username = ''
-        this.$store.state.motto = ''
-        this.$store.state.password = ''
-        this.$store.state.is_admin = false
-        this.$store.state.avatar = ''
+        console.log('logout logout logout logout logout')
+        console.log(this.$store.state)
+        if (this.mess === 'Logout Success') {
+          alert('登出成功！')
+          this.$store.state.id = 0
+          this.$store.state.username = ''
+          this.$store.state.motto = ''
+          this.$store.state.password = ''
+          this.$store.state.is_admin = false
+          this.$store.state.avatar = ''
+        }
       })
     },
     handleBeforeUpload (file) {
