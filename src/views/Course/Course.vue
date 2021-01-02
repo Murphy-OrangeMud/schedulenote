@@ -95,6 +95,12 @@ export default {
         this.courseCount = res.length
       })
     }
+  },
+  created () {
+    getcourse(new FormData()).then(res => {
+      this.courseList = res
+      this.courseCount = res.length
+    })
   }
 }
 </script>
