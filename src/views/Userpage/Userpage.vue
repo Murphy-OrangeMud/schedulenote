@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button size='small' @click='print'>print</el-button>
     <el-row :gutter='20' style='margin-top: 10px'>
       <el-col :span='8' :offset='3'>
         <div class='grid-content bg-purple'>
@@ -128,8 +127,8 @@ export default {
       dialogVisible2: false,
       data: {},
       formdata: {
-        username: 'alice',
-        password: '123',
+        username: '',
+        password: '',
         avatar: '',
         motto: ''
       }
@@ -162,11 +161,6 @@ export default {
     }
   },
   methods: {
-    print: function () {
-      console.log(this.$store.state.username)
-      console.log(this.$store.state.id)
-      console.log(this.$store.state.password)
-    },
     showAuthority: function (isAdmin) {
       if (this.data.is_admin) return 'Admin'
       else return 'User'
@@ -178,8 +172,8 @@ export default {
       if (
         !(
           datas.avatar.type === 'image/png' ||
-          datas.avatar.type.type === 'image/jpg' ||
-          datas.avatar.type.type === 'image/jpeg'
+          datas.avatar.type === 'image/jpg' ||
+          datas.avatar.type === 'image/jpeg'
         )
       ) {
         console.log('不是图片')
@@ -290,7 +284,17 @@ export default {
         .then((res) => {
           console.log(res)
         })
+    },
+    initformdata () {
+      this.formdata.password = this.$store.state.password
+      this.formdata.username = this.$store.state.username
+      this.formdata.avatar = this.$store.state.avatar
+      this.formdata.motto = this.$store.state.motto
     }
+  },
+  created () {
+    console.log('initformdata')
+    this.initformdata()
   }
 }
 </script>
