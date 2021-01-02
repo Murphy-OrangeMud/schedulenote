@@ -243,13 +243,13 @@ export default {
       })
     },
     uploadFile () {
-      const datas = {
-        avatar: this.files,
-        name: this.$store.state.username
-      }
-      console.log(datas)
-      addavatar(datas).then(res => {
-        console.log(res.data)
+      const param = new FormData() // 创建form对象
+      param.append('avatar', this.files) // 通过append向form对象添加数据
+      param.append('name', this.$store.state.username)
+      addavatar(param).then(res => {
+        if (res.data.code === '200') {
+          this.avatar = this.imageUrl
+        }
       })
     },
     modify: function () {

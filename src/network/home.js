@@ -146,6 +146,7 @@ export function addavatar (datas) {
   return request({
     url: '/user/upload_avatar',
     method: 'put',
-    data: datas
+    data: datas,
+    headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
