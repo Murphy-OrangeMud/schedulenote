@@ -89,7 +89,7 @@ class Schedule(db.Model):
                                                        self.startTime.day, 
                                                        self.startTime.hour, 
                                                        self.startTime.minute, 
-                                                       self.startTime.second
+                                                       self.startTime.second)
         endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.endTime.year, 
                                                      self.endTime.month, 
                                                      self.endTime.day, 
