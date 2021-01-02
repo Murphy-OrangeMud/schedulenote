@@ -11,6 +11,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from uuid import uuid1
 
 from pypinyin import lazy_pinyin
+from pathlib import Path
 from .configs import *
 
 from .utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code

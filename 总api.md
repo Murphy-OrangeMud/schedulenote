@@ -1175,3 +1175,38 @@ request.body = {
 
 ### 添加课程
 
+POST /course/addCourse
+
+```json
+request.body = {
+    "name": str,
+    "info": str
+}
+```
+
+### 删除课程
+
+POST /course/deleteCourse
+
+```json
+request.body = {
+    "id":int
+}
+```
+
+### 课程列表
+
+GET /course/courselist
+
+```json
+response.body = {
+    [
+    	element:{
+        "id":int,
+    	"name":str,
+    	"info":str
+        }
+    ]
+}
+```
+
