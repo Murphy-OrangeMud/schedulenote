@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>md文本测试</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/marked/0.3.4/marked.min.js"></script>
+	<script src="https://linwalker.github.io/render-html-to-pdf/js/html2canvas.js"></script>
+	<script src="https://linwalker.github.io/render-html-to-pdf/js/jsPdf.debug.js"></script>
+    <script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+	<link rel="stylesheet" href="https://sindresorhus.com/github-markdown-css/github-markdown.css">
+	<style>
+		
+	
+	#edit {display: flex; justify-content: space-between;}
+    #content {width: 49%;float: left;height: auto;}
+    .button {
+        color: #fff;
+        background-color: #009a61;
+        border-color: #008151;
+        padding: 0 13px;
+        font-size: 14px;
+        border-radius: 4px;
+        margin: 10px;
+    }
+    #show{width: 50%; border:  1px solid  #ddd; padding: 50px; box-sizing: border-box;float: left;height: auto;}
+	
+	.hljs-comment,.hljs-quote {
+	 color:#989498
+	}
+	.hljs-variable,.hljs-template-variable,.hljs-attribute,.hljs-tag,.hljs-name,.hljs-selector-id,.hljs-selector-class,.hljs-regexp,.hljs-link,.hljs-deletion {
+	 color:#dd464c
+	}
+	.hljs-number,.hljs-built_in,.hljs-builtin-name,.hljs-literal,.hljs-type,.hljs-params {
+	 color:#fd8b19
+	}
+	.hljs-class .hljs-title {
+	 color:#fdcc59
+	}
+	.hljs-string,.hljs-symbol,.hljs-bullet,.hljs-addition {
+	 color:#8fc13e
+	}
+	.hljs-meta {
+	 color:#149b93
+	}
+	.hljs-function,.hljs-section,.hljs-title {
+	 color:#1290bf
+	}
+	.hljs-keyword,.hljs-selector-tag {
+	 color:#c85e7c
+	}
+	.hljs {
+	 display:block;
+	 background:#322931;
+	 color:#b9b5b8;
+	 padding:0.5em
+	}
+	.hljs-emphasis {
+	 font-style:italic
+	}
+	.hljs-strong {
+	 font-weight:bold
+	}
+	
+	</style>
+</head>
+<body id="edit">
+<div><button id="download" class="button">下载html</button><button class="button" id="downloadPdf">下载PDF</button></div>
+
+<textarea  id="content"></textarea> 
+<div id="show" class="typo markdown-body">content</div>
+
+<script>
+    marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        escaped : true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        highlight: function (code, lang) {
+        return hljs.highlightAuto(code).value;
+      }
+    });
+
+    $("#content").on("input  propertychange", function() {
+        var val = $(this).val();
+        $("#show").html(marked(val));
+    });
+
+
+    function downloadFile(fileName, content){
+      var aLink = document.createElement('a');
+      var blob = new Blob([content]);
+      var evt = document.createEvent("HTMLEvents");
+      aLink.download = fileName;
+      aLink.href = URL.createObjectURL(blob);
+      aLink.click();
+    }
+
+
+
+    $("#download").click(e=>{
+        console.log($("#tpl").html());
+      var tpl = new Template($('#tpl').html());
+      var s = tpl.render({
+          title: "markdown",
+          style:$("style").html(),
+          content:$("#show").html()
+      });
+      downloadFile("markdown.html",s);
+    });
+
+
+  function Template(tpl) {
+      var
+          fn,
+          match,
+          code = ['var r=[];\nvar _html = function (str) { return str; };'],
+          re = /\{\s*([a-zA-Z\.\_0-9()]+)(\s*\|\s*safe)?\s*\}/m,
+          addLine = function (text) {
+              code.push('r.push(\'' + text.replace(/\'/g, '\\\'').replace(/\n/g, '\\n').replace(/\r/g, '\\r') + '\');');
+          };
+      while (match = re.exec(tpl)) {
+          if (match.index > 0) {
+              addLine(tpl.slice(0, match.index));
+          }
+          if (match[2]) {
+              code.push('r.push(String(this.' + match[1] + '));');
+          }
+          else {
+              code.push('r.push(_html(String(this.' + match[1] + ')));');
+          }
+          tpl = tpl.substring(match.index + match[0].length);
+      }
+      addLine(tpl);
+      code.push('return r.join(\'\');');
+      fn = new Function(code.join('\n'));
+      this.render = function (model) {
+          return fn.apply(model);
+      };
+    }
+
+$("#downloadPdf").click(e=>{
+	html2canvas(document.body, {
+	  onrendered:function(canvas) {
+
+		  var contentWidth = canvas.width;
+		  var contentHeight = canvas.height;
+
+		  //一页pdf显示html页面生成的canvas高度;
+		  var pageHeight = contentWidth / 592.28 * 841.89;
+		  //未生成pdf的html页面高度
+		  var leftHeight = contentHeight;
+		  //页面偏移
+		  var position = 0;
+		  //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+		  var imgWidth = 595.28;
+		  var imgHeight = 592.28/contentWidth * contentHeight;
+
+		  var pageData = canvas.toDataURL('image/jpeg', 1.0);
+
+		  var pdf = new jsPDF('', 'pt', 'a4');
+
+		  //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+		  //当内容未超过pdf一页显示的范围，无需分页
+		  if (leftHeight < pageHeight) {
+		  pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
+		  } else {
+			  while(leftHeight > 0) {
+				  pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
+				  leftHeight -= pageHeight;
+				  position -= 841.89;
+				  //避免添加空白页
+				  if(leftHeight > 0) {
+					pdf.addPage();
+				  }
+			  }
+		  }
+
+		  pdf.save('content.pdf');
+	  }
+	})
+});	
+	
+
+
+</script>
+
+<script id="tpl" type="text/plain">
+ <html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+<title>GitHub Markdown CSS demo</title>
+<link rel="stylesheet" href="https://sindresorhus.com/github-markdown-css/github-markdown.css">
+<style>
+	@media (min-width: 768px) {
+		.markdown-body {
+			box-sizing: border-box;
+			min-width: 200px;
+			max-width: 980px;
+			margin: 0 auto;
+			padding: 45px;
+		}
+	}
+</style>
+</head>
+<body>
+<article class="markdown-body">
+{content}
+</article>
+</body>
+</html>
+</script>
+
+</body>
+</html>
