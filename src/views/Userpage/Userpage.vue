@@ -148,39 +148,39 @@ export default {
   },
   computed: {
     id () {
-      return this.$store.state.id;
+      return this.$store.state.id
     },
     username () {
-      return this.$store.state.username;
+      return this.$store.state.username
     },
     email () {
-      return this.$store.state.email;
+      return this.$store.state.email
     },
     avatar () {
-      return this.$store.state.avatar;
+      return this.$store.state.avatar
     },
     motto () {
-      return this.$store.state.motto;
+      return this.$store.state.motto
     },
     is_admin () {
-      return this.$store.state.is_admin;
+      return this.$store.state.is_admin
     },
     password () {
-      return this.$store.state.password;
+      return this.$store.state.password
     },
     not_login () {
-      return this.$store.state.username === '';
-    },
+      return this.$store.state.username === ''
+    }
   },
   methods: {
     showAuthority: function (isAdmin) {
-      if (this.data.is_admin) return 'Admin';
-      else return 'User';
+      if (this.data.is_admin) return 'Admin'
+      else return 'User'
     },
     addAvatar: function () {
       const datas = {
-        avatar: this.formdata.avatar,
-      };
+        avatar: this.formdata.avatar
+      }
       if (
         !(
           datas.avatar.type === 'image/png' ||
@@ -188,33 +188,33 @@ export default {
           datas.avatar.type.type === 'image/jpeg'
         )
       ) {
-        console.log('不是图片');
+        console.log('不是图片')
       }
-      addavatar(datas);
+      addavatar(datas)
     },
     modify: function () {
-      clearTimeout(this.timer);
+      clearTimeout(this.timer)
       this.timer = setTimeout(() => {
-        this.$store.state.username = this.formdata.username;
-        this.$store.state.password = this.formdata.password;
-        this.$options.methods.addAvatar();
+        this.$store.state.username = this.formdata.username
+        this.$store.state.password = this.formdata.password
+        this.$options.methods.addAvatar()
         //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-        this.$store.state.motto = this.formdata.motto;
-        console.log('ok');
-      }, 3000);
+        this.$store.state.motto = this.formdata.motto
+        console.log('ok')
+      }, 3000)
     },
     logout: function () {
       postLogout().then((res) => {
-        alert('登出成功！');
-        this.$store.state.id = 0;
-        this.$store.state.username = '';
-        this.$store.state.motto = '';
-        this.$store.state.password = '';
-        this.$store.state.is_admin = false;
-        this.$store.state.avatar = '';
-      });
+        alert('登出成功！')
+        this.$store.state.id = 0
+        this.$store.state.username = ''
+        this.$store.state.motto = ''
+        this.$store.state.password = ''
+        this.$store.state.is_admin = false
+        this.$store.state.avatar = ''
+      })
     },
-    handleBeforeUpload(file) {
+    handleBeforeUpload (file) {
       if (
         !(
           file.type === 'image/png' ||
@@ -225,60 +225,60 @@ export default {
         this.$notify.warning({
           title: '警告',
           message:
-            '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片',
-        });
+            '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+        })
       }
-      var size = file.size / 1024 / 1024 / 2;
+      var size = file.size / 1024 / 1024 / 2
       if (size > 4) {
         this.$notify.warning({
           title: '警告',
-          message: '图片大小必须小于4M',
-        });
+          message: '图片大小必须小于4M'
+        })
       }
-      var fd = new FormData();
-      fd.append('picFile', file);
-      console.log(fd.get('picFile'));
+      var fd = new FormData()
+      fd.append('picFile', file)
+      console.log(fd.get('picFile'))
     },
     // 文件超出个数限制时的钩子
-    handleExceed(files, fileList) {},
+    handleExceed (files, fileList) {},
     // 文件列表移除文件时的钩子
-    handleRemove(file, fileList) {
-      this.hideUpload = fileList.length >= this.limitNum;
+    handleRemove (file, fileList) {
+      this.hideUpload = fileList.length >= this.limitNum
     },
     // 点击文件列表中已上传的文件时的钩子
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
+    handlePictureCardPreview (file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
     },
-    uploadFile() {
-      this.$refs.upload.submit();
+    uploadFile () {
+      this.$refs.upload.submit()
     },
-    imgChange(files, fileList) {
-      this.hideUpload = fileList.length >= this.limitNum;
+    imgChange (files, fileList) {
+      this.hideUpload = fileList.length >= this.limitNum
       if (fileList) {
-        this.$refs.uploadElement.clearValidate();
+        this.$refs.uploadElement.clearValidate()
       }
     },
-    tocancel() {
-      this.dialogVisible2 = false;
+    tocancel () {
+      this.dialogVisible2 = false
     },
-    onUpload() {
-      var file = this.files[0];
+    onUpload () {
+      var file = this.files[0]
       /* eslint-disable no-undef */
-      let param = new FormData(); // 创建form对象
-      param.append('avatar', file); // 通过append向form对象添加数据
-      param.append('chunk', '0'); // 添加form表单中其他数据
-      console.log(param.get('file')); // FormData私有类对象，访问不到，可以通过get判断值是否传进去
-      let config = {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      };
+      const param = new FormData() // 创建form对象
+      param.append('avatar', file) // 通过append向form对象添加数据
+      param.append('chunk', '0') // 添加form表单中其他数据
+      console.log(param.get('file')) // FormData私有类对象，访问不到，可以通过get判断值是否传进去
+      const config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }
       // 添加请求头
       this.axios
         .post('http://8.136.141.151:8848/user/upload_avatar', param, config)
         .then((res) => {
-          console.log(res);
+          console.log(res)
         })
     }
   }
-};
+}
 </script>
