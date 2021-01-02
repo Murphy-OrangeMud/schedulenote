@@ -3,7 +3,7 @@ import { request } from './request'
 export function getFilelist (datas) {
   return request({
     url: '/course/queryFile',
-    method: 'get',
+    method: 'post',
     data: datas
   })
 }
