@@ -25,14 +25,33 @@
     </div>
     <h2 v-else>课程为空</h2>
     <h1></h1>
+    <el-form ref=for label-width="80px" class="login-form">
+      <el-form-item label="课程名称" prop="username">
+        <el-input v-model="mycourse.name"></el-input>
+      </el-form-item>
+
+      <el-form-item label="课程描述" prop="password">
+        <el-input v-model="mycourse.description"></el-input>
+      </el-form-item>
+    </el-form>
     <el-button v-on:click="addCourse()" type="primary" round>添加课程</el-button>
     <el-button v-on:click="refresh()" icon="el-icon-refresh" round>刷新</el-button>
   </div>
 </template>
 
 <script>
+import { addcourse } from 'network/home'
 export default {
   name: 'course',
+  data () {
+    return {
+      mycourse: {
+        description: '',
+        name: ''
+      },
+      mess: '未能获取ddl'
+    }
+  },
   computed: {
     courseList () {
       return this.$store.state.courseList
@@ -52,6 +71,13 @@ export default {
     },
     addCourse () {
       // check admin
+      var formData = new FormData()
+      formData.append('name', this.mycourse.name)
+      formData.append('info', this.mycourse.description)
+
+      addcourse(formData).then(res => {
+        console.log(res)
+      })
     },
     deleteCourse () {
       // check admin
