@@ -256,6 +256,8 @@ export default {
       }
       console.log(datas)
       addavatar(datas).then(res => {
+        console.log('addavatra')
+        console.log(res.data)
         if (res.data.code === '200') {
           this.avatar = this.imageUrl
         }
