@@ -59,12 +59,6 @@ export default {
         endTime2: '',
         location: ''
       },
-      templateddl: {
-        title: '',
-        start: '',
-        end: '',
-        cssClass: 'red'
-      },
       mess: '未能获取ddl'
     }
   },
@@ -80,10 +74,12 @@ export default {
         this.ddlList = []
         let i = 0
         for (i = 0; i < res.calendar.length; i += 1) {
-          this.templateddl.title = res.calendar[i].discription
-          this.templateddl.start = res.calendar[i].startTime
-          this.templateddl.end = res.calendar[i].endTime
-          this.ddlList.push(this.templateddl)
+          this.ddlList.push({
+            title: res.calendar[i].discription,
+            start: res.calendar[i].startTime,
+            end: res.calendar[i].endTime,
+            cssClass: 'red'
+          })
         }
         this.resddl = res.calendar
         this.mess = '成功获取ddl'
