@@ -86,7 +86,7 @@ export default {
     },
     addMaterials () {
     },
-    getFilelist () {
+    myGetFilelist () {
       var formData = new FormData()
       formData.append('id', this.$store.state.courseid)
       getFilelist(formData).then(res => {
@@ -134,9 +134,7 @@ export default {
             })
           }
         })
-        getFilelist().then(res => {
-          this.materialList = res
-        })
+        this.myGetFilelist()
       }
     },
     resetAdd () {
@@ -144,7 +142,7 @@ export default {
     }
   },
   created () {
-    this.getFilelist()
+    this.myGetFilelist()
   }
 }
 </script>
