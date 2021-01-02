@@ -1,6 +1,6 @@
 # schedulenote
 软件工程实践项目.
-
+我们的网址是：http://8.136.141.151/
 ## 用法：
 
 `git clone https://github.com/Murphy-OrangeMud/schedulenote.git`
