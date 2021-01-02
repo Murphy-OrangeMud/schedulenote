@@ -6,8 +6,6 @@
     <div class="note" style="position:relative;margin-left:10%;margin-right:10%">
       <v-md-editor v-model="text" id = "printMe" height="800px" @save="Save">
       </v-md-editor><br>
-      <el-button type="primary" plain style="position:relative;margin-left:46%"
-      v-print="printObj">保存pdf</el-button>
     </div>
 
   </div>
@@ -132,21 +130,11 @@ import jsPDF from 'jspdf'
 export default {
   data () {
     return {
-      text: 'Hello',
-      printObj: {
-        id: 'printMe',
-        popTitle: 'good print',
-        extraCss: 'https://www.google.com,https://www.google.com',
-        extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>'
-      }
+      text: 'Hello'
     }
   },
   methods: {
     Save (text, htmlCode) {
-      console.log('save')
-      console.log(text)
-      console.log(htmlCode)
-      console.log(tplhtml)
       var tpl = new Template(tplhtml);
       var s = tpl.render({
           title: "markdown",
