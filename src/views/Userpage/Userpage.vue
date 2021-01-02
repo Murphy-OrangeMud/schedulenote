@@ -1,8 +1,6 @@
 <template>
   <div>
-    <el-button size='mini' type='print' @click='print'
-                  >print</el-button
-                >
+    <el-button size='small' @click='print'>print</el-button>
     <el-row :gutter='20' style='margin-top: 10px'>
       <el-col :span='8' :offset='3'>
         <div class='grid-content bg-purple'>
