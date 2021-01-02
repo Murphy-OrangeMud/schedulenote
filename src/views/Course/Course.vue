@@ -7,7 +7,6 @@
           <tr>
             <th>时间</th>
             <th>课程</th>
-            <th>笔记</th>
             <th>资料</th>
             <th>操作</th>
           </tr>
@@ -17,7 +16,6 @@
         <td>{{item.info}}</td>
         <td>{{item.name}}</td>
         <td><el-button v-on:click="chooseNote()" round type="success">查询</el-button></td>
-        <td><el-button v-on:click="chooseMaterials(item.id)" round type="success">查询</el-button></td>
         <td><el-button v-on:click="deleteCourse(item.id)" round type="danger" >删除</el-button></td>
         </tr>
       </tbody>
@@ -57,10 +55,6 @@ export default {
   methods: {
     chooseNote () {
       this.$router.push('/notes')
-    },
-    chooseMaterials (ID) {
-      this.$store.state.courseid = ID
-      this.$router.push('/materials')
     },
     addCourse () {
       // check admin
