@@ -6,9 +6,9 @@
 ```
 "id" = Interger,//自增的，每个用户是唯一的
 "username": string,  //不可重复的，每个用户是唯一的
-"email": string,    //以后改密码需要给邮箱发邮件，功能尚未实现
+"email": string,    //用于完成邮件验证，不可重复
 "password": string, //使用加盐哈希加密
-"avater": string, //还没想好怎么存
+"avater": string, //保存头像在服务器中存储的地址
 "motto": string //个性签名
 "is_admin": 0 或 1 //代表该用户是否为管理员
 ```
