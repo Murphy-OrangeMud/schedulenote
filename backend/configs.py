@@ -1,8 +1,8 @@
 HOST = 'localhost'
-PORT = '8848'
-DATABASE = 'ScheduleNote'
+PORT = '3306'
+DATABASE = 'usertest'
 USERNAME = 'root'
-PASSWORD = 'root'
+PASSWORD = ''
 
 MAIL_PASSWORD = 'EUJTGGGIQFXWGFUJ'
 SECRET_KEY = 'FOOLISH_KEY'

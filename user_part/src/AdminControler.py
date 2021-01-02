@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
-from flask_login import login_required, current_user
+#from flask_login import login_required, current_user()
+from UserControler import login_required, current_user
 from uuid import uuid1
 
 from Model import User, db, MyRedis, Report, Feedback
@@ -14,7 +15,7 @@ admin_bp = Blueprint('admin', __name__)
 @login_required
 def get_unfinished_feedback():
     return_json = {'data':{}} 
-    if not current_user.is_admin():
+    if not current_user().is_admin():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -29,7 +30,7 @@ def get_unfinished_feedback():
 @login_required
 def get_unfinished_report():
     return_json = {'data':{}} 
-    if not current_user.is_admin():
+    if not current_user().is_admin():
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -45,7 +46,7 @@ def get_unfinished_report():
 @login_required
 def get_feedback(id):
     return_json = {'data':{}}
-    if not current_user.is_admin(): 
+    if not current_user().is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -63,7 +64,7 @@ def get_feedback(id):
 @login_required
 def get_report(id):
     return_json = {'data':{}}
-    if not current_user.is_admin(): 
+    if not current_user().is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -81,7 +82,7 @@ def get_report(id):
 @login_required
 def finish_feedback(id):
     return_json = {'data':{}}
-    if not current_user.is_admin(): 
+    if not current_user().is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -101,7 +102,7 @@ def finish_feedback(id):
 @login_required
 def finish_report(id):
     return_json = {'data':{}}
-    if not current_user.is_admin(): 
+    if not current_user().is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)
@@ -126,7 +127,7 @@ def admin_modify(id):
     #修改内容，0,1,2,3分别代表 昵称、头像、座右铭、笔记文件
     report_type = request.values.get('report_type', type = int, default = None)
     file_id = request.values.get('file_id', type = str, default = None)
-    if not current_user.is_admin(): 
+    if not current_user().is_admin(): 
         return_json['code'] = 400
         return_json['data']['msg'] = "You are not an administrator"
         return jsonify(return_json)

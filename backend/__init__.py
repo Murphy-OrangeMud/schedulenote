@@ -13,8 +13,8 @@ def create_app():
     app.config.from_pyfile('configs.py')
     CORS(app, resources={r"/*": {"origins": "*"}})
 
-    if not os.path.exists(IMAGEPATH):
-        os.makedirs(IMAGEPATH)
+    # if not os.path.exists(IMAGEPATH):
+    #     os.makedirs(IMAGEPATH)
     with app.app_context():
         from .api import user_bp, schedule_bp, note_bp, course_bp, admin_bp
         # db.create_all()

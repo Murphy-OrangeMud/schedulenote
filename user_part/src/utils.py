@@ -14,7 +14,7 @@ def is_legal_str(s):
 
 #表示当前有正在登录的账号
 def has_login():
-    return session.get('user_id')
+    return session.get('user_id') != None
 
 
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'JPEG', 'JPG', 'PNG']

@@ -11,6 +11,9 @@ from Mail import send_email
 
 user_bp = Blueprint('user', __name__)
 # login_manager = LoginManager()
+# #表示当前有正在登录的账号
+# def has_login():
+#     return session.get('user_id')
 
 def login_required(view_func):
 
@@ -24,9 +27,6 @@ def login_required(view_func):
         return view_func(*args, **kwargs)
     return wrapper
 
-# #表示当前有正在登录的账号
-# def has_login():
-#     return session.get('user_id')
 def login_user(user):
     session['user_id'] = user.id
 def logout_user():
@@ -231,11 +231,11 @@ def signup():
             user_data['code'] = 400
             user_data['data']['msg'] = 'The mailbox is already occupied'
             return jsonify(user_data)
-        if MyRedis.get(email + '_checked') != email:
-            user_data['code'] = 400
-            user_data['data']['msg'] = 'The mailbox was not verified'
+        # if MyRedis.get(email + '_checked') != email:
+        #     user_data['code'] = 400
+        #     user_data['data']['msg'] = 'The mailbox was not verified'
             return jsonify(user_data)
-        MyRedis.delete(email + '_checked')
+        # MyRedis.delete(email + '_checked')
         user = User(name, password, email)
         try:
             db.session.add(user)
@@ -329,16 +329,16 @@ def modify_info():
             return jsonify(return_json)
     newemail = request.values.get('newemail', type = str, default = None)
     if is_legal_str(newemail):
-        if MyRedis.get(newemail + "_checked") == newemail:
-            current_user().motto = newmotto
-            db.session.commit()
-            return_json['code'] = 200
-            return_json['data']['msg'] = "Email modify success"
-            return jsonify(return_json)
-        else:
-            return_json['code'] = 400
-            return_json['data']['msg'] = 'The mailbox was not verified'
-            return jsonify(return_json)
+        # if MyRedis.get(newemail + "_checked") == newemail:
+        current_user().email = newemail
+        db.session.commit()
+        return_json['code'] = 200
+        return_json['data']['msg'] = "Email modify success"
+        return jsonify(return_json)
+        # else:
+        #     return_json['code'] = 400
+        #     return_json['data']['msg'] = 'The mailbox was not verified'
+        #     return jsonify(return_json)
     #所有的都不满足，就一定是参数错误
     return_json['code'] = 900
     return_json['data']['msg'] = "parameter ILLEGAL"
