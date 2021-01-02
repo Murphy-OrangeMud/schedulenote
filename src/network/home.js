@@ -65,7 +65,7 @@ export function postFilelist (id) {
 
 export function postRegister (datas) {
   return request({
-    url: '/user/test_init',
+    url: '/user/signup',
     method: 'post',
     data: datas
   })
