@@ -104,7 +104,7 @@ export function addddl (datas) {
 
 export function delddl (datas) {
   return request({
-    url: '/schedule/deleteschedule',
+    url: '/schedule/deleteddl',
     method: 'post',
     data: datas
   })

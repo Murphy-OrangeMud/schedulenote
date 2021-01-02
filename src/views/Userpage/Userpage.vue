@@ -52,18 +52,6 @@
                 label-position='right'
               >
                 <el-form-item :label='头像' prop='avatar' ref='uploadElement'>
-                  <div id='fileInput'>
-                    <h2 class='text-center'>Choose an Image</h2>
-                    <v-file-input
-                      accept='image/*'
-                      placeholder='images'
-                      prepend-icon='mdi-camera-plus'
-                      multiple
-                      v-model='files'
-                    >
-                    </v-file-input>
-                    <v-btn class='button' @click='onUpload'> UPLOAD </v-btn>
-                  </div>
                   <el-upload
                     ref='upload'
                     action='#'
