@@ -5,6 +5,7 @@
     </full-calendar>
     <h1></h1>
     <el-form ref=for label-width="80px" class="login-form">
+      <h> 描述、地点请用英文</h>
 
         <el-form-item label="描述" prop="username">
           <el-input v-model="myddl.description"></el-input>
@@ -43,7 +44,7 @@
 </template>
 
 <script>
-import qs from 'qs'
+
 import { getddl, addddl, delddl } from 'network/home'
 export default {
   name: 'calender',
@@ -93,7 +94,7 @@ export default {
       console.log('eventClick')
       if (confirm('是否要删除' + event.title + '？')) {
         const datas = {
-          ID: event.YOUR_DATA.id
+          id: event.YOUR_DATA.id
         }
         console.log(datas)
         delddl(datas).then(res => {
@@ -103,18 +104,19 @@ export default {
       }
     },
     addDdl () {
-      const datas = qs.stringify({
+      const ddldatas = {
         description: this.myddl.description,
         startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
         endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
-        rotation: Math.round(Math.random() * 1000000000),
+        rotation: Math.round(Math.random() * 900000000) + 100000000,
         userID: this.$store.state.id + '',
         type: 2
-      })
-      console.log(datas)
+      }
+      console.log(ddldatas)
+      console.log(ddldatas)
       this.mess = '未能添加ddl'
-      addddl(datas).then(res => {
+      addddl(ddldatas).then(res => {
         this.mess = '添加ddl成功'
         console.log(res)
       })

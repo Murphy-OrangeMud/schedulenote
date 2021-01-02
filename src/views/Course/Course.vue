@@ -17,7 +17,7 @@
         <td>{{item.info}}</td>
         <td>{{item.name}}</td>
         <td><el-button v-on:click="chooseNote()" round type="success">查询</el-button></td>
-        <td><el-button v-on:click="chooseMaterials()" round type="success">查询</el-button></td>
+        <td><el-button v-on:click="chooseMaterials(item.id)" round type="success">查询</el-button></td>
         <td><el-button v-on:click="deleteCourse(item.id)" round type="danger" >删除</el-button></td>
         </tr>
       </tbody>
@@ -58,8 +58,8 @@ export default {
     chooseNote () {
       this.$router.push('/notes')
     },
-    chooseMaterials () {
-      this.$store.state.courseid = 2
+    chooseMaterials (ID) {
+      this.$store.state.courseid = ID
       this.$router.push('/materials')
     },
     addCourse () {
