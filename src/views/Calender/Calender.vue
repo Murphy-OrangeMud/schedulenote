@@ -1,7 +1,7 @@
 <template>
   <div id="calender">
-    <full-calendar :events="ddlList">
-    @eventClick="eventClick"
+    <full-calendar :events="ddlList" class="test-fc" first-day='1' locate="fr"
+    @eventClick="eventClick">
     </full-calendar>
     <h1></h1>
     <el-form ref=for label-width="80px" class="login-form">
@@ -78,7 +78,9 @@ export default {
             title: res.calendar[i].description,
             start: res.calendar[i].startTime.split(' ')[0],
             end: res.calendar[i].endTime.split(' ')[0],
-            cssClass: 'red'
+            YOUR_DATA: {
+              id: res.calendar[i].id
+            }
           })
         }
         this.resddl = res.calendar
@@ -87,10 +89,11 @@ export default {
         console.log(this.ddlList)
       })
     },
-    eventClick (ddl) {
-      if (confirm('是否要删除' + ddl.description + '？')) {
+    eventClick (event, jsEvent, pos) {
+      console.log('eventClick')
+      if (confirm('是否要删除' + event.description + '？')) {
         const datas = {
-          id: ddl
+          id: event.YOUR_DATA.id
         }
         this.mess = '未能删除ddl'
         delddl(datas).then(res => {
