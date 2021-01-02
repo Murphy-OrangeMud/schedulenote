@@ -10,6 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import fullCalendar from 'vue-fullcalendar'
 import htmlToPdf from '@/components/utils/htmlToPdf'
 import Print from 'vue-print-nb'
+import { jsPDF } from 'jspdf'
 
 Vue.use(Print)
 Vue.use(htmlToPdf)
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 VueMarkdownEditor.use(vuepressTheme)
 Vue.use(ElementUI)
 Vue.use(VueMarkdownEditor)
+Vue.use(jsPDF)
 Vue.config.productionTip = false
 
 new Vue({
