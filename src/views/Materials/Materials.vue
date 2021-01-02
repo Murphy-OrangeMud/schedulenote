@@ -86,6 +86,7 @@ export default {
     },
     myGetFilelist () {
       var formData = new FormData()
+      console.log(this.$store.state.courseid)
       formData.append('id', this.$store.state.courseid)
       getFilelist(formData).then(res => {
         this.materialList = res
