@@ -18,7 +18,6 @@ def create_app():
     with app.app_context():
         from .api import login_manager, user_bp, schedule_bp, note_bp, course_bp, admin_bp
         # db.create_all()
-        login_manager.init_app(app)
         app.register_blueprint(user_bp)
         app.register_blueprint(schedule_bp)
         app.register_blueprint(note_bp)
