@@ -74,9 +74,9 @@ def strformat2datetime(strformat):
     return datetime.datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
 
 def datetime2strformat(datetime):
-    return "%04d-%02d-%02d %02d-%02d-%02d" % (datetime.year(), 
-                                                       datetime.month(), 
-                                                       datetime.day(), 
-                                                       datetime.hour(), 
-                                                       datetime.minute(), 
-                                                       datetime.second())
+    return "%04d-%02d-%02d %02d-%02d-%02d" % (datetime.year, 
+                                                       datetime.month, 
+                                                       datetime.day, 
+                                                       datetime.hour, 
+                                                       datetime.minute, 
+                                                       datetime.second)
