@@ -95,7 +95,7 @@ export default {
         const datas = {
           id: event.YOUR_DATA.id
         }
-        this.mess = '未能删除ddl'
+        console.log(datas)
         delddl(datas).then(res => {
           this.mess = '删除ddl成功'
         })
