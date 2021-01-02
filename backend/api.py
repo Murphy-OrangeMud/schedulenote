@@ -138,7 +138,6 @@ def upload():
         c = session.query(Course).filter(Course.id == course).first()
         c.addFile({"uploader":uploader,"description":description,"filename":f.filename})
         session.commit()
-        session.close()
         return jsonify({"code":200})
     return jsonify({"code":0})
 
@@ -153,7 +152,7 @@ def download():
         coursepath = Path(str(file.course))
         dfilename = secure_filename(''.join(lazy_pinyin(file.filename)))
         download_path = os.path.join(basepath,coursepath)
-        session.close()        
+        session.commit()        
         response = make_response(send_from_directory(download_path,filename=dfilename,as_attachment=True))
         response.headers["Content-Disposition"] = "attachment; filename={}".format(file.filename.encode().decode('latin-1'))
         return response
