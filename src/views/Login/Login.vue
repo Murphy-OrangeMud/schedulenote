@@ -58,7 +58,7 @@ export default {
       postLogin(datas).then(res => {
         this.mess = res.data.msg
         console.log(res)
-        if (this.mess === 'User "' + this.account + '" login success') {
+        if (this.mess === 'User "' + this.username + '" login success') {
           this.$store.state.id = res.data.id
           this.$store.state.username = res.data.username
           this.$store.state.motto = res.data.motto
