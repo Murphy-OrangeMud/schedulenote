@@ -8,7 +8,6 @@
             <th>课程</th>
             <th>文件名</th>
             <th>贡献者</th>
-            <th>创建时间</th>
             <th>操作</th>
             <th>赞</th>
           </tr>
@@ -18,7 +17,6 @@
         <td>{{item.coursename}}</td>
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
-        <td>{{item.date}}</td>
         <td><el-button v-on:click="download(item, item.fileid)" size="small" type="success">下载</el-button></td>
         <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
