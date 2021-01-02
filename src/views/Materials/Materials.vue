@@ -95,7 +95,7 @@ export default {
     },
     Upvote (item, id) {
       postFilelist({ id })
-      this.getFilelist()
+      this.myGetFilelist()
     },
     getFile (event) {
       var file = event.target.files
