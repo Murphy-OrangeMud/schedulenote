@@ -129,7 +129,11 @@ export default {
               message: '附件上传成功!'
             })
           }
+          if (res.code === 400) {
+            console.log('shit2')
+          }
           if (res.data.code === 400) {
+            console.log('SHit!')
             alert('已有同名文件，上传失败。')
             this.$message({
               type: 'fail',
