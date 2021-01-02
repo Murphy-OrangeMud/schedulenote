@@ -4,8 +4,10 @@
     <br>
     <h1>开始写markdown吧！</h1>
     <div class="note" style="position:relative;margin-left:10%;margin-right:10%">
-      <v-md-editor v-model="text" id = "printMe" height="800px" @save="Save">
+      <v-md-editor v-model="text" id = "printMe" height="800px" @save="Save" @change = "Change">
       </v-md-editor><br>
+      <el-button type="primary" plain style="position:relative;margin-left:46%"
+      @click="savePDF">保存html</el-button>
     </div>
 
   </div>
@@ -130,7 +132,8 @@ import jsPDF from 'jspdf'
 export default {
   data () {
     return {
-      text: 'Hello'
+      text: 'Hello',
+      htmlC: ''
     }
   },
   methods: {
@@ -181,6 +184,18 @@ export default {
       });
 
       doc.save('sample.pdf')*/
+    },
+    savePDF(){
+      var tpl = new Template(tplhtml);
+      var s = tpl.render({
+          title: "markdown",
+          style:styleCode,
+          content:this.htmlC
+      });
+      downloadFile("markdown.html",s);
+    },
+    Change(text, htmlCode){
+      this.htmlC = htmlCode
     }
   }
 }
