@@ -1,9 +1,10 @@
 import { request } from './request'
 
-export function getFilelist () {
+export function getFilelist (datas) {
   return request({
     url: '/course/queryFile',
-    method: 'get'
+    method: 'get',
+    data: datas
   })
 }
 
