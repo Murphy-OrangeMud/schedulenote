@@ -84,18 +84,18 @@ class Schedule(db.Model):
             self.id = ID
 
     def __repr__(self):
-        startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.startTime.year(), 
-                                                       self.startTime.month(), 
-                                                       self.startTime.day(), 
-                                                       self.startTime.hour(), 
-                                                       self.startTime.minute(), 
-                                                       self.startTime.second())
-        endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.endTime.year(), 
-                                                     self.endTime.month(), 
-                                                     self.endTime.day(), 
-                                                     self.endTime.hour(), 
-                                                     self.endTime.minute(), 
-                                                     self.endTime.second())
+        startTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.startTime.year, 
+                                                       self.startTime.month, 
+                                                       self.startTime.day, 
+                                                       self.startTime.hour, 
+                                                       self.startTime.minute, 
+                                                       self.startTime.second
+        endTime = "%04d-%02d-%02d %02d-%02d-%02d" % (self.endTime.year, 
+                                                     self.endTime.month, 
+                                                     self.endTime.day, 
+                                                     self.endTime.hour, 
+                                                     self.endTime.minute, 
+                                                     self.endTime.second)
         return "<Schedule(description = '%s', location = '%s', startTime = '%s', endTime = '%s', rotation = '%d', userID = '%s', type = '%d'>" % (
             self.description, self.location, startTime, endTime, self.rotation, self.userID, self.type)
 
