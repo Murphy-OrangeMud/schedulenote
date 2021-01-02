@@ -940,7 +940,7 @@ def signup():
 def get_user():
     #id和name二者都空则查看自己的信息，二者都非空则以id为准
     user_name = request.cookies.get("user_name")
-    current_user = User.query.filter(User.username == user_name).all()[0]
+    # current_user = User.query.filter(User.username == user_name).all()[0]
     id = request.values.get('id', type = int, default = None)
     name = request.values.get('name', type = str, default = None)
     return_json = {'code': 400, 'data' : {}}
