@@ -130,6 +130,7 @@ export default {
             })
           }
           if (res.data.code === 400) {
+            alert('已有同名文件，上传失败。')
             this.$message({
               type: 'fail',
               message: '已有同名文件!'
