@@ -30,15 +30,22 @@ export default {
     return {
       username: '',
       password: '',
-      mess: ''
+      mess: '',
+      email: ''
     }
   },
   methods: {
     regis: function () {
+      this.email = ''
+      const leng = Math.round(Math.random() * 40) + 20
+      let i = 0
+      for (i = 0; i < leng; ++i) {
+        this.email += Math.round(Math.random() * 9)
+      }
       const datas = qs.stringify({
         name: this.username,
         password: this.password,
-        email: Date()
+        email: this.email
       })
       console.log(datas)
       postRegister(datas).then(res => {

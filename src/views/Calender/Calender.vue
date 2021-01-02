@@ -75,7 +75,7 @@ export default {
         let i = 0
         for (i = 0; i < res.calendar.length; i += 1) {
           this.ddlList.push({
-            title: res.calendar[i].discription,
+            title: res.calendar[i].description,
             start: res.calendar[i].startTime.split(' ')[0],
             end: res.calendar[i].endTime.split(' ')[0],
             cssClass: 'red'
