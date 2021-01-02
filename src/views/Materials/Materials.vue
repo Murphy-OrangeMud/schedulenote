@@ -45,7 +45,7 @@
 
 <script>
 import { getFilelist, postFilelist, postMaterials, getMaterials } from 'network/home'
-import qs from 'qs'
+// import qs from 'qs'
 export default {
   name: 'materials',
   data () {
@@ -86,14 +86,12 @@ export default {
     addMaterials () {
     },
     myGetFilelist () {
-      // var formData = new FormData()
+      var formData = new FormData()
       console.log(this.$store.state.courseid)
-      // formData.append('id', this.$store.state.courseid)
-      // console.log(formData)
-      const datas = qs.stringify({
-        id: this.$store.state.courseid
-      })
-      getFilelist(datas).then(res => {
+      formData.append('id', this.$store.state.courseid)
+
+      // const datas = { id: this.$store.state.courseid }
+      getFilelist(formData).then(res => {
         this.materialList = res
       })
     },
