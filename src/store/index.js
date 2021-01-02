@@ -67,7 +67,8 @@ const store = new Vuex.Store({
         downvote: 1
       }
     ],
-    mdtext: 'markdown'
+    mdtext: 'markdown',
+    courseid: 0
   }
 })
 

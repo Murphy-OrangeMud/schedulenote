@@ -8,7 +8,6 @@
             <th>课程</th>
             <th>文件名</th>
             <th>贡献者</th>
-            <th>创建时间</th>
             <th>操作</th>
             <th>赞</th>
           </tr>
@@ -18,7 +17,6 @@
         <td>{{item.coursename}}</td>
         <td>{{item.filename}}</td>
         <td>{{item.uploader}}</td>
-        <td>{{item.date}}</td>
         <td><el-button v-on:click="download(item, item.fileid)" size="small" type="success">下载</el-button></td>
         <td>{{item.score}} <el-button type="success" icon="el-icon-arrow-up" size = "small" @click="Upvote(item, item.fileid)"></el-button></td>
         </tr>
@@ -47,6 +45,7 @@
 
 <script>
 import { getFilelist, postFilelist, postMaterials, getMaterials } from 'network/home'
+import qs from 'qs'
 export default {
   name: 'materials',
   data () {
@@ -86,14 +85,21 @@ export default {
     },
     addMaterials () {
     },
-    getFilelist () {
-      getFilelist().then(res => {
+    myGetFilelist () {
+      // var formData = new FormData()
+      console.log(this.$store.state.courseid)
+      // formData.append('id', this.$store.state.courseid)
+      // console.log(formData)
+      const datas = qs.stringify({
+        id: this.$store.state.courseid
+      })
+      getFilelist(datas).then(res => {
         this.materialList = res
       })
     },
     Upvote (item, id) {
       postFilelist({ id })
-      this.getFilelist()
+      this.myGetFilelist()
     },
     getFile (event) {
       var file = event.target.files
@@ -113,7 +119,7 @@ export default {
           return
         }
         var formData = new FormData()
-        formData.append('course', 2)
+        formData.append('course', this.$store.state.courseid)
         formData.append('uploader', 2)
         formData.append('description', 'hzj')
         formData.append('file', this.addArr[i])
@@ -132,9 +138,7 @@ export default {
             })
           }
         })
-        getFilelist().then(res => {
-          this.materialList = res
-        })
+        this.myGetFilelist()
       }
     },
     resetAdd () {
@@ -142,7 +146,7 @@ export default {
     }
   },
   created () {
-    this.getFilelist()
+    this.myGetFilelist()
   }
 }
 </script>

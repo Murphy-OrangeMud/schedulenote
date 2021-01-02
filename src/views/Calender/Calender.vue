@@ -1,10 +1,11 @@
 <template>
   <div id="calender">
-    <full-calendar :events="ddlList">
-    @eventClick="eventClick"
+    <full-calendar :events="ddlList" class="test-fc" first-day='1' locate="fr"
+    @eventClick="eventClick">
     </full-calendar>
     <h1></h1>
-    <el-form ref=for :model="form" label-width="80px" class="login-form">
+    <el-form ref=for label-width="80px" class="login-form">
+      <h> 描述、地点请用英文</h>
 
         <el-form-item label="描述" prop="username">
           <el-input v-model="myddl.description"></el-input>
@@ -50,6 +51,7 @@ export default {
   data () {
     return {
       ddlList: [],
+      resddl: [],
       myddl: {
         description: '',
         startTime1: '',
@@ -58,7 +60,8 @@ export default {
         endTime2: '',
         location: ''
       },
-      mess: '未能获取ddl'
+      mess: '未能获取ddl',
+      timer: null
     }
   },
   components: {
@@ -66,43 +69,68 @@ export default {
   },
   methods: {
     getDdl () {
-      const datas = { userID: '100' }
+      const datas = { userID: this.$store.state.id + '' }
       console.log(datas)
       getddl(datas).then(res => {
-        this.ddlList = res.calendar
-        this.mess = '成功获取ddl'
         console.log(res)
+        this.ddlList = []
+        let i = 0
+        for (i = 0; i < res.calendar.length; i += 1) {
+          this.ddlList.push({
+            title: res.calendar[i].description,
+            start: res.calendar[i].startTime.split(' ')[0],
+            end: res.calendar[i].endTime.split(' ')[0],
+            YOUR_DATA: {
+              id: res.calendar[i].id
+            }
+          })
+        }
+        this.resddl = res.calendar
+        this.mess = '成功获取ddl'
+        console.log(this.resddl)
+        console.log(this.ddlList)
       })
     },
-    eventClick (ddl) {
-      if (confirm('是否要删除' + ddl.description + '？')) {
+    eventClick (event, jsEvent, pos) {
+      console.log('eventClick')
+      if (confirm('是否要删除' + event.title + '？')) {
         const datas = {
-          id: ddl
+          id: event.YOUR_DATA.id
         }
-        this.mess = '未能删除ddl'
+        console.log(datas)
         delddl(datas).then(res => {
           this.mess = '删除ddl成功'
         })
-        this.getDdl()
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.getDdl()
+        }, 1000)
       }
     },
     addDdl () {
-      const datas = {
+      const ddldatas = {
         description: this.myddl.description,
         startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
         endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
-        rotation: 100,
-        userID: '100',
+        rotation: Math.round(Math.random() * 900000000) + 100000000,
+        userID: this.$store.state.id + '',
         type: 2
       }
-      console.log(datas)
-      this.mess = '未能添加ddl'
-      addddl(datas).then(res => {
-        this.mess = '添加ddl成功'
+      console.log(ddldatas)
+      console.log(ddldatas)
+      addddl(ddldatas).then(res => {
+        if (res.status === 'OK') {
+          this.mess = '添加ddl成功'
+        } else {
+          this.mess = '添加ddl失败'
+        }
         console.log(res)
       })
-      this.getDdl()
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.getDdl()
+      }, 1000)
     },
     refresh: function () {
       this.getDdl()

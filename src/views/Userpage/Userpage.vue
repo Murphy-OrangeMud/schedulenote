@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button size='small' @click='print'>print</el-button>
     <el-row :gutter='20' style='margin-top: 10px'>
       <el-col :span='8' :offset='3'>
         <div class='grid-content bg-purple'>
@@ -52,18 +51,6 @@
                 label-position='right'
               >
                 <el-form-item :label='头像' prop='avatar' ref='uploadElement'>
-                  <div id='fileInput'>
-                    <h2 class='text-center'>Choose an Image</h2>
-                    <v-file-input
-                      accept='image/*'
-                      placeholder='images'
-                      prepend-icon='mdi-camera-plus'
-                      multiple
-                      v-model='files'
-                    >
-                    </v-file-input>
-                    <v-btn class='button' @click='onUpload'> UPLOAD </v-btn>
-                  </div>
                   <el-upload
                     ref='upload'
                     action='#'
@@ -124,7 +111,7 @@
 </template>
 
 <script>
-import { postLogout, addavatar } from 'network/home'
+import { postLogout, addavatar, getuser } from 'network/home'
 export default {
   // eslint-disable-next-line space-before-function-paren
   data() {
@@ -140,8 +127,8 @@ export default {
       dialogVisible2: false,
       data: {},
       formdata: {
-        username: 'alice',
-        password: '123',
+        username: '',
+        password: '',
         avatar: '',
         motto: ''
       }
@@ -174,11 +161,6 @@ export default {
     }
   },
   methods: {
-    print: function () {
-      console.log(this.$store.state.username)
-      console.log(this.$store.state.id)
-      console.log(this.$store.state.password)
-    },
     showAuthority: function (isAdmin) {
       if (this.data.is_admin) return 'Admin'
       else return 'User'
@@ -190,26 +172,13 @@ export default {
       if (
         !(
           datas.avatar.type === 'image/png' ||
-          datas.avatar.type.type === 'image/jpg' ||
-          datas.avatar.type.type === 'image/jpeg'
+          datas.avatar.type === 'image/jpg' ||
+          datas.avatar.type === 'image/jpeg'
         )
       ) {
         console.log('不是图片')
       }
       addavatar(datas)
-    },
-    modify: function () {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        console.log('modify modify modify modify modify modify modify ')
-        console.log(this.$store.state)
-        this.$store.state.username = this.formdata.username
-        this.$store.state.password = this.formdata.password
-        this.$options.methods.addAvatar()
-        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-        this.$store.state.motto = this.formdata.motto
-        console.log('ok')
-      }, 3000)
     },
     logout: function () {
       postLogout().then((res) => {
@@ -262,14 +231,50 @@ export default {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
+    getUser () {
+      const datas = {
+        id: 1,
+        name: 'alice'
+      }
+      console.log(datas)
+      getuser(datas).then(res => {
+        console.log('getuser')
+        console.log(res.data)
+      })
+    },
     uploadFile () {
-      this.$refs.upload.submit()
+      const datas = {
+        avatar: this.files
+      }
+      console.log(datas)
+      addavatar(datas).then(res => {
+        console.log('addavatra')
+        console.log(res)
+        if (res.data.code === '200') {
+          this.avatar = this.imageUrl
+        }
+      })
+    },
+    modify: function () {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        console.log('modify modify modify modify modify modify modify ')
+        console.log(this.$store.state)
+        this.$store.state.username = this.formdata.username
+        this.$store.state.password = this.formdata.password
+        this.$options.methods.addAvatar()
+        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+        this.$store.state.motto = this.formdata.motto
+        console.log('ok')
+      }, 3000)
     },
     imgChange (files, fileList) {
-      this.hideUpload = fileList.length >= this.limitNum
-      if (fileList) {
-        this.$refs.uploadElement.clearValidate()
-      }
+      // this.hideUpload = fileList.length >= this.limitNum
+      // if (fileList) {
+      //   this.$refs.uploadElement.clearValidate()
+      // }
+      this.files = files
+      this.imageUrl = files.url
     },
     tocancel () {
       this.dialogVisible2 = false
@@ -290,7 +295,18 @@ export default {
         .then((res) => {
           console.log(res)
         })
+    },
+    initformdata () {
+      this.formdata.password = this.$store.state.password
+      this.formdata.username = this.$store.state.username
+      this.formdata.avatar = this.$store.state.avatar
+      this.formdata.motto = this.$store.state.motto
     }
+  },
+  created () {
+    console.log('initformdata')
+    this.initformdata()
+    this.getUser()
   }
 }
 </script>

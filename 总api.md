@@ -216,17 +216,26 @@ request.body = {
     "type": scheduleType/int
 }
 response.body = {
-    "status": "OK"
+    "status": "OK", // 成功
+}
+response.body = {
+    "status": "information format incorrect", // 格式不对
+}
+response.body = {
+    "status": "information not complete", // 少了一些信息
+}
+response.body = {
+    "status": "schedule already added", // 已经添加/其他错误
 }
 ```
 
 ###### 删除DDL
 
-POST /deleteddl
+POST /deleteschedule
 
 ``` json
 request.body = {
-    "ID": string,
+    "id": string,
 }
 response.body = {
     "status": "OK"
@@ -255,21 +264,31 @@ response.body = {
         "id": string,
         "discription": string, 
         "location": string, 
-        "startTime": string("Thu, 04 Apr 2019 08:00:00 GMT"), 
-        "endTime": string("Thu, 04 Apr 2019 08:00:00 GMT"), 
+        "startTime": string("yyyy-mm-dd hh-mm-ss"), 
+        "endTime": string("yyyy-mm-dd hh-mm-ss"), 
         "rotation": int,
         "userID": string,
         "type": scheduleType/int
-    } //返回修改之后的schedule
+    } // 成功：返回修改之后的schedule
 }
+response.body = {
+    "status": "Fail: schedule id needed"
+} // 失败：没有提供id
+response.body = {
+    "status": "Fail: schedule does not exist"
+} // 失败：错误的schedule id
 ```
 
 ###### 得到警告
 
-GET /getalert
+POST /getalert
 
 ``` json
-{
+request.body = {
+    "userID": string
+}
+response.body = {
+    "status": "OK",
     "alertddl": {
         "id": string,
         "discription": string, 
@@ -280,7 +299,10 @@ GET /getalert
         "userID": string,
         "type": scheduleType/int
     }
-}
+} // 成功
+response.body = {
+    "status": "Please provide userID"
+} // 失败：没有userid
 ```
 
 ## 相关数据结构

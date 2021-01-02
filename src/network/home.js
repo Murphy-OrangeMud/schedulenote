@@ -1,9 +1,10 @@
 import { request } from './request'
 
-export function getFilelist () {
+export function getFilelist (datas) {
   return request({
-    url: '/course/filelist',
-    method: 'get'
+    url: '/course/queryFile',
+    method: 'get',
+    data: datas
   })
 }
 
@@ -27,6 +28,13 @@ export function loginByEmail (datas) {
   return request({
     url: '/user/login_by_email',
     method: 'post',
+    data: datas
+  })
+}
+export function getuser (datas) {
+  return request({
+    url: '/user/getuser',
+    method: 'get',
     data: datas
   })
 }
@@ -105,6 +113,36 @@ export function addddl (datas) {
 export function delddl (datas) {
   return request({
     url: '/schedule/deleteschedule',
+    method: 'post',
+    data: datas
+  })
+}
+export function addavatar (datas) {
+  return request({
+    url: '/user/upload_avatar',
+    method: 'put',
+    data: datas
+  })
+}
+
+export function getcourse (datas) {
+  return request({
+    url: '/course/courselist',
+    method: 'get',
+    data: datas
+  })
+}
+
+export function deletecourse (datas) {
+  return request({
+    url: '/course/deleteCourse',
+    method: 'post',
+    data: datas
+  })
+}
+export function addcourse (datas) {
+  return request({
+    url: '/course/addCourse',
     method: 'post',
     data: datas
   })
