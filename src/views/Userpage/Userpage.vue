@@ -180,19 +180,6 @@ export default {
       }
       addavatar(datas)
     },
-    modify: function () {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        console.log('modify modify modify modify modify modify modify ')
-        console.log(this.$store.state)
-        this.$store.state.username = this.formdata.username
-        this.$store.state.password = this.formdata.password
-        this.$options.methods.addAvatar()
-        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-        this.$store.state.motto = this.formdata.motto
-        console.log('ok')
-      }, 3000)
-    },
     logout: function () {
       postLogout().then((res) => {
         console.log('logout logout logout logout logout')
@@ -246,8 +233,8 @@ export default {
     },
     getUser () {
       const datas = {
-        id: '',
-        name: ''
+        id: 1,
+        name: 'alice'
       }
       console.log(datas)
       getuser(datas).then(res => {
@@ -267,6 +254,19 @@ export default {
           this.avatar = this.imageUrl
         }
       })
+    },
+    modify: function () {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        console.log('modify modify modify modify modify modify modify ')
+        console.log(this.$store.state)
+        this.$store.state.username = this.formdata.username
+        this.$store.state.password = this.formdata.password
+        this.$options.methods.addAvatar()
+        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+        this.$store.state.motto = this.formdata.motto
+        console.log('ok')
+      }, 3000)
     },
     imgChange (files, fileList) {
       // this.hideUpload = fileList.length >= this.limitNum
