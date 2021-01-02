@@ -1,5 +1,6 @@
 import os
 import json
+import functools
 from flask import render_template, redirect, url_for, send_from_directory, make_response, session
 from werkzeug.utils import secure_filename
 
