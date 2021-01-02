@@ -36,9 +36,11 @@ export default {
   },
   methods: {
     print: function () {
+      console.log('debug information')
       console.log(this.$store.state.username)
       console.log(this.$store.state.id)
       console.log(this.$store.state.password)
+      console.log(this.$store.state.motto)
     },
     login: function () {
       const datas = qs.stringify({
