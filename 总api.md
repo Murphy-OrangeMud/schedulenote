@@ -235,7 +235,7 @@ POST /deleteschedule
 
 ``` json
 request.body = {
-    "ID": string,
+    "id": string,
 }
 response.body = {
     "status": "OK"
