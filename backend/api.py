@@ -718,7 +718,7 @@ def admin_modify(id):
         return_json['code'] = 300
         return jsonify(return_json)
 
-    @user_bp.route('/test_init', methods = ['GET', 'POST'])
+@user_bp.route('/test_init', methods = ['GET', 'POST'])
 def test_init():
     user1 = User('alice', '123', 'alice@email')
     user2 = User('admin', '123', 'admin@email')
@@ -822,7 +822,7 @@ def login():
     name = request.values.get('name',type = str, default = None)
     password = request.values.get('password',type = str, default = None)
     user_data = {'code':0, 'data':{}}
-
+    user_name = request.cookie.get("user_name")
     if user_name:#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
