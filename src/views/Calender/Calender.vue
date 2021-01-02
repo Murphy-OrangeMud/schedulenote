@@ -94,7 +94,7 @@ export default {
       console.log('eventClick')
       if (confirm('是否要删除' + event.title + '？')) {
         const datas = {
-          ID: event.YOUR_DATA.id
+          id: event.YOUR_DATA.id
         }
         console.log(datas)
         delddl(datas).then(res => {
@@ -109,7 +109,7 @@ export default {
         startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
         endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
-        rotation: Math.round(Math.random() * 1000000000),
+        rotation: Math.round(Math.random() * 900000000) + 100000000,
         userID: this.$store.state.id + '',
         type: 2
       }
