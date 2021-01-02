@@ -1,6 +1,7 @@
 <template>
   <div id="login">
     <h1>Schedule note 用户登录</h1>
+    <el-button size='small' @click='print'>print</el-button>
     <el-form ref=for :model="form" label-width="80px" class="login-form">
 
         <el-form-item label="用户名" prop="username">
@@ -34,7 +35,16 @@ export default {
     }
   },
   methods: {
+<<<<<<< Updated upstream
     regi: function () {
+=======
+    print: function () {
+      console.log(this.$store.state.username)
+      console.log(this.$store.state.id)
+      console.log(this.$store.state.password)
+    },
+    login: function () {
+>>>>>>> Stashed changes
       const datas = qs.stringify({
         name: this.account,
         password: this.password,
