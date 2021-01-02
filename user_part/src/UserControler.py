@@ -1,16 +1,38 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+# from flask_login import LoginManager, login_user, logout_user, current_user(),login_required
 from uuid import uuid1
+import functools
 
 from Model import User, db, MyRedis, Report, Feedback
 from configs import *
-from utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
+from utils import get_file_type, is_legal_str, allowed_file,has_login, get_verify_code
 from Mail import send_email
 
 user_bp = Blueprint('user', __name__)
-login_manager = LoginManager()
+# login_manager = LoginManager()
 
+def login_required(view_func):
+
+    @functools.wraps(view_func)  #
+    def wrapper(*args, **kwargs):
+        # 判断用户的登录状态
+        user_id = session.get('user_id')
+        # 如果未登录，返回未登录的信息
+        if not user_id:
+            return jsonify(code = 401, msg='用户未登录')
+        return view_func(*args, **kwargs)
+    return wrapper
+
+# #表示当前有正在登录的账号
+# def has_login():
+#     return session.get('user_id')
+def login_user(user):
+    session['user_id'] = user.id
+def logout_user():
+    session.pop('user_id')
+def current_user():
+    return User.query.get(session['user_id'])
 # APIs
 
 @user_bp.route('/test_init', methods = ['GET', 'POST'])
@@ -46,9 +68,9 @@ def test_init():
 
 
 
-@login_manager.user_loader
-def load_user(userid):
-    return User.query.get(userid)
+# @login_manager.user_loader
+# def load_user(userid):
+#     return User.query.get(userid)
 
 @user_bp.route('/search_email', methods = ['GET'])
 def search_email():
@@ -121,7 +143,7 @@ def login():
     if has_login():#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
-        user_data['data']['msg'] = 'User "' + current_user.username + '" is using now'
+        user_data['data']['msg'] = 'User "' + current_user().username + '" is using now'
         return jsonify(user_data)
     if is_legal_str(name) and is_legal_str(password):
         #判断用户是否存在
@@ -239,7 +261,7 @@ def get_user():
     if id == None and name == None:
         if has_login():
             return_json['code'] = 200
-            return_json['data'] = current_user.todict()
+            return_json['data'] = current_user().todict()
             return_json['data']['msg'] = 'success'
             return_json['data']['is_current'] = 1
             return jsonify(return_json)
@@ -250,7 +272,7 @@ def get_user():
             return_json['data'] = user.todict()
             return_json['data']['msg'] = 'success'
             try:
-                return_json['data']['is_current'] = int(current_user == user)
+                return_json['data']['is_current'] = int(current_user() == user)
             except:
                 return_json['data']['is_current'] = 0
             return jsonify(return_json)
@@ -262,7 +284,7 @@ def get_user():
             return_json['data'] = user.todict()
             return_json['data']['msg'] = 'success'
             try:
-                return_json['data']['is_current'] = int(current_user == user)
+                return_json['data']['is_current'] = int(current_user() == user)
             except:
                 return_json['data']['is_current'] = 0
             return jsonify(return_json)
@@ -283,7 +305,7 @@ def modify_info():
             return_json['data']['msg'] = "User \"" + newname  + "\" already exists"
             return jsonify(return_json)
         else:
-            current_user.username = newname
+            current_user().username = newname
             db.session.commit()
             return_json['code'] = 200
             return_json['data']['msg'] = "Username modify success"
@@ -291,7 +313,7 @@ def modify_info():
 
     newpassword = request.values.get('newpassword', type = str, default = None)
     if is_legal_str(newpassword):
-        current_user.password = generate_password_hash(newpassword)
+        current_user().password = generate_password_hash(newpassword)
         db.session.commit()
         return_json['code'] = 200
         return_json['data']['msg'] = "Password modify success"
@@ -300,7 +322,7 @@ def modify_info():
     newmotto = request.values.get('newmotto', type = str, default = None)
     if newmotto:
         if len(newmotto) > 0 and len(newmotto) <= MAXMOTTO:
-            current_user.motto = newmotto
+            current_user().motto = newmotto
             db.session.commit()
             return_json['code'] = 200
             return_json['data']['msg'] = "Motto modify success"
@@ -308,7 +330,7 @@ def modify_info():
     newemail = request.values.get('newemail', type = str, default = None)
     if is_legal_str(newemail):
         if MyRedis.get(newemail + "_checked") == newemail:
-            current_user.motto = newmotto
+            current_user().motto = newmotto
             db.session.commit()
             return_json['code'] = 200
             return_json['data']['msg'] = "Email modify success"
@@ -330,15 +352,15 @@ def modify_info():
 def upload_avatar():
     img = request.files.get('avatar')
     return_json = {'data':{}}
-    user_id = current_user.id
+    user_id = current_user().id
     if allowed_file(img.filename):
         ext = get_file_type(img.filename)
         filename = str(uuid1(user_id)) + '.' + ext
         path = IMAGEPATH
         file_path = path + filename
-        current_user.avatar = filename
+        current_user().avatar = filename
         db.session.commit()
-        # print(current_user.avatar)
+        # print(current_user().avatar)
         img.save(file_path)
         return_json['code'] = 200
         return_json['data']['msg'] = 'success'
@@ -366,7 +388,7 @@ def feedback():
     else: #msg合法
         my_feedback = Feedback(msg)
         if anonymous == 0:
-            my_feedback = Feedback(msg, current_user.id)
+            my_feedback = Feedback(msg, current_user().id)
         try:
             db.session.add(my_feedback)
             db.session.flush()
@@ -411,7 +433,7 @@ def report():
         return jsonify(return_json)
 
     else: #msg合法
-        my_id = current_user.id
+        my_id = current_user().id
         if anonymous == 0:
             my_id = -1
         my_report = Report(reported_id, to_report, msg, file_id, my_id)

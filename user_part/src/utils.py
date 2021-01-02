@@ -1,6 +1,7 @@
 from configs import MAXSTRLEN
-from flask_login import current_user
+# from flask_login import current_user
 from uuid import uuid1
+from flask import session
 
 def is_legal_str(s):
     try:
@@ -13,7 +14,7 @@ def is_legal_str(s):
 
 #表示当前有正在登录的账号
 def has_login():
-    return not current_user.is_anonymous
+    return session.get('user_id')
 
 
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'JPEG', 'JPG', 'PNG']

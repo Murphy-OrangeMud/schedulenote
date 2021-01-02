@@ -582,7 +582,7 @@ response.body = {
 ```
 
 #### 获得未处理的举报信息（report）
-GET admin/feedback_list
+GET admin/report_list
 ```json
 request.body = {}
 
