@@ -153,6 +153,8 @@ def download():
         coursepath = Path(str(file.course))
         dfilename = secure_filename(''.join(lazy_pinyin(file.filename)))
         download_path = os.path.join(basepath,coursepath)
+        print(download_path)
+        print(dfilename)
         session.commit()        
         response = make_response(send_from_directory(download_path,filename=dfilename,as_attachment=True))
         response.headers["Content-Disposition"] = "attachment; filename={}".format(file.filename.encode().decode('latin-1'))
