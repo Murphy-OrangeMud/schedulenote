@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <h1>Schedule note 用户注册</h1>
-    <el-form ref=for :model="form" label-width="80px" class="login-form">
+    <el-form ref=for label-width="80px" class="login-form">
 
         <el-form-item label="用户名" prop="username">
           <el-input v-model=username></el-input>
@@ -29,14 +29,23 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      mess: '',
+      email: ''
     }
   },
   methods: {
     regis: function () {
+      this.email = ''
+      const leng = Math.round(Math.random() * 40) + 20
+      let i = 0
+      for (i = 0; i < leng; ++i) {
+        this.email += Math.round(Math.random() * 9)
+      }
       const datas = qs.stringify({
         name: this.username,
-        password: this.password
+        password: this.password,
+        email: this.email
       })
       console.log(datas)
       postRegister(datas).then(res => {

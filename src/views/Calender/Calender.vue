@@ -4,7 +4,7 @@
     @eventClick="eventClick"
     </full-calendar>
     <h1></h1>
-    <el-form ref=for :model="form" label-width="80px" class="login-form">
+    <el-form ref=for label-width="80px" class="login-form">
 
         <el-form-item label="描述" prop="username">
           <el-input v-model="myddl.description"></el-input>
@@ -75,9 +75,9 @@ export default {
         let i = 0
         for (i = 0; i < res.calendar.length; i += 1) {
           this.ddlList.push({
-            title: res.calendar[i].discription,
-            start: res.calendar[i].startTime,
-            end: res.calendar[i].endTime,
+            title: res.calendar[i].description,
+            start: res.calendar[i].startTime.split(' ')[0],
+            end: res.calendar[i].endTime.split(' ')[0],
             cssClass: 'red'
           })
         }
