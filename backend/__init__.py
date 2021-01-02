@@ -11,7 +11,7 @@ from .configs import IMAGEPATH
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('configs.py')
-    CORS(app, resources={r"/*": {"origins": "8.136.141.151:8848"}})
+    CORS(app, resources={r"/*": {"origins": "*"}})
 
     if not os.path.exists(IMAGEPATH):
         os.makedirs(IMAGEPATH)
