@@ -96,6 +96,15 @@ const routes = [
       requireAuth: false
     },
     component: () => import('../views/Userpage/Userpage.vue')
+  },
+  {
+    path: '/Email',
+    name: 'Userpage',
+    meta: {
+      title: 'email',
+      requireAuth: false
+    },
+    component: () => import('../views/Email/Email.vue')
   }
 ]
 

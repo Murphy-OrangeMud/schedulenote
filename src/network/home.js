@@ -23,6 +23,38 @@ export function postMaterials (datas) {
   })
 }
 
+export function loginByEmail (datas) {
+  return request({
+    url: '/user/login_by_email',
+    method: 'post',
+    data: datas
+  })
+}
+
+export function searchEmail (datas) {
+  return request({
+    url: '/user/search_email',
+    method: 'get',
+    data: datas
+  })
+}
+
+export function getMailVertify (datas) {
+  return request({
+    url: '/user/get_mail_verify',
+    method: 'get',
+    data: datas
+  })
+}
+
+export function checkMailVertify (datas) {
+  return request({
+    url: '/user/check_mail_verify',
+    method: 'post',
+    data: datas
+  })
+}
+
 export function postFilelist (id) {
   return request({
     url: '/course/upvote',
