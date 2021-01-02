@@ -747,15 +747,15 @@ def signup():
             'email': email
         } 
     }
-    if is_legal_str(name) and is_legal_str(password) and is_legal_str(email):
+    if is_legal_str(name) and is_legal_str(password):
         if User.query.filter(User.username == name).all():
             user_data['code'] = 400
             user_data['data']['msg'] = 'User "' + name + '" already exists'
             return jsonify(user_data)
-        if User.query.filter(User.email == email).all():
-            user_data['code'] = 400
-            user_data['data']['msg'] = 'The mailbox is already occupied'
-            return jsonify(user_data)
+#         if User.query.filter(User.email == email).all():
+#             user_data['code'] = 400
+#             user_data['data']['msg'] = 'The mailbox is already occupied'
+#             return jsonify(user_data)
 #         if MyRedis.get(email + '_checked') != email:
 #             user_data['code'] = 400
 #             user_data['data']['msg'] = 'The mailbox was not verified'
