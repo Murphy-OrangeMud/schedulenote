@@ -50,7 +50,7 @@ def queryFile():
     if request.method == 'GET':
         id = request.values.get("id",type=int,default = None)
         if id == None:
-            return jsonify({"code":0})
+            return jsonify({"code":10})
         files = db.session.query(File).filter(File.course == id).all()
         filelist = []
         for file in files:
