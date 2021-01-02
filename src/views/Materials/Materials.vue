@@ -123,6 +123,9 @@ export default {
         formData.append('file', this.addArr[i])
 
         postMaterials(formData).then(res => {
+          if (res.code === 400) {
+            console.log('shit1')
+          }
           if (res.data.code === 200) {
             this.$message({
               type: 'success',
