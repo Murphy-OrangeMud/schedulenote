@@ -1,6 +1,7 @@
 <template>
   <div id="login">
     <h1>Schedule note 用户登录</h1>
+    <el-button size='small' @click='print'>print</el-button>
     <el-form ref=for :model="form" label-width="80px" class="login-form">
 
         <el-form-item label="用户名" prop="username">
@@ -40,23 +41,23 @@ export default {
     }
   },
   methods: {
+    print: function () {
+      console.log('debug information')
+      console.log(this.$store.state.username)
+      console.log(this.$store.state.id)
+      console.log(this.$store.state.password)
+      console.log(this.$store.state.motto)
+    },
     login: function () {
       const datas = qs.stringify({
-        name: this.username,
-        password: this.password
+        name: this.account,
+        password: this.password,
+        email: '12345678@pku.edu.cn'
       })
       console.log(datas)
       event.preventDefault()
       postLogin(datas).then(res => {
         this.mess = res.data.msg
-        console.log(res.data)
-        if (this.mess === 'User "' + this.account + '" login success') {
-          this.$store.state.id = res.data.id
-          this.$store.state.username = res.data.username
-          this.$store.state.motto = res.data.motto
-          this.$store.state.password = this.password
-          this.$store.state.is_admin = res.data.is_admin
-        }
       })
     }
   }

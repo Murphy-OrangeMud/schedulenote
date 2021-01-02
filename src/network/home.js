@@ -104,16 +104,15 @@ export function addddl (datas) {
 
 export function delddl (datas) {
   return request({
-    url: '/schedule/deleteddl',
+    url: '/schedule/deleteschedule',
     method: 'post',
     data: datas
   })
 }
-
-export function addcourse (datas) {
+export function addavatar (datas) {
   return request({
-    url: '/course/addCourse',
-    method: 'post',
+    url: '/user/upload_avatar',
+    method: 'put',
     data: datas
   })
 }
