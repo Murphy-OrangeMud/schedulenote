@@ -16,7 +16,7 @@ def create_app():
     if not os.path.exists(IMAGEPATH):
         os.makedirs(IMAGEPATH)
     with app.app_context():
-        from .api import login_manager, user_bp, schedule_bp, note_bp, course_bp, admin_bp
+        from .api import user_bp, schedule_bp, note_bp, course_bp, admin_bp
         # db.create_all()
         app.register_blueprint(user_bp)
         app.register_blueprint(schedule_bp)
