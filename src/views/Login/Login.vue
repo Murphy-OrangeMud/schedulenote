@@ -87,10 +87,11 @@ export default {
       searchEmail(emaildata)
         .then((res) => {
           console.log(res)
-          if (res.data.msg === 'success') {
-            this.mess = 'Email already exist'
+          if (res.data.msg === 'User not exist') {
+            this.mess = 'User not exist'
           } else {
             getMailVertify(emaildata).then((res) => {
+              console.log(res)
               this.mess = res.data.msg
               this.checkmess = res.data.msg
             })
