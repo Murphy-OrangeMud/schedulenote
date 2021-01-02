@@ -718,7 +718,7 @@ def admin_modify(id):
         return_json['code'] = 300
         return jsonify(return_json)
 
-    @user_bp.route('/test_init', methods = ['GET', 'POST'])
+@user_bp.route('/test_init', methods = ['GET', 'POST'])
 def test_init():
     user1 = User('alice', '123', 'alice@email')
     user2 = User('admin', '123', 'admin@email')
