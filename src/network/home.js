@@ -109,3 +109,11 @@ export function delddl (datas) {
     data: datas
   })
 }
+
+export function addcourse (datas) {
+  return request({
+    url: '/course/addCourse',
+    method: 'post',
+    data: datas
+  })
+}
