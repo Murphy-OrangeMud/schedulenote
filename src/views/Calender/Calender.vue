@@ -43,7 +43,7 @@
 </template>
 
 <script>
-
+import qs from 'qs'
 import { getddl, addddl, delddl } from 'network/home'
 export default {
   name: 'calender',
@@ -93,7 +93,7 @@ export default {
       console.log('eventClick')
       if (confirm('是否要删除' + event.title + '？')) {
         const datas = {
-          id: event.YOUR_DATA.id
+          ID: event.YOUR_DATA.id
         }
         console.log(datas)
         delddl(datas).then(res => {
@@ -103,15 +103,15 @@ export default {
       }
     },
     addDdl () {
-      const datas = {
+      const datas = qs.stringify({
         description: this.myddl.description,
         startTime: this.myddl.startTime1 + ' ' + this.myddl.startTime2 + ':00',
         endTime: this.myddl.endTime1 + ' ' + this.myddl.endTime2 + ':00',
         location: this.myddl.location,
-        rotation: 100,
+        rotation: Math.round(Math.random() * 1000000000),
         userID: this.$store.state.id + '',
         type: 2
-      }
+      })
       console.log(datas)
       this.mess = '未能添加ddl'
       addddl(datas).then(res => {
