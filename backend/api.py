@@ -821,7 +821,7 @@ def login():
     name = request.values.get('name',type = str, default = None)
     password = request.values.get('password',type = str, default = None)
     user_data = {'code':0, 'data':{}}
-    user_name = request.cookie.get("user_name")
+    user_name = request.cookies.get("user_name")
     if user_name:#当前有正在登录中的账号
         user_data['code'] = 400
         user_data['data'] = {}
