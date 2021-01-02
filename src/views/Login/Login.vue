@@ -35,16 +35,12 @@ export default {
     }
   },
   methods: {
-<<<<<<< Updated upstream
-    regi: function () {
-=======
     print: function () {
       console.log(this.$store.state.username)
       console.log(this.$store.state.id)
       console.log(this.$store.state.password)
     },
     login: function () {
->>>>>>> Stashed changes
       const datas = qs.stringify({
         name: this.account,
         password: this.password,
