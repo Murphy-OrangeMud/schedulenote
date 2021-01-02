@@ -8,17 +8,17 @@ import os
 
 from configs import IMAGEPATH
 from Model import db
-from UserControler import user_bp, login_manager
+from UserControler import user_bp
 from AdminControler import admin_bp
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(user_bp,url_prefix='/user')
 app.register_blueprint(admin_bp,url_prefix='/admin')
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.config.from_pyfile('configs.py')
 app.app_context().push()
 db.init_app(app)
-login_manager.init_app(app)
+# login_manager.init_app(app)
 
 
 if __name__ == "__main__":
