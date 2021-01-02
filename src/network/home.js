@@ -117,3 +117,19 @@ export function addcourse (datas) {
     data: datas
   })
 }
+
+export function getcourse (datas) {
+  return request({
+    url: '/course/courselist',
+    method: 'get',
+    data: datas
+  })
+}
+
+export function deletecourse (datas) {
+  return request({
+    url: '/course/deleteCourse',
+    method: 'post',
+    data: datas
+  })
+}
