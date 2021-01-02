@@ -17,7 +17,7 @@ from .configs import *
 
 from .utils import get_file_type, is_legal_str, allowed_file, has_login, get_verify_code
 from .utils import send_email
-from .utils import strformat2datetime
+from .utils import strformat2datetime, datetime2strformat
 
 import markdown, pdfkit
 
@@ -298,8 +298,8 @@ def getCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -325,8 +325,8 @@ def getClassCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -352,8 +352,8 @@ def getDeadlinesCalendar():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
@@ -501,8 +501,8 @@ def modifySchedule():
             "userID": newschedule.userID,
             "description": newschedule.description,
             "location": newschedule.location,
-            "startTime": newschedule.startTime,
-            "endTime": newschedule.endTime,
+            "startTime": datetime2strformat(newschedule.startTime),
+            "endTime": datetime2strformat(newschedule.endTime),
             "rotation": newschedule.rotation,
             "type": newschedule.scheduleType
         }})
@@ -534,8 +534,8 @@ def getAlert():
                 "userID": schedule.userID,
                 "description": schedule.description,
                 "location": schedule.location,
-                "startTime": schedule.startTime,
-                "endTime": schedule.endTime,
+                "startTime": datetime2strformat(schedule.startTime),
+                "endTime": datetime2strformat(schedule.endTime),
                 "rotation": schedule.rotation,
                 "type": schedule.scheduleType
             })
