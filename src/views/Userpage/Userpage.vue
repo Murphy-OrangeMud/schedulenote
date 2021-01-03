@@ -21,7 +21,7 @@
               <span class='sender'>头像：</span>
               <el-image
                 style='width: 100px; height: 100px'
-                :src='avatar'
+                :src='avatarSrc'
                 :fit='fit'
               ></el-image>
             </div>
@@ -116,6 +116,7 @@ export default {
   // eslint-disable-next-line space-before-function-paren
   data() {
     return {
+      avatarSrc: '',
       hideUpload: false,
       dialogImageUrl: '',
       dialogVisible: false,
@@ -230,6 +231,7 @@ export default {
       })
     },
     addAvatar: function () {
+      console.log('addAvatar')
       const param = new FormData() // 创建form对象
       param.append('avatar', this.files) // 通过append向form对象添加数据
       param.append('name', this.$store.state.username)
@@ -244,6 +246,7 @@ export default {
         console.log('不是图片')
       }
       addavatar(param).then(res => {
+        console.log(res.data)
         if (res.data.msg === 'success') {
           this.avatar = this.imageUrl
         }
@@ -258,7 +261,7 @@ export default {
       addavatar(param).then(res => {
         console.log(res.data)
         if (res.data.msg === 'success') {
-          this.avatar = this.imageUrl
+          this.avatarSrc = this.imageUrl
         }
       })
     },
