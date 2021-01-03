@@ -165,21 +165,6 @@ export default {
       if (this.data.is_admin) return 'Admin'
       else return 'User'
     },
-    addAvatar: function () {
-      const datas = {
-        avatar: this.formdata.avatar
-      }
-      if (
-        !(
-          datas.avatar.type === 'image/png' ||
-          datas.avatar.type === 'image/jpg' ||
-          datas.avatar.type === 'image/jpeg'
-        )
-      ) {
-        console.log('不是图片')
-      }
-      addavatar(datas)
-    },
     logout: function () {
       postLogout().then((res) => {
         console.log('logout logout logout logout logout')
@@ -244,28 +229,48 @@ export default {
         console.log(res.data)
       })
     },
+    addAvatar: function () {
+      const param = new FormData() // 创建form对象
+      param.append('avatar', this.files) // 通过append向form对象添加数据
+      param.append('name', this.$store.state.username)
+      console.log(param)
+      if (
+        !(
+          param.avatar.type === 'image/png' ||
+          param.avatar.type === 'image/jpg' ||
+          param.avatar.type === 'image/jpeg'
+        )
+      ) {
+        console.log('不是图片')
+      }
+      addavatar(param).then(res => {
+        if (res.data.msg === 'success') {
+          this.avatar = this.imageUrl
+        }
+      })
+    },
     uploadFile () {
       const param = new FormData() // 创建form对象
       param.append('avatar', this.files) // 通过append向form对象添加数据
       param.append('name', this.$store.state.username)
+      console.log('uploadfile')
+      console.log(param)
       addavatar(param).then(res => {
-        if (res.data.code === '200') {
+        console.log(res.data)
+        if (res.data.msg === 'success') {
           this.avatar = this.imageUrl
         }
       })
     },
     modify: function () {
-      clearTimeout(this.timer)
-      this.timer = setTimeout(() => {
-        console.log('modify modify modify modify modify modify modify ')
-        console.log(this.$store.state)
-        this.$store.state.username = this.formdata.username
-        this.$store.state.password = this.formdata.password
-        this.$options.methods.addAvatar()
-        //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
-        this.$store.state.motto = this.formdata.motto
-        console.log('ok')
-      }, 3000)
+      console.log('modify modify modify modify modify modify modify ')
+      console.log(this.$store.state)
+      this.$store.state.username = this.formdata.username
+      this.$store.state.password = this.formdata.password
+      this.$options.methods.addAvatar()
+      //  this.$store.state.avatar = 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      this.$store.state.motto = this.formdata.motto
+      console.log('ok')
     },
     imgChange (files, fileList) {
       this.files = files.raw
