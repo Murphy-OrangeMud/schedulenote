@@ -184,6 +184,8 @@ export default {
       postLogout().then((res) => {
         console.log('logout logout logout logout logout')
         console.log(this.$store.state)
+        console.log(res.data)
+        this.mess = res.data.msg
         if (this.mess === 'Logout Success') {
           alert('登出成功！')
           this.$store.state.id = 0
